@@ -17,14 +17,16 @@ function PersonSleep( _pos, _color, _id, _name ) {
 
 	// construct physical existence
 	this.player = new THREE.Object3D();
-	this.pMat = new THREE.MeshLambertMaterial( { map: personTex, color: this.color, side: THREE.DoubleSide } );
+	//this.pMat = new THREE.MeshLambertMaterial( { map: personTex, color: this.color, side: THREE.DoubleSide } );
+	this.pMat = new THREE.MeshLambertMaterial( { map: sleeperTexture, color: this.color, side: THREE.DoubleSide } );
+	this.pSkinnedMat = new THREE.MeshLambertMaterial( { skinning: true, map: sleeperTexture, color: this.color, side: THREE.DoubleSide } );
 
 	// 1-body
-	this.playerBody = new THREE.Mesh( personBody, this.pMat);
+	//this.playerBody = new THREE.Mesh( personBody, this.pMat);
+	this.playerBody = new THREE.Mesh( sleeperGeo, this.pSkinnedMat);
 	this.playerBody.name = _id + " body";
-	//this.playerBody.position.y-=0.2;
 
-	// if it's ME, create inner poop
+	// if it's ME, create inner stuff
 	if( this.whoIam == whoIamInLife ){
 		// 1-0: stomach
 		this.poopMini = new THREE.Mesh( stomach, new THREE.MeshBasicMaterial({map: stomachTex,  morphTargets: true}) );		
@@ -82,15 +84,29 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		// this.miniMe.visible = false;
 		// this.playerBody.add( this.miniMe );
 
-	this.player.add( this.playerBody );
+	this.playerBody.position.y -= 0.6;
+	this.playerBodyParent = new THREE.Object3D();
+	this.playerBodyParent.add( this.playerBody );
+	this.player.add( this.playerBodyParent );
 
 	// 2-head
 	//if it's ME, create empty head
 	if( this.whoIam == whoIamInLife ){
 		this.playerHead = new THREE.Object3D();
+
+		var headMesh = planet.clone();
+		//headMesh.position.y -= 0.6;
+		this.playerHead.add(headMesh);
+
 		this.playerHead.name = _id + " head";
 	} else {
-		this.playerHead = new THREE.Mesh( personHead, this.pMat );
+		//this.playerHead = new THREE.Mesh( personHead, this.pMat );
+		this.playerHead = new THREE.Object3D();
+
+		var headMesh = new THREE.Mesh( chewerA, this.pMat );
+		//headMesh.position.y -= 0.6;
+		this.playerHead.add(headMesh);
+
 		this.playerHead.name = _id + " head";
 		// this.playerHead.position.z = -2;
 		// this.playerHead.rotation.y = Math.PI;
@@ -101,6 +117,7 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		// 	pHat.position.y += 0.3;
 		// 	this.playerHead.add( pHat );
 	}
+	this.playerHead.position.y -= 0.6;
 	this.player.add( this.playerHead );
 
 	// this.player.scale.multiplyScalar(2);
@@ -120,18 +137,44 @@ PersonSleep.prototype.update = function( _playerLocX, _playerLocY, _playerLocZ, 
 	
 	// body
 	var newQ = _playerQ.clone();
-	//newQ._x = 0;
-	//newQ._y = 0;
+	newQ._x = 0;
+	// newQ._y = 0;
 	newQ._z = 0;	
 	newQ.normalize();
 
 	//this.ahhRotation = new THREE.Euler().setFromQuaternion( newQ, 'YXZ');
-	this.ahhRotation = new THREE.Euler().setFromQuaternion( newQ );
+	//this.ahhRotation = new THREE.Euler().setFromQuaternion( newQ );
 
 	if(this.player.children[0]){
 		this.player.children[0].quaternion.copy(newQ);
+		// this.player.children[0].rotation.copy(this.ahhRotation);
 	}
 	// if(this.player.children[2]){
 	// 	this.player.children[2].rotation.y = this.ahhRotation.y;
 	// }
+}
+
+PersonSleep.prototype.updateReal = function( _playerLocX, _playerLocY, _playerLocZ, _playerQ ) {
+
+	this.realPosition.set(_playerLocX, _playerLocY, _playerLocZ);
+	this.realRotation.copy(_playerQ);
+	var newQ = _playerQ.clone();
+	newQ._x = 0;
+	newQ._z = 0;
+	newQ.normalize();
+	this.realBillboardRotation.copy(newQ);
+}
+
+PersonSleep.prototype.transUpdate = function() {
+	this.player.position.lerp(this.realPosition, 0.1);
+	
+	// head
+	if(this.player.children[1]) {
+		this.player.children[1].quaternion.slerp( this.realRotation, 0.2 );
+	}
+	
+	// body
+	if(this.player.children[0]){
+		this.player.children[0].quaternion.slerp( this.realBillboardRotation, 0.2 );
+	}
 }

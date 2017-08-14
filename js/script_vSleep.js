@@ -63,39 +63,43 @@ var keyIsPressed;
 	var personAniOffsetSet = [  1, 30, 48, 50, 58, 60, 72, 82 ];	//2: sit freeze; 4: push freeze; 7: stand freeze
 	var personFreeze = false;
 
-// WEB_AUDIO_API!
-	var usingWebAudio = true, bufferLoader, convolver, mixer;
-	var source, buffer, audioBuffer, gainNode, convolverGain;
-	var soundLoaded = false;
-	var masterGain, sampleGain;
-	var audioSources = [], gainNodes = [];
+// SOUND
+	// var usingWebAudio = true, bufferLoader, convolver, mixer;
+	// var source, buffer, audioBuffer, gainNode, convolverGain;
+	// var soundLoaded = false;
+	// var masterGain, sampleGain;
+	// var audioSources = [], gainNodes = [];
 
-	var sound_sweet = {};
-	var sweetSource;
-	var vecZ = new THREE.Vector3(0,0,1);
-	var vecY = new THREE.Vector3(0,-1,0);
-	var sswM, sswX, sswY, sswZ;
-	var camM, camMX, camMY, camMZ;	
+	// var sound_sweet = {};
+	// var sweetSource;
+	// var vecZ = new THREE.Vector3(0,0,1);
+	// var vecY = new THREE.Vector3(0,-1,0);
+	// var sswM, sswX, sswY, sswZ;
+	// var camM, camMX, camMY, camMZ;	
 
-	var _iOSEnabled = false;
+	// var _iOSEnabled = false;
 
-	window.AudioContext = (window.AudioContext || window.webkitAudioContext || null);
-	if (!AudioContext) {
-	  throw new Error("AudioContext not supported!");
-	} 
+	// window.AudioContext = (window.AudioContext || window.webkitAudioContext || null);
+	// if (!AudioContext) {
+	//   throw new Error("AudioContext not supported!");
+	// } 
 
-	var audioContext = new AudioContext();
-	var sample = new SoundsSample(audioContext);
+	// var audioContext = new AudioContext();
+	// var sample = new SoundsSample(audioContext);
 
-	var sound_fire, sound_bathroom, sound_stomach, sound_forest, sound_poop, sound_meditation, sound_opening;
-	var initSound = false, yogaOver = false;
+	// var sound_fire, sound_bathroom, sound_stomach, sound_forest, sound_poop, sound_meditation, sound_opening;
+	// var initSound = false, yogaOver = false;
 
-	var switchSound_1 = false;
+	// var switchSound_1 = false;
 
 // STAR
 	var star, starMat, glowTexture, glowTextures = [], starAnimator, starAnimators = [], stars = [];
 	var starFiles = [ basedURL + "images/sStar_1.png", basedURL + "images/sStar_2.png",
 					  basedURL + "images/sStar_3.png", basedURL + "images/sStar_4.png" ];
+
+// SLEEPER
+	var sleeper, sleeperGeo, sleeperTexture;
+	var chewerA, chewerTextures = [], chewers = [];
 
 var worldTotal = 18, eaterPerTable = 6, tableAmount = 3;
 
@@ -175,8 +179,7 @@ function superInit(){
 			sinWaves.push(sw);
 		}
 
-	planet = new THREE.Mesh( new THREE.SphereGeometry(1), new THREE.MeshLambertMaterial({color: 0xff0000, side: THREE.DoubleSide}) );
-	//planet.position.y = -2;
+	planet = new THREE.Mesh( new THREE.SphereGeometry(0.1), new THREE.MeshLambertMaterial({color: 0xff0000, side: THREE.DoubleSide}) );
 	scene.add( planet );
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -220,13 +223,24 @@ function superInit(){
 
 	loadSitModelPlayer( basedURL + "models/personHead.js",
 						//basedURL + "models/personBody.js",
-						basedURL + "models/sleepBody.json",
+						basedURL + "models/sleepBody2.json",
 						basedURL + "models/stomach_empty.json",
 						basedURL + "models/stomach_full.json");
 
 	LoadTexModelPoopHeart( basedURL + 'images/poopHeart.jpg', basedURL + 'models/poopHeart.js' );
 
 	LoadStarTexture();
+
+	sleeperTexture = textureLoader.load( basedURL + 'images/dude0.jpg' );
+	LoadModelChewer( basedURL + "models/sleepHead.json" );
+
+	modelLoader.load( basedURL + "models/sleeper.json", function(geometry, material){
+
+		sleeperGeo = geometry;
+		sleeper = new THREE.SkinnedMesh( sleeperGeo, new THREE.MeshLambertMaterial({map: sleeperTexture, skinning: true, side: THREE.DoubleSide}) );
+
+		//scene.add(sleeper);	
+	});
 
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -285,15 +299,8 @@ function lateInit()
 	firstGuy = new PersonSleep( myPosition, myColor, whoIamInLife, playerNName );
 	dailyLifePlayerDict[ whoIamInLife ] = firstGuy;
 
-	secGuy = new PersonSleep( myPosition, new THREE.Color(), 8, "andy" );
-	secGuy.player.position.x = 5;
-
-	// thirdGuy = new PersonEat( myPosition, new THREE.Color(), 2, "zoe" );
-	// thirdGuy.player.position.x = -5;
-
-	// fourthGuy = new PersonEat( myPosition, new THREE.Color(), 3, "corbin" );
-	// fourthGuy.player.position.x = -5;
-	// fourthGuy.player.position.z = 10;
+	// secGuy = new PersonSleep( myPosition, new THREE.Color(), 8, "andy" );
+	// secGuy.player.position.x = 5;
 
 	// create controls
 	controls = new THREE.DeviceControls(camera, myWorldCenter, true);
@@ -475,11 +482,11 @@ function update()
 		}
 
 	// Update all the player
-	// for( var p in dailyLifePlayerDict )
-	// {
-	// 	if(p != whoIamInLife)
-	// 		dailyLifePlayerDict[p].transUpdate();
-	// }
+	for( var p in dailyLifePlayerDict )
+	{
+		if(p != whoIamInLife)
+			dailyLifePlayerDict[p].transUpdate();
+	}
 
 	//
 	time = Date.now();

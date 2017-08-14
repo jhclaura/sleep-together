@@ -1,10 +1,16 @@
 
 WebVRConfig = {
+	ROTATE_INSTRUCTIONS_DISABLED: true,
 	MOUSE_KEYBOARD_CONTROLS_DISABLED: true, // Default: false.
-	BUFFER_SCALE: 0.5, // Default: 1.0.
-	// PREVENT_DISTORTION: true,
-	DIRTY_SUBMIT_FRAME_BINDINGS: true, // Polyfill optimizations
 	TOUCH_PANNER_DISABLED: true,
+	
+	BUFFER_SCALE: 0.5, // Default: 0.5.
+	// PREVENT_DISTORTION: true,
+
+	// Allow VRDisplay.submitFrame to change gl bindings, which is more
+	// efficient if the application code will re-bind its resources on the
+	// next frame anyway.
+	DIRTY_SUBMIT_FRAME_BINDINGS: true,
 	DISABLE_ORI_CHANGE_AFTER_ONCE: false
 };
 

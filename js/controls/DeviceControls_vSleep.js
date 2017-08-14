@@ -764,8 +764,8 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 		////////////////////////////////////////////////////////////////////
 		//WEB_SOCKET
 		
-		//if(updateInterval > 110) {
-			//updateInterval = 0;
+		if(updateInterval > 110) {
+			updateInterval = 0;
 
 			if(trulyFullyStart){
 				var msg = {
@@ -783,16 +783,15 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 
 				if(ws){
 					sendMessage( JSON.stringify(msg) );
-					// console.log('A msg sent by DeviceControls when updating.');
 				}
 			}
-		//}
+		}
 		
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
 
-		// if(firstGuy)
-		// 	firstGuy.update( yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2 );
+		if(firstGuy)
+			firstGuy.update( yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2 );
 	};
 
 	// //debug

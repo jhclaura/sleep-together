@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || 6969;
 var compression = require('compression');
 //
 server.listen(port);

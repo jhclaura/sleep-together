@@ -3,10 +3,10 @@
 	<head>
 		<title>Sleep Together</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>		
@@ -68,11 +68,11 @@
 			}
 
 			var renderCanvas = byId("render-canvas");
-			var blockerDiv = byId("blocker");	
+			var blockerDiv = byId("blocker");
 		</script>
 
 			<div id="splashPage" style="display:block; position:absolute;">
-				<h1>On The Bed</h1>
+				<h1>Sleep Together</h1>
 
 				<input type="text" id="playerName" placeholder="Who's this?" style="width:20em;height:2em"></input>
 				<img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
@@ -101,7 +101,6 @@
 			var splashPage = byId("splashPage");
 			// var finalBG = byId("finalBG");
 			// var finalStat = byId("finalStat");
-			// var uselesspress = byId("useless-widget");
 
 			var playerNName = "";
 			var readyToStart = false;
@@ -123,7 +122,7 @@
 				// superInit();
 				// connectSocket();
 
-				lateInit();		
+				lateInit();
 			}
 
 			window.addEventListener('keydown', myFakeEnter, false);
@@ -195,7 +194,6 @@
 								var newPlayerStartPos = new THREE.Vector3(data.playerStartX, data.playerStartY, data.playerStartZ);
 								var newPlayerStartRotY = data.playerStartRotY;
 
-								// var newGuy = new PersonEat(newPlayerStartPos, data.myHex, data.id, data.nname, mouth);
 								var newGuy = new PersonSleep(newPlayerStartPos, data.myHex, data.id, data.nname, null);
 
 								dailyLifePlayerDict[data.id] = newGuy;
@@ -242,8 +240,14 @@
 						playerRotY = data.playerRotY;
 						playerQ = new THREE.Quaternion(data.playerQ._x, data.playerQ._y, data.playerQ._z, data.playerQ._w);
 
-						if( dailyLifePlayerDict[ data.index ] )
-							dailyLifePlayerDict[ data.index ].update( playerPosX, playerPosY, playerPosZ, playerRotY, playerQ );
+						if( dailyLifePlayerDict[ data.index ] && data.index != whoIamInLife )
+						{
+							// v.1 - no interpolation
+							// dailyLifePlayerDict[ data.index ].update( playerPosX, playerPosY, playerPosZ, playerRotY, playerQ );
+
+							// v.2 interpolation
+							dailyLifePlayerDict[ data.index ].updateReal( playerPosX, playerPosY, playerPosZ, playerQ );
+						}
 					}
 
 					// update chewing ONLY IF we are in the same world

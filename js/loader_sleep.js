@@ -144,6 +144,15 @@ function loadSitModelPlayer( _head, _body, _emptyStomach, _fullStomach ){
 	});
 }
 
+function LoadModelChewer( _A1 ){
+	var loader = new THREE.JSONLoader( loadingManger );
+
+	// chewerA
+	loader.load( _A1, function( geoA1 ){
+		chewerA = geoA1;
+	});
+}
+
 function loadModelChewers( _A1, _A2, _A3, _B1, _B2, _C1, _C2, _C3, _D1, _D2 ){
 	var loader = new THREE.JSONLoader( loadingManger );
 
