@@ -620,10 +620,10 @@ function GazeToMove()
 					{
 						var midPoint = new THREE.Vector3();
 						midPoint.addVectors(p_from, p_to).multiplyScalar(1/2);
-						var myTarget = new THREE.Vector3().subVectors(p_from, midPoint).normalize().multiplyScalar(1.5);
+						var myTarget = new THREE.Vector3().subVectors(p_from, midPoint).normalize().multiplyScalar(2);
 						dist_T = p_from.distanceTo(midPoint)*1.5;
 
-						controls.createTweenForMove(midPoint, dist_T);
+						controls.createTweenForMove(myTarget, dist_T);
 						console.log("GAZE_TO_MOVE! time: " + dist_T);
 
 						setTimeout(function(){
