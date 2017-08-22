@@ -98,8 +98,21 @@ var keyIsPressed;
 					  basedURL + "images/sStar_3.png", basedURL + "images/sStar_4.png" ];
 
 // SLEEPER
-	var sleeper, sleeperGeo, sleeperTexture;
+	var sleeper, sleeperGeo, sleeperTexture, sleep_test;
 	var chewerA, chewerTextures = [], chewers = [];
+	var isGazing = false, isGazeMoving = false, notifyGazeMax = false;
+	var eyeTex, eyeGeo, eyeGaze;
+	var EyeMaxSize = 5, gazeTargetIndex = -1;
+	var lookingAtSomeone = -1, someoneLookingAtMe = -1;
+
+
+// Gaze-To-Move:
+// 1) Look at someone => CreateBigEye (from_index_look: true, to_index_look: false), startGazeTime
+// 2) BigEyeGrow - if not look away, size max: 5
+// 2.5) If other looks back: CreateYellowLine
+// 3) if both EyeSize all 5 (from_index_look: true, to_index_look: true), start moving toward the center point
+// 4) once move, keep moving eventhough look away
+// 5) sync breathing tempo (true for local player)
 
 var worldTotal = 18, eaterPerTable = 6, tableAmount = 3;
 
@@ -232,6 +245,8 @@ function superInit(){
 	LoadStarTexture();
 
 	sleeperTexture = textureLoader.load( basedURL + 'images/dude0.jpg' );
+	sleeper_test_Texture = textureLoader.load( basedURL + 'images/chef2.jpg' );
+
 	LoadModelChewer( basedURL + "models/sleepHead.json" );
 
 	modelLoader.load( basedURL + "models/sleeper.json", function(geometry, material){
@@ -241,6 +256,17 @@ function superInit(){
 
 		//scene.add(sleeper);	
 	});
+
+	eyeTex = textureLoader.load( basedURL + 'images/eyeGaze.jpg' );
+	modelLoader.load( basedURL + "models/eye.json", function(geometry, material){
+		eyeGeo = geometry;
+		eyeGaze = new THREE.Mesh( eyeGeo, new THREE.MeshBasicMaterial({map: eyeTex}) );
+	});
+
+	// modelLoader.load( basedURL + "models/sleep_test.json", function(geometry, material){
+	// 	sleep_test = new THREE.SkinnedMesh( geometry, new THREE.MeshLambertMaterial({map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide}) );
+	// 	scene.add(sleep_test);
+	// });
 
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -481,6 +507,9 @@ function update()
 			lookingAtSomeone = -1;
 		}
 
+	if(!isGazeMoving)
+		GazeToMove();
+
 	// Update all the player
 	for( var p in dailyLifePlayerDict )
 	{
@@ -513,6 +542,133 @@ function UpdatePplCount( thisWorldCount, totalCount, totalVisit ) {
 	pplCountTex.drawText("this world: " + thisWorldCount, undefined, 400, 'white');
 	pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
 	pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
+}
+
+function GazeToMove()
+{
+	// Gaze-To-Move
+	// 1) Look at someone => CreateBigEye (from_index_look: true, to_index_look: false), startGazeTime
+	// 2) BigEyeGrow - if not look away, size max: 5
+	// 2.5) If other looks back: CreateYellowLine
+	// 3) if both EyeSize all 5 (from_index_look: true, to_index_look: true), start moving toward the center point
+	// 4) once move, keep moving eventhough look away
+	// 5) sync breathing tempo (true for local player)
+	if(lookingAtSomeone != -1 && lookingAtSomeone != whoIamInLife)
+	{
+		// First gaze!
+		if(!isGazing)
+		{
+			// ------ SEND_TO_SERVER_ME_START_GAZING (Nah..) ------
+				// if(trulyFullyStart){
+				// 	var msg = {
+				// 		'type': 'gaze',
+				// 		'index': whoIamInLife,
+				// 		'toWhom': lookingAtSomeone,
+				// 		'playerPos': controls.position,
+				// 		'playerDir': controls.getDirection(),
+				// 		'worldId': meInWorld
+				// 	};
+
+				// 	if(ws){
+				// 		sendMessage( JSON.stringify(msg) );
+				// 	}
+				// }
+			// ----------------------------------------------------
+
+			firstGuy.lookAt = lookingAtSomeone;
+			isGazing = true;
+
+			console.log("start gaze!");
+		}
+
+		// Keep gazing!
+		// grow eye size ++
+		firstGuy.eye.visible = true;
+		firstGuy.eye.scale.lerp(new THREE.Vector3( 1,1,1 ), 0.01);
+
+		// if my eye size >= 1
+		if(firstGuy.eye.scale.x>=0.9)
+		{
+			// ------ SEND_TO_SERVER_ME_MAX_EYE / READY ------
+			if(!notifyGazeMax)
+			{
+				var msg = {
+					'type': 'gaze',
+					'index': whoIamInLife,
+					'toWhom': lookingAtSomeone,
+					// 'playerPos': controls.position,
+					// 'playerDir': controls.getDirection(),
+					'worldId': meInWorld
+				};
+
+				if(ws){
+					sendMessage( JSON.stringify(msg) );
+					notifyGazeMax = true;
+				}
+				console.log("ME_MAX_EYE");
+			}
+			
+			if(lookingAtSomeone == someoneLookingAtMe)
+			{
+				if(!isGazeMoving){
+					var p_from = firstGuy.player.position.clone();
+					var p_to = dailyLifePlayerDict[ lookingAtSomeone ].player.position.clone();
+					var dist_T = p_from.distanceTo(p_to);
+
+					// if distance > 1.5
+					if(dist_T > 2.5)
+					{
+						var midPoint = new THREE.Vector3();
+						midPoint.addVectors(p_from, p_to).multiplyScalar(1/2);
+						var myTarget = new THREE.Vector3().subVectors(p_from, midPoint).normalize().multiplyScalar(1.5);
+						dist_T = p_from.distanceTo(midPoint)*1.5;
+
+						controls.createTweenForMove(midPoint, dist_T);
+						console.log("GAZE_TO_MOVE! time: " + dist_T);
+
+						setTimeout(function(){
+							console.log("reset isGazeMoving");
+							isGazeMoving = false;
+						}, dist_T*1000);
+
+						isGazeMoving = true;
+					}
+					
+				}
+			}
+		}
+	}
+	else
+	{
+		// First stop gaze!
+		if(isGazing)
+		{
+			// ------ SEND_TO_SERVER_ME_STOP_GAZING ------
+			var msg = {
+				'type': 'gaze',
+				'index': whoIamInLife,
+				'toWhom': -1,
+				// 'playerPos': yawObject.position,
+				// 'playerDir': scope.getDirection(),
+				'worldId': meInWorld
+			};
+
+			if(ws){
+				sendMessage( JSON.stringify(msg) );
+			}
+			// --------------------------------------------
+
+			// RESET
+			firstGuy.lookAt = -1;
+			isGazing = false;
+			notifyGazeMax = false;
+			isGazeMoving = false;
+
+			firstGuy.closeEye();
+
+			console.log("stop gaze!");
+		}
+	}
 }
 
 function LoadStarTexture() {

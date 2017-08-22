@@ -293,6 +293,41 @@
 						}
 					}
 
+					// GAZE_TO_MOVE, ONLY IF we are in the same world
+					if(data.type == 'gaze' && data.worldId == meInWorld)
+					{
+						if(data.index != whoIamInLife)
+						{
+							if(data.toWhom == -1)
+							{
+								dailyLifePlayerDict[ data.index ].closeEye();
+
+								// someone stop look at me
+								if(data.index == someoneLookingAtMe) {
+									firstGuy.wordTexture.clear();
+									someoneLookingAtMe = -1;
+								}
+							}
+							else
+							{
+								dailyLifePlayerDict[ data.index ].openEye();
+
+								// someone look at me
+								if(data.toWhom == whoIamInLife) {
+									var h_f_n = dailyLifePlayerDict[ data.index ].nname;
+									firstGuy.wordTexture.clear('#dc5e64').drawText(h_f_n + " is gazing you <3", undefined, 96, 'white');
+
+									someoneLookingAtMe = data.index;
+
+									// setTimeout(function(){
+									// 	firstGuy.wordTexture.clear();
+									// },5000);
+								}
+							}
+							
+						}
+					}
+
 					//REMOVE_PLAYER
 					if(data.type == 'removePlayer'){
 						if(data.worldId == meInWorld){

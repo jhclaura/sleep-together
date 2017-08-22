@@ -9,6 +9,8 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	this.ahhRotation;
 	this.nname = _name;
 
+	this.lookAt = -1;
+
 	// for interpolation
 	this.realPosition = new THREE.Vector3();
 	this.realRotation = new THREE.Quaternion();
@@ -72,7 +74,7 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	this.nameBubble.name = "nameBubble";
 	this.playerBody.add( this.nameBubble );
 
-	// 1-3: highChair!
+	// 1-3: highChair! (Eat version)
 		// this.highChair = highChair.clone();
 		// this.highChair.position.set(0, -3.17, 0);
 		// this.playerBody.add( this.highChair );
@@ -83,6 +85,15 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		// this.miniMe.rotation.y = Math.PI;
 		// this.miniMe.visible = false;
 		// this.playerBody.add( this.miniMe );
+
+	// 1-3: eye
+	this.eye = eyeGaze.clone();
+	this.eye.name = "eye";
+	this.eye.rotation.x = 45*Math.PI/180;
+	this.eye.position.set(0,-0.5,2.4);
+	this.eye.scale.multiplyScalar(0.01);
+	this.eye.visible = false;
+	this.playerBody.add( this.eye );
 
 	this.playerBody.position.y -= 0.6;
 	this.playerBodyParent = new THREE.Object3D();
@@ -177,4 +188,17 @@ PersonSleep.prototype.transUpdate = function() {
 	if(this.player.children[0]){
 		this.player.children[0].quaternion.slerp( this.realBillboardRotation, 0.2 );
 	}
+}
+
+PersonSleep.prototype.openEye = function() {
+	this.eye.visible = true;
+	TweenMax.to( this.eye.scale, 1,
+		{ x: 1, y: 1, z: 1, ease: Back.easeOut.config(2) } );
+}
+
+PersonSleep.prototype.closeEye = function() {
+	TweenMax.to( this.eye.scale, 0.7,
+		{ x: 0.01, y: 0.01, z: 0.01, ease: Back.easeIn.config(2), onComplete:()=>{
+			this.eye.visible = false;
+		} } );
 }
