@@ -606,6 +606,12 @@ function GazeToMove()
 			isGazing = true;
 
 			console.log("start gaze!");
+
+			// if this "lookingAtSomeone" already looking at me
+			if(lookingAtSomeone == someoneLookingAtMe)
+			{
+				firstGuy.wordTexture.clear();
+			}
 		}
 
 		// Keep gazing!
@@ -642,8 +648,7 @@ function GazeToMove()
 					var p_to = dailyLifePlayerDict[ lookingAtSomeone ].player.position.clone();
 					var dist_T = p_from.distanceTo(p_to);
 
-					// if distance > 1.5
-					if(dist_T > 2.5)
+					if(dist_T > 3)
 					{
 						var midPoint = new THREE.Vector3();
 						midPoint.addVectors(p_from, p_to).multiplyScalar(1/2);
@@ -652,6 +657,8 @@ function GazeToMove()
 
 						controls.createTweenForMove(myTarget, dist_T);
 						console.log("GAZE_TO_MOVE! time: " + dist_T);
+
+						firstGuy.wordTexture.clear();
 
 						setTimeout(function(){
 							console.log("reset isGazeMoving");
