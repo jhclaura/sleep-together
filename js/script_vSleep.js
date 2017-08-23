@@ -46,8 +46,8 @@ var keyIsPressed;
 	var QforBodyRotation;
 	var fGuyHandHigh = false, sGuyHandHigh = false;
 	var bodyGeo;
-	var dailyLifeME, colorME, dailyLifePlayers = [];
-	var dailyLifePlayerDict = {};
+	var dailyLifeME, colorME;
+	var dailyLifePlayerDict = {}, dailyLifePlayerObject = new THREE.Object3D();
 
 	var person, personGeo, personMat, toiletTex, toiletMat;
 	var persons = [], personIsWalking = [], personCircle, personAmount = 3;
@@ -194,6 +194,8 @@ function superInit(){
 
 	planet = new THREE.Mesh( new THREE.SphereGeometry(0.1), new THREE.MeshLambertMaterial({color: 0xff0000, side: THREE.DoubleSide}) );
 	scene.add( planet );
+
+	scene.add( dailyLifePlayerObject );
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -479,10 +481,14 @@ function update()
 	// eyeRay!
 		var directionCam = controls.getDirection(1).clone();
 		eyerayCaster.set( controls.position().clone(), directionCam );
+
+		// v.1
+		/*
 		eyeIntersects = eyerayCaster.intersectObjects( scene.children, true );
 		//console.log(intersects);
 
 		if( eyeIntersects.length > 0 ){
+
 			var iName = eyeIntersects[ 0 ].object.name;
 			iName = iName.split(" ");
 			if(iName.length==2){
@@ -506,6 +512,23 @@ function update()
 		} else {
 			lookingAtSomeone = -1;
 		}
+		*/
+
+		// v.2 - PLAYERS_ONLY
+		eyeIntersects = eyerayCaster.intersectObject( dailyLifePlayerObject, true );
+		if( eyeIntersects.length > 0 ){
+			var iName = eyeIntersects[ 0 ].object.name;
+			iName = iName.split(" ");
+			if(iName.length==2){
+				lookingAtSomeone = iName[0];
+			} else {
+				lookingAtSomeone = -1;
+			}
+		} else {
+			lookingAtSomeone = -1;
+		}
+
+
 
 	if(!isGazeMoving)
 		GazeToMove();
@@ -528,8 +551,12 @@ function render()
 
 function removePlayer(playerID){
 	if(dailyLifePlayerDict[playerID]){
-		scene.remove( dailyLifePlayerDict[playerID].player );
-		//
+
+		// v.1
+		//scene.remove( dailyLifePlayerDict[playerID].player );
+		// v.2
+		dailyLifePlayerObject.remove( dailyLifePlayerDict[playerID].player );
+
 		delete dailyLifePlayerDict[playerID];
 	}
 }

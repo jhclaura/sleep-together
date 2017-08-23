@@ -96,7 +96,8 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	this.playerBody.add( this.eye );
 
 	this.playerBody.position.y -= 0.6;
-	this.playerBodyParent = new THREE.Object3D();
+	this.playerBodyParent = new THREE.Mesh(new THREE.BoxGeometry(3,2,4), new THREE.MeshBasicMaterial({visible: false}));
+	this.playerBodyParent.name = _id + " parentBody";
 	this.playerBodyParent.add( this.playerBody );
 	this.player.add( this.playerBodyParent );
 
@@ -134,7 +135,11 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	// this.player.scale.multiplyScalar(2);
 	this.player.position.copy( _pos );
 
-	scene.add( this.player );
+	if( this.whoIam == whoIamInLife ){
+		scene.add( this.player );
+	} else {
+		dailyLifePlayerObject.add( this.player );
+	}
 }
 
 PersonSleep.prototype.update = function( _playerLocX, _playerLocY, _playerLocZ, _playerRotY, _playerQ ) {
