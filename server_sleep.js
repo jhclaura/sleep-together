@@ -5,6 +5,7 @@ var http = require('http');
 var server = http.createServer(app);
 var port = process.env.PORT || 6969;
 var compression = require('compression');
+var geolocator = require('ip2countrify');
 //
 server.listen(port);
 
@@ -47,6 +48,28 @@ var occuIndex = 1;
 wss.on('connection', function(ws){
 
 	mySocket = ws;
+
+	// GET_GEO
+	/*
+	console.log(mySocket._socket.remoteAddress);
+	geolocator.lookup(
+	    mySocket._socket.remoteAddress,
+	    function( ip, results, error ) {
+	        if ( error ) {
+	            return console.warn( 'An error has occurred: ' + error );
+	        }
+	        console.log(
+	            'API results for ' + ip
+	        );
+	        console.log(
+	            'countryCode: ' + results.countryCode,
+	            'countryCode3: ' + results.countryCode3,
+	            'countryName: ' + results.countryName,
+	            'countryEmoji: ' + results.countryEmoji
+	        );
+	    }
+	);
+	*/
 
 	// TRACK TOTAL # OF PPL
 	totalCount++;

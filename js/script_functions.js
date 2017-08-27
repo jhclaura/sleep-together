@@ -181,4 +181,41 @@ function TexturesAnimator(material, allTextures, numTiles, tileDispDuration, ord
 			// console.log(this.displayOrder[ this.currentTile ]);
 		}
 	};
-}	
+}
+
+function GetGeoData()
+{
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://freegeoip.net/json/', true);
+
+	request.onload = function() {
+	  if (request.status >= 200 && request.status < 400) {
+	    // Success!
+	    var data = JSON.parse(request.responseText);
+
+		if(data.city!="") {
+			sleeperOrigin = data.city;
+		}
+		else if(data.region_name!="") {
+			sleeperOrigin = data.region_name;
+		}
+		else if(data.country_name!="") {
+			sleeperOrigin = data.country_name;
+		}
+		console.log("Sleeper is from: " + sleeperOrigin);
+
+	  } else {
+	    // We reached our target server, but it returned an error
+	  }
+	};
+
+	request.onerror = function() {
+	  // There was a connection error of some sort
+	};
+
+	request.send();
+}
+
+function GetRidOfSec(str) {
+  return str.slice(0,-6) + str.slice(-3);
+}

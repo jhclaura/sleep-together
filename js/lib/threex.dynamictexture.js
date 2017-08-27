@@ -148,3 +148,39 @@ THREEx.DynamicTexture.prototype.drawImage	= function(/* same params as context2d
 	// for chained API
 	return this;
 }
+
+/**
+ * draw text with lines
+ *
+ * @param  {String}		text	- the text to display
+ * @param  {Number|undefined}	x	- if provided, it is the x where to draw, if not, the text is centered
+ * @param  {Number}		y	- the y where to draw the text
+ * @param  {String*} 		fillStyle - the fillStyle to clear with, if not provided, fallback on .clearRect
+ * @param  {String*} 		contextFont - the font to use
+ * @return {THREEx.DynamicTexture}	- the object itself, for chained texture
+ */
+THREEx.DynamicTexture.prototype.drawTextLines = function(text, x, y, fillStyle, contextFont){
+	// set font if needed
+	if( contextFont !== undefined )	this.context.font = contextFont;
+
+	this.context.fillStyle = fillStyle;
+
+	var lines = text.split("\n");
+	var x_center = 0;
+	for (i = 0; i < lines.length; i++)
+	{
+		// if x isnt provided
+		if( x === undefined || x === null ){
+			var textSize	= this.context.measureText(lines[i]);
+			console.log(textSize);
+			x_center = (this.canvas.width - textSize.width) / 2;
+		}
+
+ 		this.context.fillText(lines[i], x_center, y*(i+1));
+	}	
+	
+	// make the texture as .needsUpdate
+	this.texture.needsUpdate	= true;
+	// for chained API
+	return this;
+};

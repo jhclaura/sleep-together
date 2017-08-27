@@ -8,6 +8,8 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
 		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
 	</head>
 	<body>		
 		<div id="render-canvas" style="display:none;"></div>
@@ -17,6 +19,17 @@
 		<script type="text/javascript" src="js/lib/Detector.js"></script>
 
 		<script type="text/javascript">
+			var fbConfig = {
+				databaseURL : "https://sleep-together.firebaseio.com/"
+			};
+			firebase.initializeApp(fbConfig);
+			var fbDatabase = firebase.database();
+			var visitDataRef = fbDatabase.ref("totalVisit");
+			var fireVisit = 0;
+			visitDataRef.on("value", function(snapshot) {
+				fireVisit = snapshot.val().visit_count;
+				console.log("firevisit: " + fireVisit);
+			});
 
 			//device detection
 			//source: http://stackoverflow.com/questions/3514784/what-is-the-best-way-to-detect-a-mobile-device-in-jquery
@@ -123,6 +136,15 @@
 				// connectSocket();
 
 				lateInit();
+
+				// FIREBASE_TOTAL_VISTI
+				visitDataRef.once("value", function(snapshot) {
+					fireVisit = snapshot.val().visit_count;
+					fireVisit++;
+					visitDataRef.set({
+						visit_count: fireVisit
+					});
+				});	
 			}
 
 			window.addEventListener('keydown', myFakeEnter, false);
@@ -168,7 +190,7 @@
 				ws = new WebSocket(host);
 
 				ws.onopen = function(){
-					console.log("Our plates are connected!");
+					console.log("Our beds are connected!");
 
 					/* Connect this new player to every player*/
 					/* JUST ONCE! */
@@ -223,7 +245,7 @@
 							// totalVisitCount = fireVisit;
 							final_statistic.totalVisit = totalVisitCount;
 
-							console.log("I am #" + whoIamInLife + " in the #" + meInWorld + " Daily Life world, with total visit: " + totalVisitCount);
+							console.log("I am #" + whoIamInLife + " in the #" + meInWorld + " Sleep-Together world, with total visit: " + totalVisitCount);
 
 							AssignIndex();
 
@@ -326,6 +348,12 @@
 							}
 							
 						}
+					}
+
+					// GAZE_TO_MOVE, ONLY IF we are in the same world
+					if(data.type == 'timestamp' && data.worldId == meInWorld)
+					{
+						dailyLifePlayerDict[ data.index ].updateTimetag( data.time );
 					}
 
 					//REMOVE_PLAYER

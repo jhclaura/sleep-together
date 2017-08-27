@@ -1,5 +1,5 @@
 
-// THE SIT PERSON OBJECT
+// THE SLEEP PERSON OBJECT
 function PersonSleep( _pos, _color, _id, _name ) {
 
 	var scope = this;
@@ -26,6 +26,7 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	// 1-body
 	//this.playerBody = new THREE.Mesh( personBody, this.pMat);
 	this.playerBody = new THREE.Mesh( sleeperGeo, this.pSkinnedMat);
+	this.playerBody.position.z = -0.02;
 	this.playerBody.name = _id + " body";
 
 	// if it's ME, create inner stuff
@@ -40,7 +41,7 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		this.poopMini.position.set( 0, -1.06, -0.04);
 		this.playerBody.add( this.poopMini );
 
-		// 1-1: message_name!
+		// 1-1: message!
 		scope.wordTexture = new THREEx.DynamicTexture(1024,128);	//512,512; 1000,128
 		scope.wordTexture.context.font = "bolder 70px StupidFont";
 		// scope.wordTexture.clear('#dc5e64').drawText("You got a poop heart from --- <3", undefined, 96, 'white');
@@ -48,8 +49,8 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		scope.wordMaterial = new THREE.MeshBasicMaterial({map: this.wordTexture.texture, side: THREE.DoubleSide, transparent: true});
 		scope.wordBubble = new THREE.Mesh(new THREE.PlaneGeometry( this.wordTexture.canvas.width, this.wordTexture.canvas.height), this.wordMaterial);
 		scope.wordBubble.scale.set(0.002,0.002,0.002);
-		scope.wordBubble.position.z = 2;
-		scope.wordBubble.position.y = -0.2;
+		scope.wordBubble.position.z = 2.5;
+		scope.wordBubble.position.y = 0;
 		scope.wordBubble.rotation.y = Math.PI;
 		scope.wordBubble.name = "wordBubble";
 		scope.playerBody.add( scope.wordBubble );
@@ -62,16 +63,29 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	// }
 
 	// 1-2: message_name!
-	this.nameTexture = new THREEx.DynamicTexture(512,128);	//512,512
-	this.nameTexture.context.font = "bolder 100px StupidFont";
-	this.nameTexture.clear('cyan').drawText(this.nname, undefined, 96, 'red');
+	this.nameTexture = new THREEx.DynamicTexture(512,64);	//512,128
+	this.nameTexture.context.font = "bolder 70px StupidFont"; //100px
+	this.nameTexture.clear('#31393c').drawText(this.nname, undefined, 50, 'grey'); //96
 	this.nameMaterial = new THREE.MeshBasicMaterial({map: this.nameTexture.texture, side: THREE.DoubleSide});
-	this.nameMaterial.transparent = true;
+	this.nameMaterial.transparent = false;
 	this.nameBubble = new THREE.Mesh(new THREE.PlaneGeometry( this.nameTexture.canvas.width, this.nameTexture.canvas.height), this.nameMaterial);
 	this.nameBubble.scale.set(0.005,0.005,0.005);
 	this.nameBubble.position.z = -0.4;
 	this.nameBubble.position.y = 2;
 	this.nameBubble.name = "nameBubble";
+
+	this.dataTexture = new THREEx.DynamicTexture(512,64);	//512,128
+	this.dataTexture.context.font = "bolder 50px StupidFont"; //100px
+	this.dataTexture.clear().drawText("time from geolocation", undefined, 50, 'grey'); //96
+	this.dataMaterial = new THREE.MeshBasicMaterial({map: this.dataTexture.texture, side: THREE.DoubleSide});
+	this.dataMaterial.transparent = true;
+	this.dataBubble = new THREE.Mesh(new THREE.PlaneGeometry( this.dataTexture.canvas.width, this.dataTexture.canvas.height), this.dataMaterial);
+	// this.dataBubble.scale.set(0.005,0.005,0.005);
+	// this.dataBubble.position.z = -0.4;
+	this.dataBubble.position.y = -80;
+	this.dataBubble.name = "dataBubble";
+
+	this.nameBubble.add( this.dataBubble );
 	this.playerBody.add( this.nameBubble );
 
 	// 1-3: highChair! (Eat version)
@@ -94,6 +108,9 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	this.eye.scale.multiplyScalar(0.01);
 	this.eye.visible = false;
 	this.playerBody.add( this.eye );
+
+	// 1-4: light
+	this.light = new THREE.PointLight();
 
 	this.playerBody.position.y -= 0.6;
 	this.playerBodyParent = new THREE.Mesh(new THREE.BoxGeometry(3,2,4), new THREE.MeshBasicMaterial({visible: false}));
@@ -206,4 +223,8 @@ PersonSleep.prototype.closeEye = function() {
 		{ x: 0.01, y: 0.01, z: 0.01, ease: Back.easeIn.config(2), onComplete:()=>{
 			this.eye.visible = false;
 		} } );
+}
+
+PersonSleep.prototype.updateTimetag = function( _time ) {
+	this.dataTexture.clear().drawText( _time + " from " + sleeperOrigin, undefined, 50, 'grey');
 }

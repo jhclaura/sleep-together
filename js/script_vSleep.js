@@ -98,6 +98,10 @@ var keyIsPressed;
 					  basedURL + "images/sStar_3.png", basedURL + "images/sStar_4.png" ];
 
 // SLEEPER
+	// Geo
+		var sleeperOrigin = "Earth";
+	// Time
+		var currMinute, startTimestamp, endTimestamp;
 	var sleeper, sleeperGeo, sleeperTexture, sleep_test;
 	var chewerA, chewerTextures = [], chewers = [];
 	var isGazing = false, isGazeMoving = false, notifyGazeMax = false;
@@ -126,6 +130,9 @@ superInit();			// init automatically
 // FUNCTIONS 
 ///////////////////////////////////////////////////////////
 function superInit(){
+
+	// Use http://freegeoip.net in script_functions.js
+	GetGeoData();
 
 	myColor = new THREE.Color();
 
@@ -265,10 +272,10 @@ function superInit(){
 		eyeGaze = new THREE.Mesh( eyeGeo, new THREE.MeshBasicMaterial({map: eyeTex}) );
 	});
 
-	// modelLoader.load( basedURL + "models/sleep_test.json", function(geometry, material){
-	// 	sleep_test = new THREE.SkinnedMesh( geometry, new THREE.MeshLambertMaterial({map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide}) );
-	// 	scene.add(sleep_test);
-	// });
+	modelLoader.load( basedURL + "models/sleeper3.json", function(geometry, material){
+		sleep_test = new THREE.SkinnedMesh( geometry, new THREE.MeshLambertMaterial({map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide}) );
+		//scene.add(sleep_test);
+	});
 
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -344,6 +351,21 @@ function lateInit()
 
 	trulyFullyStart = true;
 
+	// Timestamp
+	startTimestamp = Date.now();
+	currMinute = Math.floor(startTimestamp / 60);
+	// ------ SEND_TO_SERVER => PLAYER_TIME ------
+	var msg = {
+		'type': 'timestamp',
+		'index': whoIamInLife,
+		'time': new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true}),
+		'worldId': meInWorld
+	};
+
+	if(ws){
+		sendMessage( JSON.stringify(msg) );
+	}
+	// --------------------------------------------
 }
 
 function createHeart( fromIndex, toIndex ) {
@@ -542,6 +564,25 @@ function update()
 
 	//
 	time = Date.now();
+
+	// Keep track of time, send to server if minute changes
+	var newMinute = Math.floor(time / 60);
+	if(newMinute != currMinute)
+	{
+		// -------------- SEND_TO_SERVER ---------------
+		var msg = {
+			'type': 'timestamp',
+			'index': whoIamInLife,
+			'time': new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true}),
+			'worldId': meInWorld
+		};
+
+		if(ws){
+			sendMessage( JSON.stringify(msg) );
+		}
+		//-----------------------------------------------
+		currMinute = newMinute;
+	}
 }
 
 function render() 
