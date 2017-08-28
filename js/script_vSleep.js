@@ -102,7 +102,8 @@ var keyIsPressed;
 		var sleeperOrigin = "Earth";
 	// Time
 		var currMinute, startTimestamp, endTimestamp;
-	var sleeper, sleeperGeo, sleeperTexture, sleep_test;
+	var sleeper, sleeperGeo, sleeperTexture, sleep_test, sleeperGeo_test;
+	var breathLightTexture;
 	var chewerA, chewerTextures = [], chewers = [];
 	var isGazing = false, isGazeMoving = false, notifyGazeMax = false;
 	var eyeTex, eyeGeo, eyeGaze;
@@ -255,6 +256,7 @@ function superInit(){
 
 	sleeperTexture = textureLoader.load( basedURL + 'images/dude0.jpg' );
 	sleeper_test_Texture = textureLoader.load( basedURL + 'images/chef2.jpg' );
+	breathLightTexture = textureLoader.load( "images/glow_edit.png" );
 
 	LoadModelChewer( basedURL + "models/sleepHead.json" );
 
@@ -273,7 +275,8 @@ function superInit(){
 	});
 
 	modelLoader.load( basedURL + "models/sleeper3.json", function(geometry, material){
-		sleep_test = new THREE.SkinnedMesh( geometry, new THREE.MeshLambertMaterial({map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide}) );
+		sleeperGeo_test = geometry;
+		sleep_test = new THREE.SkinnedMesh( sleeperGeo_test, new THREE.MeshLambertMaterial({map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide}) );
 		//scene.add(sleep_test);
 	});
 
