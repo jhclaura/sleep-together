@@ -110,9 +110,11 @@ function PersonSleep( _pos, _color, _id, _name ) {
 
 	// 2-4: light
 	this.breathLight = new THREE.PointLight(0xffff00, 0.2, 50);
+	this.breathLight.name = _id + " breathLight";
 	// ori color: 0xffef3b
 	var mat = new THREE.SpriteMaterial({map: breathLightTexture, color: 0x8a7512, transparent: false, blending: THREE.AdditiveBlending});
 	this.breathSprite = new THREE.Sprite(mat);
+	this.breathSprite.name = _id + " breathSprite";
 	//this.breathSprite.scale.multiplyScalar(2);	//big
 	this.breathLight.add(this.breathSprite);
 	this.breathLight.position.set(0,0.5,2);
@@ -127,7 +129,7 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	this.playerBody.position.y -= 1; //0.6
 
 	// 1-DummyBox for easy raycasting
-	this.playerBodyParent = new THREE.Mesh(new THREE.BoxGeometry(3,2,4), new THREE.MeshBasicMaterial({visible: false}));
+	this.playerBodyParent = new THREE.Mesh(new THREE.BoxGeometry(4,2,4), new THREE.MeshBasicMaterial({visible: false}));
 	this.playerBodyParent.name = _id + " parentBody";
 	this.playerBodyParent.add( this.playerBody );
 	this.player.add( this.playerBodyParent );
