@@ -655,6 +655,7 @@ function GazeToMove()
 			if(lookingAtSomeone == someoneLookingAtMe)
 			{
 				firstGuy.wordTexture.clear();
+				firstGuy.wordBubble.visible = false;
 			}
 		}
 
@@ -703,6 +704,7 @@ function GazeToMove()
 						console.log("GAZE_TO_MOVE! time: " + dist_T);
 
 						firstGuy.wordTexture.clear();
+						firstGuy.wordBubble.visible = false;
 
 						setTimeout(function(){
 							console.log("reset isGazeMoving");

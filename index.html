@@ -286,9 +286,11 @@
 								// if the heart is to ME, display the message
 								if(data.toWhom == whoIamInLife){
 									var h_f_n = dailyLifePlayerDict[ data.index ].nname;
+									firstGuy.wordBubble.visible = true;
 									firstGuy.wordTexture.clear('#dc5e64').drawText("You got a heart from " + h_f_n + " <3", undefined, 96, 'white');
 									setTimeout(function(){
 										firstGuy.wordTexture.clear();
+										firstGuy.wordBubble.visible = false;
 									},5000);
 
 									//
@@ -327,6 +329,7 @@
 								// someone stop look at me
 								if(data.index == someoneLookingAtMe) {
 									firstGuy.wordTexture.clear();
+									firstGuy.wordBubble.visible = false;
 									someoneLookingAtMe = -1;
 								}
 							}
@@ -337,6 +340,7 @@
 								// someone look at me
 								if(data.toWhom == whoIamInLife) {
 									var h_f_n = dailyLifePlayerDict[ data.index ].nname;
+									firstGuy.wordBubble.visible = true;
 									firstGuy.wordTexture.clear('#dc5e64').drawText(h_f_n + " is gazing you <3", undefined, 96, 'white');
 
 									someoneLookingAtMe = data.index;

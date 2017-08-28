@@ -54,6 +54,7 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		scope.wordBubble.position.y = 0;
 		scope.wordBubble.rotation.y = Math.PI;
 		scope.wordBubble.name = "wordBubble";
+		scope.wordBubble.visible = false;
 		scope.playerBody.skeleton.bones[0].add( scope.wordBubble );
 	}
 	// else {
