@@ -219,3 +219,42 @@ function GetGeoData()
 function GetRidOfSec(str) {
   return str.slice(0,-6) + str.slice(-3);
 }
+
+// Canvas Wrap Text tutorial
+function WrapText( context, text, x, y, maxWidth, lineHeight)
+{
+	var words = text.split(' ');
+	var line = '';
+
+	for(var i=0; i<words.length; i++)
+	{
+		var testLine = line + words[i] + ' ';
+		var metrics = context.measureText(testLine);
+		var testWidth = metrics.width;
+		if(testWidth > maxWidth && i>0){
+			context.fillText(line, x, y);
+			line = words[i] + ' ';
+			y += lineHeight;
+		}
+		else {
+			line = testLine;
+		}
+	}
+	context.fillText(line,x,y);
+}
+
+function GetRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function GetRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+function GetRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+}

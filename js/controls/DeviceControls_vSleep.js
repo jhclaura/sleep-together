@@ -16,7 +16,7 @@ var eyeFinalQ = new THREE.Quaternion();			// for screen in front of eyes
 var eyeFinalQ2 = new THREE.Quaternion();		// for others
 var eyeFinalQ3 = new THREE.Quaternion();		// for others & only Y axis
 
-var toLookAtCenter = true;
+var toLookAtCenter = false;
 var updateInterval = 0;
 
 function onDeviceOrientationChangeEvent(evt) {
@@ -637,43 +637,52 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 	};
 
 	//
-	this.setMovXAnimation = function(_distance, _time){
+	this.setMovXAnimation = function(_distance, _time, _followEyeDirection){
 		var v1 = new THREE.Vector3();
 		var v2 = new THREE.Vector3();
 		v2.copy(yawObject.position);
-		v1.copy( xAxis ).applyQuaternion( eyeFinalQ3 );
+		if(_followEyeDirection)
+			v1.copy( xAxis ).applyQuaternion( eyeFinalQ3 );
+		else
+			v1.copy( xAxis );
 		v2.add( v1.multiplyScalar( _distance ) );
 
 		this.createTweenForMove( v2, _time );
 	};
-	this.setMovYAnimation = function(_distance, _time){
+	this.setMovYAnimation = function(_distance, _time, _followEyeDirection){
 		var v1 = new THREE.Vector3();
 		var v2 = new THREE.Vector3();
 		v2.copy(yawObject.position);
-		v1.copy( yAxis ).applyQuaternion( eyeFinalQ3 );
+		if(_followEyeDirection)
+			v1.copy( yAxis ).applyQuaternion( eyeFinalQ3 );
+		else
+			v1.copy( yAxis );
 		v2.add( v1.multiplyScalar( _distance ) );
 
 		this.createTweenForMove( v2, _time );
 	};
-	this.setMovZAnimation = function(_distance, _time){
+	this.setMovZAnimation = function(_distance, _time, _followEyeDirection){
 		var v1 = new THREE.Vector3();
 		var v2 = new THREE.Vector3();
 		v2.copy(yawObject.position);
-		v1.copy( zAxis ).applyQuaternion( eyeFinalQ3 );
+		if(_followEyeDirection)
+			v1.copy( zAxis ).applyQuaternion( eyeFinalQ3 );
+		else
+			v1.copy( zAxis );
 		v2.add( v1.multiplyScalar( _distance ) );
 
 		this.createTweenForMove( v2, _time );
 	};
 
-	// TODO: should avoid using onUpdate!
 	this.createTweenForMove = function( _newPos, _time ){
 		TweenMax.to(
 			yawObject.position, 
 			_time,
 			{
 				x: _newPos.x, y: _newPos.y, z: _newPos.z,
-				ease: Power1.easeInOut,
-				onUpdate: ()=>{
+				ease: Power1.easeInOut
+				/*
+				,onUpdate: ()=>{
 					var msg = {
 						'type': 'updatePlayer',
 						'index': whoIamInLife,
@@ -690,7 +699,7 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 					if(ws){
 						sendMessage( JSON.stringify(msg) );
 					}
-				}
+				}*/
 			}
 		);
 	};
@@ -790,8 +799,8 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
 
-		if(firstGuy)
-			firstGuy.update( yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2 );
+		// if(firstGuy)
+		// 	firstGuy.update( yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2 );
 	};
 
 	// //debug
