@@ -799,8 +799,8 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
 
-		// if(firstGuy)
-		// 	firstGuy.update( yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2 );
+		if(firstGuy)
+			firstGuy.update( yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2 );
 	};
 
 	// //debug
