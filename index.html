@@ -357,11 +357,13 @@
 					// GAZE_TO_MOVE, ONLY IF we are in the same world
 					if(data.type == 'timestamp' && data.worldId == meInWorld)
 					{
-						dailyLifePlayerDict[ data.index ].updateTimetag( data.time );
+						if(trulyFullyStart)
+							dailyLifePlayerDict[ data.index ].updateTimetag( data.time );
 					}
 
 					//REMOVE_PLAYER
-					if(data.type == 'removePlayer'){
+					if(data.type == 'removePlayer')
+					{
 						if(data.worldId == meInWorld){
 							removePlayer(data.removeID);					
 							console.log('removePlayer #' + data.removeID);
@@ -396,11 +398,9 @@
 									console.log("create history players #" + data[i].id + ", in world #" + data[i].worldId);	
 								// }															
 							}
-							
 							// UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data[i].totalCount, fireVisit );
 							// totalPplInWorldsCount = data[i].totalCount;
 						}
-
 						updatePreviousPlayer = true;
 					}
 				}

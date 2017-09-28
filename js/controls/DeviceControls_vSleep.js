@@ -418,7 +418,7 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 
 		//interact();
 		scope.align();
-		alignBody(firstGuy);
+		//alignBody(firstGuy);
 	};
 
 	var alignBody = function (guy) {

@@ -759,8 +759,6 @@ function update() {
         lookingAtSomeone = -1;
     }
 
-
-
     if (!isGazeMoving)
         GazeToMove();
 
@@ -769,7 +767,6 @@ function update() {
         if (p != whoIamInLife)
             dailyLifePlayerDict[p].transUpdate();
     }
-
     //
     time = Date.now();
 
