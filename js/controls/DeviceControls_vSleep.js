@@ -16,7 +16,7 @@ var eyeFinalQ = new THREE.Quaternion();			// for screen in front of eyes
 var eyeFinalQ2 = new THREE.Quaternion();		// for others
 var eyeFinalQ3 = new THREE.Quaternion();		// for others & only Y axis
 
-var toLookAtCenter = false;
+var toLookAtCenter = true;
 var updateInterval = 0;
 
 function onDeviceOrientationChangeEvent(evt) {
@@ -680,7 +680,13 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 			_time,
 			{
 				x: _newPos.x, y: _newPos.y, z: _newPos.z,
-				ease: Power1.easeInOut
+				ease: Power1.easeInOut,
+				onStart: ()=>{
+					firstGuy.player.visible = false;
+				},
+				onComplete: ()=>{
+					firstGuy.player.visible = true;
+				}
 				/*
 				,onUpdate: ()=>{
 					var msg = {

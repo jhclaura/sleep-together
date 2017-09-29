@@ -138,7 +138,12 @@ var EyeMaxSize = 5,
 var lookingAtSomeone = -1,
     someoneLookingAtMe = -1;
 var sleeperStartPositions = {};
-var socialMediaMat, socialMediaTex, socialMediaScreens = {};
+
+var socialMediaGroup, socialMediaMat, socialMediaTex, socialMediaScreens = [],
+    socialMediaTweens = [],
+    sm_materials = [];
+var glowGeo, glowMat1, glowMat2, sm_glow;
+
 var nestTex, nestStickGeos = [],
     nestSticks = [];
 
@@ -171,15 +176,13 @@ function superInit() {
     for (var j = 0; j < 3; j++) {
         for (var i = 7; i < 13; i++) {
             var startPos = new THREE.Vector3(
-            	(i - 10) * 45 + GetRandomArbitrary(0, 15),
-                j * 50 + GetRandomArbitrary(0, 13),
-                -500 + GetRandomArbitrary(0, 3)
+                (i - 10) * 45 + GetRandomArbitrary(0, 15),
+                j * 50 + GetRandomArbitrary(0, 13), -500 + GetRandomArbitrary(0, 3)
             );
             sleeperStartPositions[s_index] = startPos;
             s_index++;
         }
     }
-
 
     // Use http://freegeoip.net in script_functions.js
     GetGeoData();
@@ -277,7 +280,7 @@ function superInit() {
     loadingManger.onLoad = function() {
 
         CreateStars();
-        CreateNest();
+        //CreateNest();
 
         console.log("ALL LOADED!");
         startLink.style.display = "";
@@ -288,35 +291,14 @@ function superInit() {
     };
 
     textureLoader = new THREE.TextureLoader(loadingManger);
-
     var modelLoader = new THREE.JSONLoader(loadingManger);
 
-    personTex = textureLoader.load(basedURL + 'images/galleryGuyTex.jpg');
-    stomachTex = textureLoader.load(basedURL + 'images/stomach.jpg');
-
-    loadSitModelPlayer(basedURL + "models/personHead.js",
-        //basedURL + "models/personBody.js",
-        basedURL + "models/sleepBody2.json",
-        basedURL + "models/stomach_empty.json",
-        basedURL + "models/stomach_full.json");
-
-    LoadTexModelPoopHeart(basedURL + 'images/poopHeart.jpg', basedURL + 'models/poopHeart.js');
+    //loadSitModelPlayer(basedURL + "models/personHead.js", basedURL + "models/sleepBody2.json");
 
     LoadStarTexture();
 
-    sleeperTexture = textureLoader.load(basedURL + 'images/dude0.jpg');
     sleeper_test_Texture = textureLoader.load(basedURL + 'images/chef2.jpg');
     breathLightTexture = textureLoader.load("images/glow_edit.png");
-
-    LoadModelChewer(basedURL + "models/sleepHead.json");
-
-    modelLoader.load(basedURL + "models/sleeper.json", function(geometry, material) {
-
-        sleeperGeo = geometry;
-        sleeper = new THREE.SkinnedMesh(sleeperGeo, new THREE.MeshLambertMaterial({ map: sleeperTexture, skinning: true, side: THREE.DoubleSide }));
-
-        //scene.add(sleeper);	
-    });
 
     eyeTex = textureLoader.load(basedURL + 'images/eyeGaze.jpg');
     modelLoader.load(basedURL + "models/eye.json", function(geometry, material) {
@@ -386,12 +368,11 @@ function superInit() {
     socialMediaTex = textureLoader.load(basedURL + 'images/socialScreen.jpg');
     socialMediaTex.wrapT = THREE.RepeatWrapping;
     socialMediaTex.repeat.set(1, 0.4);
-    var sm_glow = textureLoader.load(basedURL + 'images/glow_sm2.png');
+    sm_glow = textureLoader.load(basedURL + 'images/glow_sm2.png');
     sm_glow.needsUpdate = true;
 
-    // 10 differnet textures and materials to share
-    var sm_materials = [];
-    for (var i = 0; i < 10; i++) {
+    // 5 differnet textures and materials to share
+    for (var i = 0; i < 5; i++) {
         var cloneTex = socialMediaTex.clone();
         cloneTex.needsUpdate = true;
 
@@ -405,22 +386,21 @@ function superInit() {
         ScrollSocialMedia(sm_mat.map.offset);
     }
 
-    var glowGeo, glowMeshScales = [];
-
+    //socialMediaGroup = new THREE.Object3D();
     modelLoader.load(basedURL + "models/glow.json", function(geometry, material) {
         glowGeo = geometry;
-
-        var glowMesh = new THREE.Mesh(glowGeo, new THREE.MeshBasicMaterial({
+        glowMat1 = new THREE.MeshBasicMaterial({
             map: sm_glow,
             transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
-        }));
-        glowMesh.scale.multiplyScalar(4);
-
-        var glowMesh2 = new THREE.Mesh(glowGeo, new THREE.MeshBasicMaterial({
+        });
+        glowMat2 = new THREE.MeshBasicMaterial({
             map: sm_glow,
             transparent: true,
             side: THREE.BackSide
-        }));
+        });
+        var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
+        glowMesh.scale.multiplyScalar(4);
+        var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
         glowMesh2.scale.multiplyScalar(4);
 
         // Create Social Medai Wall
@@ -429,16 +409,16 @@ function superInit() {
         // --- Real for indexing (6*3=18 total)
         for (var j = 0; j < 3; j++) {
             for (var i = 7; i < 13; i++) {
-                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, 10)]);
-                sm_screen.position.copy( sleeperStartPositions[screenIndex] );
+                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
+                sm_screen.position.copy(sleeperStartPositions[screenIndex]);
 
                 sm_screen.add(glowMesh.clone());
                 sm_screen.add(glowMesh2.clone());
 
-                //socialMediaScreens.push(sm_screen);
-                socialMediaScreens[screenIndex] = sm_screen;
+                socialMediaScreens.push(sm_screen);
 
                 scene.add(sm_screen);
+                //socialMediaGroup.add(sm_screen);
                 screenIndex++;
             }
         }
@@ -449,51 +429,46 @@ function superInit() {
                 if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
                     continue;
 
-                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, 10)]);
+                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
                 sm_screen.position.set(
                     (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                    j * 50 + GetRandomArbitrary(0, 13),
-                    -500 + GetRandomArbitrary(0, 3)
+                    j * 50 + GetRandomArbitrary(0, 13), -500 + GetRandomArbitrary(0, 3)
                 );
 
                 sm_screen.add(glowMesh.clone());
                 sm_screen.add(glowMesh2.clone());
 
-                //socialMediaScreens.push(sm_screen);
-                socialMediaScreens[screenIndex] = sm_screen;
+                socialMediaScreens.push(sm_screen);
 
                 scene.add(sm_screen);
+                //socialMediaGroup.add(sm_screen);
                 screenIndex++;
             }
         }
+        //scene.add(socialMediaGroup);
         //TweenMax.to(glowMeshScales, 2, {x:4.3,y:4.3,z:4.3, yoyo: true, repeat:-1});
     });
 
-    // var sm_tl = new TimelineMax({repeat:-1, repeatDelay:1});
-    // sm_tl.to( socialMediaTex.offset, 2, {y:"-=0.1", ease: Power3.easeOut} );
-
-    //var sm_tween = ScrollSocialMedia(socialMediaTex.offset);
-
     nestTex = textureLoader.load(basedURL + 'images/grassDead.jpg');
-    // modelLoader.load(basedURL + "models/nest.json", function(geometry, material) {
-
-    //     var nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
-    //         map: nestTex
-    //     }));
-    //     nest.scale.multiplyScalar(4);
-    //     scene.add(nest);
-    // });
-    loadModelSticks(
-        basedURL + "models/stick1.json", basedURL + "models/stick2.json",
-        basedURL + "models/stick3.json", basedURL + "models/stick4.json",
-        basedURL + "models/stick5.json"
-    );
+    modelLoader.load(basedURL + "models/nest.json", function(geometry, material) {
+        var nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+            map: nestTex
+        }));
+        nest.scale.multiplyScalar(2);
+        scene.add(nest);
+    });
+    // loadModelSticks(
+    //     basedURL + "models/stick1.json", basedURL + "models/stick2.json",
+    //     basedURL + "models/stick3.json", basedURL + "models/stick4.json",
+    //     basedURL + "models/stick5.json"
+    // );
 }
 
 function ScrollSocialMedia(el) {
     var intensity = GetRandomArbitrary(0, 0.8);
     //console.log(intensity);
-    TweenMax.to(el, 3, { y: "-=" + intensity, ease: Power4.easeOut, delay: GetRandomArbitrary(0.5, 1.5), onComplete: ScrollSocialMedia, onCompleteParams: [el] });
+    var sm_tween = TweenMax.to(el, 3, { y: "-=" + intensity, ease: Power4.easeOut, delay: GetRandomArbitrary(0.5, 1.5), onComplete: ScrollSocialMedia, onCompleteParams: [el] });
+    socialMediaTweens.push(sm_tween);
 }
 
 function AssignIndex() {
@@ -502,7 +477,6 @@ function AssignIndex() {
     // Assign position
     // meInWorld = Math.floor(whoIamInLife/18);			// which world <== dealt at Server
 
-    myWorldCenter = new THREE.Vector3();
 
     // myStartX = 50;
     // myStartY = 50;
@@ -512,6 +486,9 @@ function AssignIndex() {
     myStartX = myPosition.x;
     myStartY = myPosition.y;
     myStartZ = myPosition.z;
+
+    myWorldCenter = myPosition.clone();
+    myWorldCenter.z -= 10;
 }
 
 // lateInit() happens after click "Start"
@@ -564,12 +541,66 @@ function lateInit() {
 
     // Moving
     var nestPos = controls.position().clone();
-    nestPos.multiplyScalar( 20/225 );
+    nestPos.multiplyScalar(20 / 225);
     nestPos.z = GetRandomArbitrary(-7, 7);
+
     setTimeout(() => {
-        //controls.setMovZAnimation(500, 6, false);
         controls.createTweenForMove(nestPos, 6);
-    }, 1000);
+
+        // TweenMax.to(socialMediaGroup.position, 3, {z:-5000, delay:7, onComplete: ()=>{
+        // 	disposeSocialMedia();
+        // }});
+        // TweenMax.staggerTo(socialMediaScreens, 0, {
+        //     opacity: 0,
+        //     delay: 4,
+        //     onStartParams: ["{self}"],
+        //     onStart: (tween) => {
+        //         tween.target.visible = 0;
+        //     }
+        // }, 0.05, disposeSocialMedia);
+        setTimeout(()=>{
+        	disposeSocialMedia();
+        }, 6500);
+
+    }, 5000);
+}
+
+function disposeSocialMedia() {
+    // tweenMax
+    for (var i = 0; i < socialMediaTweens.length; i++) {
+        socialMediaTweens[i].kill();
+    }
+    socialMediaTweens = undefined;
+
+    // mesh
+    // scene.remove(socialMediaGroup);
+    for (var i = 0; i < socialMediaScreens.length; i++) {
+        scene.remove(socialMediaScreens[i]);
+    }
+    socialMediaScreens = undefined;
+    //socialMediaGroup = undefined;
+
+    // geometry
+    glowGeo.dispose();
+
+    // texture
+    for (var i = 0; i < sm_materials.length; i++) {
+        sm_materials[i].map.dispose();
+    }
+    socialMediaTex.dispose();
+    socialMediaTex = undefined;
+    sm_glow.dispose();
+    sm_glow = undefined;
+
+    // material
+    glowMat1.dispose();
+    glowMat1 = undefined;
+    glowMat2.dispose();
+    glowMat2 = undefined;
+    for (var i = 0; i < sm_materials.length; i++) {
+        sm_materials[i].dispose();
+    }
+    sm_materials = undefined;
 }
 
 function createHeart(fromIndex, toIndex) {

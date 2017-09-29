@@ -33,13 +33,8 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	// if it's ME, create inner stuff
 	if( this.whoIam == whoIamInLife ){
 		// 1-0: stomach
-		this.poopMini = new THREE.Mesh( stomach, new THREE.MeshBasicMaterial({map: stomachTex,  morphTargets: true}) );		
-		this.poopMini.morphTargetInfluences[0] = 0.5;
+		this.poopMini = new THREE.Object3D();
 		this.poopMini.name = "miniPoop";
-		this.poopMini.scale.set(0.1,0.1,0.1);
-		this.poopMini.rotation.y += Math.PI;
-		this.poopMini.rotation.x += Math.PI/2;
-		this.poopMini.position.set( 0, -1.06, -0.04);
 		this.playerBody.add( this.poopMini );
 
 		// 1-1: message!
