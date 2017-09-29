@@ -147,6 +147,8 @@ var glowGeo, glowMat1, glowMat2, sm_glow;
 var nestTex, nestStickGeos = [],
     nestSticks = [];
 
+var breathingTimeline;
+
 
 // Gaze-To-Move:
 // 1) Look at someone => CreateBigEye (from_index_look: true, to_index_look: false), startGazeTime
@@ -177,7 +179,7 @@ function superInit() {
         for (var i = 7; i < 13; i++) {
             var startPos = new THREE.Vector3(
                 (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                j * 50 + GetRandomArbitrary(0, 13), -500 + GetRandomArbitrary(0, 3)
+                j * 50 + GetRandomArbitrary(0, 13), -400 + GetRandomArbitrary(0, 3)
             );
             sleeperStartPositions[s_index] = startPos;
             s_index++;
@@ -382,7 +384,6 @@ function superInit() {
         });
 
         sm_materials.push(sm_mat);
-
         ScrollSocialMedia(sm_mat.map.offset);
     }
 
@@ -411,6 +412,8 @@ function superInit() {
             for (var i = 7; i < 13; i++) {
                 var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
                 sm_screen.position.copy(sleeperStartPositions[screenIndex]);
+                sm_screen.position.z -= 4;
+                sm_screen.position.y += 15;
 
                 sm_screen.add(glowMesh.clone());
                 sm_screen.add(glowMesh2.clone());
@@ -432,7 +435,8 @@ function superInit() {
                 var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
                 sm_screen.position.set(
                     (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                    j * 50 + GetRandomArbitrary(0, 13), -500 + GetRandomArbitrary(0, 3)
+                    j * 50 + GetRandomArbitrary(0, 13),
+                    -400 + GetRandomArbitrary(0, 3)
                 );
 
                 sm_screen.add(glowMesh.clone());
@@ -449,7 +453,10 @@ function superInit() {
         //TweenMax.to(glowMeshScales, 2, {x:4.3,y:4.3,z:4.3, yoyo: true, repeat:-1});
     });
 
-    nestTex = textureLoader.load(basedURL + 'images/grassDead.jpg');
+    nestTex = textureLoader.load(basedURL + 'images/nest.jpg');
+    nestTex.wrapT = nestTex.wrapS = THREE.RepeatWrapping;
+    nestTex.repeat.set(2, 2);
+
     modelLoader.load(basedURL + "models/nest.json", function(geometry, material) {
         var nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
             map: nestTex
@@ -488,7 +495,7 @@ function AssignIndex() {
     myStartZ = myPosition.z;
 
     myWorldCenter = myPosition.clone();
-    myWorldCenter.z -= 10;
+    myWorldCenter.z -= 20;
 }
 
 // lateInit() happens after click "Start"
@@ -545,7 +552,7 @@ function lateInit() {
     nestPos.z = GetRandomArbitrary(-7, 7);
 
     setTimeout(() => {
-        controls.createTweenForMove(nestPos, 6);
+        controls.createTweenForMove(nestPos, 25);
 
         // TweenMax.to(socialMediaGroup.position, 3, {z:-5000, delay:7, onComplete: ()=>{
         // 	disposeSocialMedia();
@@ -558,10 +565,27 @@ function lateInit() {
         //         tween.target.visible = 0;
         //     }
         // }, 0.05, disposeSocialMedia);
-        setTimeout(()=>{
-        	disposeSocialMedia();
-        }, 6500);
 
+        setTimeout(() => {
+            disposeSocialMedia();
+            var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
+            firstGuy.startBreathing();
+            
+             // ------ SEND_TO_SERVER => START_BREATHING ------
+		    var msg = {
+		        'type': 'startBreathing',
+		        'index': whoIamInLife,
+		        'worldId': meInWorld
+		    };
+		    if (ws) {
+		        sendMessage(JSON.stringify(msg));
+		    }
+		    // --------------------------------------------
+
+            setTimeout(()=>{
+            	controls.movingEnabled = true;
+            }, duration*1000);
+        }, 26000);
     }, 5000);
 }
 
@@ -728,6 +752,7 @@ function animate(timestamp) {
 
 
 function update() {
+
     // TWEEN.update();
     controls.update(Date.now() - time);
 
@@ -1018,7 +1043,8 @@ function CreateStars() {
     for (var i = 0; i < 50; i++) {
         mat = new THREE.SpriteMaterial({ map: glowTextures[i % 4], color: 0xffef3b, transparent: false, blending: THREE.AdditiveBlending });
         var st = new THREE.Sprite(mat);
-        st.position.set(Math.random() * (myStartX + 400) - (myStartX + 200), Math.random() * -100 + 400, Math.random() * (myStartZ + 400) - (myStartZ + 200));
+        //st.position.set(Math.random() * (myStartX + 400) - (myStartX + 200), Math.random() * -100 + 400, Math.random() * (myStartZ + 400) - (myStartZ + 200));
+        st.position.set(Math.random() * (0 + 700) - (0 + 350), Math.random() * -100 + 400, Math.random() * (0 + 700) - (0 + 350));
         st.rotation.y = Math.random() * Math.PI;
         st.scale.set(7, 7, 7);
         scene.add(st);

@@ -320,7 +320,7 @@
 					// GAZE_TO_MOVE, ONLY IF we are in the same world
 					if(data.type == 'gaze' && data.worldId == meInWorld)
 					{
-						if(data.index != whoIamInLife)
+						if(data.index != whoIamInLife && dailyLifePlayerDict[ data.index ])
 						{
 							if(data.toWhom == -1)
 							{
@@ -350,15 +350,21 @@
 									// },5000);
 								}
 							}
-							
 						}
 					}
 
 					// GAZE_TO_MOVE, ONLY IF we are in the same world
-					if(data.type == 'timestamp' && data.worldId == meInWorld)
+					if(data.type == 'timestamp')
 					{
-						if(trulyFullyStart && dailyLifePlayerDict[ data.index ]!=null)
+						if(data.worldId == meInWorld && dailyLifePlayerDict[ data.index ])
 							dailyLifePlayerDict[ data.index ].updateTimetag( data.time );
+					}
+
+					// BREATHING, TODO: what if in the middle of breathing in history player?
+					if(data.type == 'startBreathing' && data.index != whoIamInLife)
+					{
+						if(data.worldId == meInWorld && dailyLifePlayerDict[ data.index ])
+							dailyLifePlayerDict[ data.index ].startBreathing();
 					}
 
 					//REMOVE_PLAYER

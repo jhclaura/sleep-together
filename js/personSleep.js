@@ -52,12 +52,6 @@ function PersonSleep( _pos, _color, _id, _name ) {
 		scope.wordBubble.visible = false;
 		scope.playerBody.skeleton.bones[0].add( scope.wordBubble );
 	}
-	// else {
-	// 	// attach toilet to body
-	// 	this.playerToilet = new THREE.Mesh( personToilet, toiletMat );
-	// 	this.playerToilet.name = _id + " toilet";
-	// 	this.playerBody.add( this.playerToilet );
-	// }
 
 	// 2-2: message_name!
 	this.nameTexture = new THREEx.DynamicTexture(512,64);	//512,128
@@ -105,20 +99,24 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	this.playerBody.add( this.eye );
 
 	// 2-4: light
-	this.breathLight = new THREE.PointLight(0xffff00, 0.2, 50);
+	this.breathLight = new THREE.PointLight(0xffff00, 0, 50); //intensity: 0.2
 	this.breathLight.name = _id + " breathLight";
 	// ori color: 0xffef3b
 	var mat = new THREE.SpriteMaterial({map: breathLightTexture, color: 0x8a7512, transparent: false, blending: THREE.AdditiveBlending});
 	this.breathSprite = new THREE.Sprite(mat);
 	this.breathSprite.name = _id + " breathSprite";
-	//this.breathSprite.scale.multiplyScalar(2);	//big
+	this.breathSprite.scale.multiplyScalar(0.05);
+	this.breathSprite.visible = false;
+
 	this.breathLight.add(this.breathSprite);
 	this.breathLight.position.set(0,0.5,2);
 
 	// DEMO_not_real
+	/*
 	TweenMax.to(this.breathSprite.scale, 7.5, {
 		x:3, y: 3, z: 3,
 		ease: Power1.easeInOut, yoyo: true, repeat: -1, repeatDelay: 1});
+	*/
 
 	this.playerBody.skeleton.bones[0].add(this.breathLight);
 
@@ -151,6 +149,28 @@ function PersonSleep( _pos, _color, _id, _name ) {
 	} else {
 		dailyLifePlayerObject.add( this.player );
 	}
+
+	// Setup breathing
+	this.breathingTimeline = new TimelineMax({ repeat: 3, repeatDelay: 2, paused: true, onComplete:()=>{
+		TweenMax.to( this.breathLight, 0.5, {intensity: 0, onComplete:()=>{
+			this.breathSprite.visible = false;
+		}} );
+	} });
+    // inhale through nose for 4
+    this.breathingTimeline
+        .to(this.breathSprite.scale, 4, {
+            x: 3,
+            y: 3,
+            z: 3,
+            ease: Power1.easeInOut
+        })
+        .addLabel("exhale", "+=7")			// hold for 7
+        .to(this.breathSprite.scale, 8, {	// exhale through mouth for 8
+            x: .05,
+            y: .05,
+            z: .05,
+            ease: Power1.easeInOut
+        }, "exhale");
 }
 
 PersonSleep.prototype.update = function( _playerLocX, _playerLocY, _playerLocZ, _playerRotY, _playerQ ) {
@@ -223,4 +243,11 @@ PersonSleep.prototype.closeEye = function() {
 
 PersonSleep.prototype.updateTimetag = function( _time ) {
 	this.dataTexture.clear().drawText( _time + " from " + sleeperOrigin, undefined, 50, 'grey');
+}
+
+PersonSleep.prototype.startBreathing = function() {
+	this.breathSprite.visible = true;
+	TweenMax.to( this.breathLight, 1, {intensity: 0.2} );
+
+	this.breathingTimeline.play();
 }
