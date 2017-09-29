@@ -643,7 +643,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
     };
 
     //
-    this.setMovXAnimation = function(_distance, _time, _followEyeDirection) {
+    this.setMovXAnimation = function(_distance, _time, _followEyeDirection, _toHide) {
         var v1 = new THREE.Vector3();
         var v2 = new THREE.Vector3();
         v2.copy(yawObject.position);
@@ -653,9 +653,9 @@ THREE.DeviceControls = function(camera, worldCenter) {
             v1.copy(xAxis);
         v2.add(v1.multiplyScalar(_distance));
 
-        this.createTweenForMove(v2, _time);
+        this.createTweenForMove(v2, _time, _toHide);
     };
-    this.setMovYAnimation = function(_distance, _time, _followEyeDirection) {
+    this.setMovYAnimation = function(_distance, _time, _followEyeDirection, _toHide) {
         var v1 = new THREE.Vector3();
         var v2 = new THREE.Vector3();
         v2.copy(yawObject.position);
@@ -665,9 +665,9 @@ THREE.DeviceControls = function(camera, worldCenter) {
             v1.copy(yAxis);
         v2.add(v1.multiplyScalar(_distance));
 
-        this.createTweenForMove(v2, _time);
+        this.createTweenForMove(v2, _time, _toHide);
     };
-    this.setMovZAnimation = function(_distance, _time, _followEyeDirection) {
+    this.setMovZAnimation = function(_distance, _time, _followEyeDirection, _toHide) {
         var v1 = new THREE.Vector3();
         var v2 = new THREE.Vector3();
         v2.copy(yawObject.position);
@@ -677,10 +677,10 @@ THREE.DeviceControls = function(camera, worldCenter) {
             v1.copy(zAxis);
         v2.add(v1.multiplyScalar(_distance));
 
-        this.createTweenForMove(v2, _time);
+        this.createTweenForMove(v2, _time, _toHide);
     };
 
-    this.createTweenForMove = function(_newPos, _time) {
+    this.createTweenForMove = function(_newPos, _time, _toHide) {
         TweenMax.to(
             yawObject.position,
             _time, {
@@ -689,10 +689,12 @@ THREE.DeviceControls = function(camera, worldCenter) {
                 z: _newPos.z,
                 ease: Power1.easeInOut,
                 onStart: () => {
-                    firstGuy.player.visible = false;
+                	if(_toHide)
+	                    firstGuy.player.visible = false;
                 },
                 onComplete: () => {
-                    firstGuy.player.visible = true;
+                	if(_toHide)
+	                    firstGuy.player.visible = true;
                 }
                 /*
                 ,onUpdate: ()=>{

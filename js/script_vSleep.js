@@ -413,7 +413,7 @@ function superInit() {
                 var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
                 sm_screen.position.copy(sleeperStartPositions[screenIndex]);
                 sm_screen.position.z -= 4;
-                sm_screen.position.y += 15;
+                sm_screen.position.y += 10;
 
                 sm_screen.add(glowMesh.clone());
                 sm_screen.add(glowMesh2.clone());
@@ -549,10 +549,10 @@ function lateInit() {
     // Moving
     var nestPos = controls.position().clone();
     nestPos.multiplyScalar(20 / 225);
-    nestPos.z = GetRandomArbitrary(-7, 7);
+    nestPos.z = GetRandomArbitrary(-5, 5);
 
     setTimeout(() => {
-        controls.createTweenForMove(nestPos, 25);
+        controls.createTweenForMove(nestPos, 25, true);
 
         // TweenMax.to(socialMediaGroup.position, 3, {z:-5000, delay:7, onComplete: ()=>{
         // 	disposeSocialMedia();
@@ -570,7 +570,7 @@ function lateInit() {
             disposeSocialMedia();
             var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
             firstGuy.startBreathing();
-            
+
              // ------ SEND_TO_SERVER => START_BREATHING ------
 		    var msg = {
 		        'type': 'startBreathing',
@@ -940,18 +940,19 @@ function GazeToMove() {
             }
 
             if (lookingAtSomeone == someoneLookingAtMe) {
-                if (!isGazeMoving) {
+                if (!isGazeMoving ) { //&& controls.movingEnabled
                     var p_from = firstGuy.player.position.clone();
                     var p_to = dailyLifePlayerDict[lookingAtSomeone].player.position.clone();
                     var dist_T = p_from.distanceTo(p_to);
-
-                    if (dist_T > 3) {
+                    //console.log(dist_T);
+                    if (dist_T > 4.5) {
                         var midPoint = new THREE.Vector3();
                         midPoint.addVectors(p_from, p_to).multiplyScalar(1 / 2);
                         var myTarget = new THREE.Vector3().subVectors(p_from, midPoint).normalize().multiplyScalar(2);
+                        myTarget.add(midPoint);
                         dist_T = p_from.distanceTo(midPoint) * 1.5;
 
-                        controls.createTweenForMove(myTarget, dist_T);
+                        controls.createTweenForMove(myTarget, dist_T, false);
                         console.log("GAZE_TO_MOVE! time: " + dist_T);
 
                         firstGuy.wordTexture.clear();
@@ -964,7 +965,6 @@ function GazeToMove() {
 
                         isGazeMoving = true;
                     }
-
                 }
             }
         }
