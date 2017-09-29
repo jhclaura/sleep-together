@@ -357,7 +357,7 @@
 					// GAZE_TO_MOVE, ONLY IF we are in the same world
 					if(data.type == 'timestamp' && data.worldId == meInWorld)
 					{
-						if(trulyFullyStart)
+						if(trulyFullyStart && dailyLifePlayerDict[ data.index ]!=null)
 							dailyLifePlayerDict[ data.index ].updateTimetag( data.time );
 					}
 
