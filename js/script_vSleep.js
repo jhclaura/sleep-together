@@ -940,7 +940,7 @@ function GazeToMove() {
             }
 
             if (lookingAtSomeone == someoneLookingAtMe) {
-                if (!isGazeMoving ) { //&& controls.movingEnabled
+                if (!isGazeMoving && controls.movingEnabled) {
                     var p_from = firstGuy.player.position.clone();
                     var p_to = dailyLifePlayerDict[lookingAtSomeone].player.position.clone();
                     var dist_T = p_from.distanceTo(p_to);
