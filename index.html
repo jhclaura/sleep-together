@@ -1,487 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Sleep Together</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
-		<meta name="mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
-	</head>
-	<body>		
-		<div id="render-canvas" style="display:none;"></div>
-		<!-- <div id="render-canvas"></div> -->
-
-		<script type="text/javascript" src="js/lib/three.js"></script>
-		<script type="text/javascript" src="js/lib/Detector.js"></script>
-
-		<script type="text/javascript">
-			var fbConfig = {
-				databaseURL : "https://sleep-together.firebaseio.com/"
-			};
-			firebase.initializeApp(fbConfig);
-			var fbDatabase = firebase.database();
-			var visitDataRef = fbDatabase.ref("totalVisit");
-			var fireVisit = 0;
-			visitDataRef.on("value", function(snapshot) {
-				fireVisit = snapshot.val().visit_count;
-				console.log("firevisit: " + fireVisit);
-			});
-
-			//device detection
-			//source: http://stackoverflow.com/questions/3514784/what-is-the-best-way-to-detect-a-mobile-device-in-jquery
-			var isMobile = false; //initiate as false
-			var whichMobile = "";
-			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-				isMobile = true;
-			}
-			console.log("isMobile: " + isMobile);
-
-			// tell android or iOS
-			if( /Android/i.test(navigator.userAgent) ) {
-				console.log("I'm android!");
-				whichMobile = "android";
-			}
-			if( /iPhone|iPad|iPod/i.test(navigator.userAgent) ) {
-				console.log("I'm iOS!");
-				whichMobile = "iOS_mobile";
-			}
-
-			// if it's desktop, create click.gif div for PointerlockAPI
-			if( !isMobile ) {
-				var clickDiv = document.createElement('div');
-				clickDiv.id = "blocker";
-				clickDiv.style = "display: none;";
-				document.getElementsByTagName("body")[0].appendChild(clickDiv);
-
-				var fingerImg = document.createElement('img');
-				fingerImg.setAttribute("src", "images/click.gif");
-				fingerImg.setAttribute("width", "60");
-				fingerImg.setAttribute("height", "60");
-				var ins = document.createElement('div');
-				ins.id = "instructions";
-				ins.appendChild(fingerImg);
-
-				clickDiv.appendChild(ins);
-			}
-
-			// DETECT
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-
-			//
-			function byId(_id) {
-				return document.getElementById(_id);
-			}
-
-			function byClass(_class) {
-				return document.getElementsByClassName(_class);
-			}
-
-			var renderCanvas = byId("render-canvas");
-			var blockerDiv = byId("blocker");
-		</script>
-
-			<div id="splashPage" style="display:block; position:absolute;">
-				<h1>Sleep Together</h1>
-
-				<input type="text" id="playerName" placeholder="Who's this?" style="width:20em;height:2em"></input>
-				<img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
-				<div id="loadingTxt" style="color:yellow">loading</div>
-
-				<p></p>
-				<a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="getNameToStart();">Start</a>
-			</div>
-
-		<script>
-			var final_statistic = {};
-			final_statistic.eaterCount = 0;
-			final_statistic.totalVisit = 0;
-			final_statistic.totalChew = 0;
-			final_statistic.totalHeart = 0;
-			final_statistic.youChew = 0;
-			final_statistic.meToOthers = {};
-			final_statistic.othersToMe = {};
-			var heartFromMeCount = 0;
-
-			var loadingImg = byId("loadingImg");
-			var loadingTxt = byId("loadingTxt");
-			var startLink = byId("startLink");
-			var playerNameInput = byId("playerName");
-
-			var splashPage = byId("splashPage");
-			// var finalBG = byId("finalBG");
-			// var finalStat = byId("finalStat");
-
-			var playerNName = "";
-			var readyToStart = false;
-
-			var getNameToStart = function(){
-				
-				if(playerNameInput.value==playerNName){
-					playerNName = "Anonymous";
-				} else {
-					playerNName = playerNameInput.value;
-				}
-				final_statistic.playerName = playerNName;
-
-				renderCanvas.style.display = "inline";				
-				if(blockerDiv) blockerDiv.style.display = "-webkit-box";
-				
-				splashPage.style.display = "none";
-
-				// superInit();
-				// connectSocket();
-
-				lateInit();
-
-				// FIREBASE_TOTAL_VISTI
-				visitDataRef.once("value", function(snapshot) {
-					fireVisit = snapshot.val().visit_count;
-					fireVisit++;
-					visitDataRef.set({
-						visit_count: fireVisit
-					});
-				});	
-			}
-
-			window.addEventListener('keydown', myFakeEnter, false);
 
-			function myFakeEnter( event ){
-				if(!readyToStart) return;
+<head>
+    <title>Sleep Together</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+</head>
+
+<body>
+    <div id="render-canvas" style="display:none;"></div>
+    <!-- <div id="render-canvas"></div> -->
+    <script type="text/javascript" src="js/lib/three.js"></script>
+    <script type="text/javascript" src="js/lib/Detector.js"></script>
+    <script type="text/javascript">
+    var fbConfig = {
+        databaseURL: "https://sleep-together.firebaseio.com/"
+    };
+    firebase.initializeApp(fbConfig);
+    var fbDatabase = firebase.database();
+    var visitDataRef = fbDatabase.ref("totalVisit");
+    var fireVisit = 0;
+    visitDataRef.on("value", function(snapshot) {
+        fireVisit = snapshot.val().visit_count;
+        console.log("firevisit: " + fireVisit);
+    });
+
+    //device detection
+    //source: http://stackoverflow.com/questions/3514784/what-is-the-best-way-to-detect-a-mobile-device-in-jquery
+    var isMobile = false; //initiate as false
+    var whichMobile = "";
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        isMobile = true;
+    }
+    console.log("isMobile: " + isMobile);
+
+    // tell android or iOS
+    if (/Android/i.test(navigator.userAgent)) {
+        console.log("I'm android!");
+        whichMobile = "android";
+    }
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        console.log("I'm iOS!");
+        whichMobile = "iOS_mobile";
+    }
+
+    // if it's desktop, create click.gif div for PointerlockAPI
+    if (!isMobile) {
+        var clickDiv = document.createElement('div');
+        clickDiv.id = "blocker";
+        clickDiv.style = "display: none;";
+        document.getElementsByTagName("body")[0].appendChild(clickDiv);
+
+        var fingerImg = document.createElement('img');
+        fingerImg.setAttribute("src", "images/click.gif");
+        fingerImg.setAttribute("width", "60");
+        fingerImg.setAttribute("height", "60");
+        var ins = document.createElement('div');
+        ins.id = "instructions";
+        ins.appendChild(fingerImg);
+
+        clickDiv.appendChild(ins);
+    }
+
+    // DETECT
+    if (!Detector.webgl) Detector.addGetWebGLMessage();
+
+    //
+    function byId(_id) {
+        return document.getElementById(_id);
+    }
+
+    function byClass(_class) {
+        return document.getElementsByClassName(_class);
+    }
+
+    var renderCanvas = byId("render-canvas");
+    var blockerDiv = byId("blocker");
+    </script>
+    <div id="splashPage" style="display:block; position:absolute;">
+        <h1>Sleep Together</h1>
+        <input type="text" id="playerName" placeholder="Who's this?" style="width:20em;height:2em"></input>
+        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
+        <div id="loadingTxt" style="color:yellow">loading</div>
+        <p></p>
+        <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="getNameToStart();">Start</a>
+    </div>
+    <script>
+    var final_statistic = {};
+    final_statistic.eaterCount = 0;
+    final_statistic.totalVisit = 0;
+    final_statistic.totalChew = 0;
+    final_statistic.totalHeart = 0;
+    final_statistic.youChew = 0;
+    final_statistic.meToOthers = {};
+    final_statistic.othersToMe = {};
+    var heartFromMeCount = 0;
+
+    var loadingImg = byId("loadingImg");
+    var loadingTxt = byId("loadingTxt");
+    var startLink = byId("startLink");
+    var playerNameInput = byId("playerName");
+
+    var splashPage = byId("splashPage");
+    // var finalBG = byId("finalBG");
+    // var finalStat = byId("finalStat");
+
+    var playerNName = "";
+    var readyToStart = false;
+
+    var getNameToStart = function() {
+
+        if (playerNameInput.value == playerNName) {
+            playerNName = "Anonymous";
+        } else {
+            playerNName = playerNameInput.value;
+        }
+        final_statistic.playerName = playerNName;
 
-				switch ( event.keyCode ) {
-					case 13: //enter
-						getNameToStart();
-						window.removeEventListener('keydown', myFakeEnter, false);
-						break;
-				}
-			}
-		</script>
-
-		<script type="text/javascript">
-			var socket = null;
-			var socketOpened = false;
-
-			var host;
-			var ws;
-			var camID = 0, addNewPlayerYet = false;
-			var updatePreviousPlayer = false;
-
-			var whoIamInLife = -1, initEnvironment = false;
-			var meInWorld = -1;
-			var totalPplInWorldsCount = 0, totalVisitCount = 0;
-			var fullhouse = false, showAniPpl = false, showAniPplNumber = 4, doPplAni = false;
-			var fullHouseDef = 7;
-			var strictToCelePplNumber = 3, strictToCele = false;
-
-			var currentPplAmount = 0;
-
-			var knowMyIndex = false;
-			//
-			var trulyFullyStart = false;
-
-			function connectSocket() {
-				currentPplAmount ++;
-
-				host = location.origin.replace(/^http/, 'ws');
-				ws = new WebSocket(host);
-
-				ws.onopen = function(){
-					console.log("Our beds are connected!");
-
-					/* Connect this new player to every player*/
-					/* JUST ONCE! */
-					// -MOVED- @DeviceControls.js for dynamically creation
-				}
-
-				ws.onmessage = function(msg){
-
-					var data = JSON.parse(msg.data);
-
-					if (data.type!="index" && !trulyFullyStart) return;
-
-					if(data.type == 'addNewPlayer'){
-
-						// If this is not ME && processed by server
-						if(data.id != whoIamInLife && data.camID > 0){
-
-							// If we are in the same world, create player
-						   	if( data.worldId == meInWorld ){
-								console.log("Got a new player, id: " + data.id);
-
-								// Create Player
-								var newPlayerStartPos = new THREE.Vector3(data.playerStartX, data.playerStartY, data.playerStartZ);
-								var newPlayerStartRotY = data.playerStartRotY;
-
-								var newGuy = new PersonSleep(newPlayerStartPos, data.myHex, data.id, data.nname, null);
-
-								dailyLifePlayerDict[data.id] = newGuy;
-
-								currentPplAmount ++;
-							}
-
-							// update people counting of this world & total worlds
-							// UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data.totalCount, fireVisit );
-							// totalPplInWorldsCount = data.totalCount;
-							// totalVisitCount = fireVisit;
-
-							// final_statistic.pooperCount ++;
-							// final_statistic.totalVisit = totalVisitCount;
-						}
-					}
-
-					// Index of ME in the world (assigned by server)
-					// Get to know whom I am
-					if(data.type=="index"){
-
-						/* ONLY ONCE */
-						if(!knowMyIndex){
-
-							whoIamInLife = data.index;
-							meInWorld = data.worldId;
-							// totalVisitCount = fireVisit;
-							final_statistic.totalVisit = totalVisitCount;
-
-							console.log("I am #" + whoIamInLife + " in the #" + meInWorld + " Sleep-Together world, with total visit: " + totalVisitCount);
-
-							AssignIndex();
-
-							knowMyIndex = true;
-						}
-					}
-
-					var playerPosX, playerPosY, playerPosZ, playerRotY, playerQ, playerQ3;
-					// update player ONLY IF we are in the same world
-					if(data.type=="updatePlayer" && data.worldId == meInWorld){
-						playerPosX = data.playerPosX;
-						playerPosY = data.playerPosY;
-						playerPosZ = data.playerPosZ;
-						playerRotY = data.playerRotY;
-						playerQ = new THREE.Quaternion(data.playerQ._x, data.playerQ._y, data.playerQ._z, data.playerQ._w);
-
-						if( dailyLifePlayerDict[ data.index ] && data.index != whoIamInLife )
-						{
-							// v.1 - no interpolation
-							// dailyLifePlayerDict[ data.index ].update( playerPosX, playerPosY, playerPosZ, playerRotY, playerQ );
-
-							// v.2 interpolation
-							dailyLifePlayerDict[ data.index ].updateReal( playerPosX, playerPosY, playerPosZ, playerQ );
-						}
-					}
-
-					// update chewing ONLY IF we are in the same world
-					if(data.type=="chew" && data.worldId == meInWorld){
-
-						// only chew if it's not MY DATA, cuz I've already chew
-						if(data.index != whoIamInLife){
-
-							// if it's aim at someone, create heart
-							if(data.toWhom != -1){								
-								createHeart( data.index, data.toWhom );
-								// final_statistic.totalHeart ++;
-
-								// if the heart is to ME, display the message
-								if(data.toWhom == whoIamInLife){
-									var h_f_n = dailyLifePlayerDict[ data.index ].nname;
-									firstGuy.wordBubble.visible = true;
-									firstGuy.wordTexture.clear('#dc5e64').drawText("You got a heart from " + h_f_n + " <3", undefined, 96, 'white');
-									setTimeout(function(){
-										firstGuy.wordTexture.clear();
-										firstGuy.wordBubble.visible = false;
-									},5000);
-
-									//
-									// if( final_statistic.othersToMe[ h_f_n ] == undefined ){
-									// 	final_statistic.othersToMe[ h_f_n ] = 1;
-									// } else {
-									// 	final_statistic.othersToMe[ h_f_n ] ++;
-									// }
-								}
-							}
-							// if it's NOT aim at someone, shot out star
-							else
-							{
-								// var poopPos = new THREE.Vector3(data.playerPos.x, data.playerPos.y, data.playerPos.z);
-								// var poopQ = new THREE.Vector3(data.playerDir.x, data.playerDir.y, data.playerDir.z);
-
-								// createPoop(poopPos, poopQ);
-
-								// final_statistic.totalPoop ++;
-
-								if( dailyLifePlayerDict[ data.index ] )
-									dailyLifePlayerDict[ data.index ].chew();
-							}
-						}
-					}
-
-					// GAZE_TO_MOVE, ONLY IF we are in the same world
-					if(data.type == 'gazeLength' && data.worldId == meInWorld)
-					{
-						if(data.index != whoIamInLife && dailyLifePlayerDict[ data.index ])
-						{
-							dailyLifePlayerDict[ data.index ].setGazeDotsRotation();
-							dailyLifePlayerDict[ data.index ].gazeDotTargetLength = data.length;
-
-							if(data.length==-1){
-								dailyLifePlayerDict[ data.index ].resetGazeDots();
-							}
-						}
-					}
-
-					// GAZE_TO_MOVE, ONLY IF we are in the same world
-					if(data.type == 'gaze' && data.worldId == meInWorld)
-					{
-						if(data.index != whoIamInLife && dailyLifePlayerDict[ data.index ])
-						{
-							if(data.toWhom == -1)
-							{
-								dailyLifePlayerDict[ data.index ].closeEye();
-								dailyLifePlayerDict[ data.index ].resetGazeDots();
-
-								// someone stop look at me
-								if(data.index == someoneLookingAtMe) {
-									firstGuy.wordTexture.clear();
-									firstGuy.wordBubble.visible = false;
-									someoneLookingAtMe = -1;
-								}
-							}
-							else
-							{
-								dailyLifePlayerDict[ data.index ].openEye();
-
-								// someone look at me
-								if(data.toWhom == whoIamInLife) {
-									var h_f_n = dailyLifePlayerDict[ data.index ].nname;
-									firstGuy.wordBubble.visible = true;
-									firstGuy.wordTexture.clear('#dc5e64').drawText(h_f_n + " is gazing you <3", undefined, 96, 'white');
-
-									someoneLookingAtMe = data.index;
-
-									// setTimeout(function(){
-									// 	firstGuy.wordTexture.clear();
-									// },5000);
-								}
-							}
-						}
-					}
-
-					// GAZE_TO_MOVE, ONLY IF we are in the same world
-					if(data.type == 'timestamp')
-					{
-						if(data.worldId == meInWorld && dailyLifePlayerDict[ data.index ])
-							dailyLifePlayerDict[ data.index ].updateTimetag( data.time );
-					}
-
-					// BREATHING, TODO: what if in the middle of breathing in history player?
-					if(data.type == 'startBreathing' && data.index != whoIamInLife)
-					{
-						if(data.worldId == meInWorld && dailyLifePlayerDict[ data.index ])
-							dailyLifePlayerDict[ data.index ].startBreathing();
-					}
-
-					//REMOVE_PLAYER
-					if(data.type == 'removePlayer')
-					{
-						if(data.worldId == meInWorld){
-							removePlayer(data.removeID);					
-							console.log('removePlayer #' + data.removeID);
-						}
-					}
-
-					// ADD_HISTORY_PLAYERS
-					// ONE_TIME_EVENT_IN_THE_BEGINNING
-					if(data.length>0 && !updatePreviousPlayer){
-
-						for(var i=0; i<data.length; i++){
-							// console.log("whoIamInLife: " + whoIamInLife + ", get history - id #" + data[i].id + " in world #" + data[i].worldId );
-
-							// if I'm not the coming player && we are in the same world
-							// this is a history player I want to create!!!
-							if(whoIamInLife != data[i].id && data[i].worldId == meInWorld){
-
-								// if(dailyLifePlayerDict[ data[i].id ]){
-								// 	console.log("already exit, so not create history players #" + data[i].id + ", in world #" + data[i].worldId);
-								// } else {
-									var oldPlayerStartPos = new THREE.Vector3(data[i].playerStartX, data[i].playerStartY, data[i].playerStartZ);
-									var oldPlayerStartRotY = data[i].playerStartRotY;
-									var oldHex = data[i].myHex;
-									var oldPlayerID = data[i].id;
-									var oldPlayerName = data[i].nname;
-
-									// var oldPlayer = new Person( oldPlayerStartPos, oldHex, oldPlayerID, oldPlayerName );
-									// var oldPlayer = new PersonEat( oldPlayerStartPos, new THREE.Color(), oldPlayerID, oldPlayerName, mouth );
-									var oldPlayer = new PersonSleep( oldPlayerStartPos, oldHex, oldPlayerID, oldPlayerName );
-									
-									dailyLifePlayerDict[ oldPlayerID ] = oldPlayer;
-									console.log("create history players #" + data[i].id + ", in world #" + data[i].worldId);	
-								// }															
-							}
-							// UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data[i].totalCount, fireVisit );
-							// totalPplInWorldsCount = data[i].totalCount;
-						}
-						updatePreviousPlayer = true;
-					}
-				}
-				socketOpened = true;
-			}
-
-			//SYNCING_ISSUE
-			//http://stackoverflow.com/questions/23898477/tornado-websockets-invalidstateerror-still-in-connecting-state
-			//but has better solution... e.g. promises
-			function sendMessage(msg) {
-				waitForSocketConnection(ws, function() {
-					ws.send( msg );
-				});
-			};
-
-			function waitForSocketConnection(socket, callback){
-				setTimeout(
-					function(){
-						if (socket.readyState === 1) {
-							if(callback !== undefined){
-								callback();
-							}
-						return;
-					} else {
-						waitForSocketConnection(socket,callback);
-					}
-				}, 5);
-			};
-
-			function reloadPage(){
-				location.reload(true);
-			}
-		</script>
-
-		<!-- WebVR Boilerplate -->
-		<script src="js/lib/effects/VREffect.js"></script>
-		<script src="js/lib/webvr-polyfill.js"></script>
-		<script src="js/lib/webvr-manager.js"></script>
-
-		<script type="text/javascript" src="js/lib/howler.js"></script>
-		<script type="text/javascript" src="js/lib/SPE.min.js"></script>
-		<script type="text/javascript" src="js/lib/BufferLoader.js"></script>
-		<script type="text/javascript" src="js/lib/physi.js"></script>
-		<script type="text/javascript" src="js/lib/ImprovedNoise.js"></script>
-		<script type="text/javascript" src="js/lib/TweenMax.min.js"></script>
-		<script type="text/javascript" src="js/util/EndArrayPlugin.js"></script>
-		<script type="text/javascript" src="js/lib/stats.min.js"></script>
-		<script type="text/javascript" src="js/lib/threex.dynamictexture.js"></script>
-
-		<script type="text/javascript" src="js/sample.js"></script>
-		<script type="text/javascript" src="js/wave.js"></script>
-		<script type="text/javascript" src="js/personSleep.js"></script>
-		<script type="text/javascript" src="js/AniObject.js"></script>
-
-		<script type="text/javascript" src="js/controls/DeviceControls_vSleep.js"></script>
-		<script type="text/javascript" src="js/script_functions.js"></script>
-		<script type="text/javascript" src="js/setup_sleep.js"></script>
-		<script type="text/javascript" src="js/loader_sleep.js"></script>
-		
-		<script type="text/javascript" src="js/script_vSleep.js"></script>
-
-	</body>
+        renderCanvas.style.display = "inline";
+        if (blockerDiv) blockerDiv.style.display = "-webkit-box";
+
+        splashPage.style.display = "none";
+
+        // superInit();
+        // connectSocket();
+
+        lateInit();
+
+        // FIREBASE_TOTAL_VISTI
+        visitDataRef.once("value", function(snapshot) {
+            fireVisit = snapshot.val().visit_count;
+            fireVisit++;
+            visitDataRef.set({
+                visit_count: fireVisit
+            });
+        });
+    }
+
+    window.addEventListener('keydown', myFakeEnter, false);
+
+    function myFakeEnter(event) {
+        if (!readyToStart) return;
+
+        switch (event.keyCode) {
+            case 13: //enter
+                getNameToStart();
+                window.removeEventListener('keydown', myFakeEnter, false);
+                break;
+        }
+    }
+    </script>
+    <script type="text/javascript">
+    var socket = null;
+    var socketOpened = false;
+
+    var host;
+    var ws;
+    var camID = 0,
+        addNewPlayerYet = false;
+    var updatePreviousPlayer = false;
+
+    var whoIamInLife = -1,
+        initEnvironment = false;
+    var meInWorld = -1;
+    var totalPplInWorldsCount = 0,
+        totalVisitCount = 0;
+    var fullhouse = false,
+        showAniPpl = false,
+        showAniPplNumber = 4,
+        doPplAni = false;
+    var fullHouseDef = 7;
+    var strictToCelePplNumber = 3,
+        strictToCele = false;
+
+    var currentPplAmount = 0;
+
+    var knowMyIndex = false;
+    //
+    var trulyFullyStart = false;
+
+    function connectSocket() {
+        currentPplAmount++;
+
+        host = location.origin.replace(/^http/, 'ws');
+        ws = new WebSocket(host);
+
+        ws.onopen = function() {
+            console.log("Our beds are connected!");
+
+            /* Connect this new player to every player*/
+            /* JUST ONCE! */
+            // -MOVED- @DeviceControls.js for dynamically creation
+        }
+
+        ws.onmessage = function(msg) {
+
+            var data = JSON.parse(msg.data);
+
+            if (data.type != "index" && !trulyFullyStart) return;
+
+            if (data.type == 'addNewPlayer') {
+
+                // If this is not ME && processed by server
+                if (data.id != whoIamInLife && data.camID > 0) {
+
+                    // If we are in the same world, create player
+                    if (data.worldId == meInWorld) {
+                        console.log("Got a new player, id: " + data.id);
+
+                        // Create Player
+                        var newPlayerStartPos = new THREE.Vector3(data.playerStartX, data.playerStartY, data.playerStartZ);
+                        var newPlayerStartRotY = data.playerStartRotY;
+
+                        var newGuy = new PersonSleep(newPlayerStartPos, data.myHex, data.id, data.nname, null);
+
+                        dailyLifePlayerDict[data.id] = newGuy;
+
+                        currentPplAmount++;
+                    }
+
+                    // update people counting of this world & total worlds
+                    // UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data.totalCount, fireVisit );
+                    // totalPplInWorldsCount = data.totalCount;
+                    // totalVisitCount = fireVisit;
+
+                    // final_statistic.pooperCount ++;
+                    // final_statistic.totalVisit = totalVisitCount;
+                }
+            }
+
+            // Index of ME in the world (assigned by server)
+            // Get to know whom I am
+            if (data.type == "index") {
+
+                /* ONLY ONCE */
+                if (!knowMyIndex) {
+
+                    whoIamInLife = data.index;
+                    meInWorld = data.worldId;
+                    // totalVisitCount = fireVisit;
+                    final_statistic.totalVisit = totalVisitCount;
+
+                    console.log("I am #" + whoIamInLife + " in the #" + meInWorld + " Sleep-Together world, with total visit: " + totalVisitCount);
+
+                    AssignIndex();
+
+                    knowMyIndex = true;
+                }
+            }
+
+            var playerPosX, playerPosY, playerPosZ, playerRotY, playerQ, playerQ3;
+            // update player ONLY IF we are in the same world
+            if (data.type == "updatePlayer" && data.worldId == meInWorld) {
+                playerPosX = data.playerPosX;
+                playerPosY = data.playerPosY;
+                playerPosZ = data.playerPosZ;
+                playerRotY = data.playerRotY;
+                playerQ = new THREE.Quaternion(data.playerQ._x, data.playerQ._y, data.playerQ._z, data.playerQ._w);
+
+                if (dailyLifePlayerDict[data.index] && data.index != whoIamInLife) {
+                    // v.1 - no interpolation
+                    // dailyLifePlayerDict[ data.index ].update( playerPosX, playerPosY, playerPosZ, playerRotY, playerQ );
+
+                    // v.2 interpolation
+                    dailyLifePlayerDict[data.index].updateReal(playerPosX, playerPosY, playerPosZ, playerQ);
+                }
+            }
+
+            // update chewing ONLY IF we are in the same world
+            if (data.type == "chew" && data.worldId == meInWorld) {
+
+                // only chew if it's not MY DATA, cuz I've already chew
+                if (data.index != whoIamInLife) {
+
+                    // if it's aim at someone, create heart
+                    if (data.toWhom != -1) {
+                        createHeart(data.index, data.toWhom);
+                        // final_statistic.totalHeart ++;
+
+                        // if the heart is to ME, display the message
+                        if (data.toWhom == whoIamInLife) {
+                            var h_f_n = dailyLifePlayerDict[data.index].nname;
+                            firstGuy.wordBubble.visible = true;
+                            firstGuy.wordTexture.clear('#dc5e64').drawText("You got a heart from " + h_f_n + " <3", undefined, 96, 'white');
+                            setTimeout(function() {
+                                firstGuy.wordTexture.clear();
+                                firstGuy.wordBubble.visible = false;
+                            }, 5000);
+
+                            //
+                            // if( final_statistic.othersToMe[ h_f_n ] == undefined ){
+                            // 	final_statistic.othersToMe[ h_f_n ] = 1;
+                            // } else {
+                            // 	final_statistic.othersToMe[ h_f_n ] ++;
+                            // }
+                        }
+                    }
+                    // if it's NOT aim at someone, shot out star
+                    else {
+                        // var poopPos = new THREE.Vector3(data.playerPos.x, data.playerPos.y, data.playerPos.z);
+                        // var poopQ = new THREE.Vector3(data.playerDir.x, data.playerDir.y, data.playerDir.z);
+
+                        // createPoop(poopPos, poopQ);
+
+                        // final_statistic.totalPoop ++;
+
+                        if (dailyLifePlayerDict[data.index])
+                            dailyLifePlayerDict[data.index].chew();
+                    }
+                }
+            }
+
+            // GAZE_TO_MOVE, ONLY IF we are in the same world
+            if (data.type == 'gazeLength' && data.worldId == meInWorld) {
+                if (data.index != whoIamInLife && dailyLifePlayerDict[data.index]) {
+
+                    dailyLifePlayerDict[data.index].gazeDotTargetLength = data.length;
+
+                    if (data.length == -1) {
+                        dailyLifePlayerDict[data.index].resetGazeDots();
+                    } else {
+                        dailyLifePlayerDict[data.index].setGazeDotsRotation(dailyLifePlayerDict[data.target].player.position);
+                    }
+                }
+            }
+
+            // GAZE_TO_MOVE, ONLY IF we are in the same world
+            if (data.type == 'gaze' && data.worldId == meInWorld) {
+                if (data.index != whoIamInLife && dailyLifePlayerDict[data.index]) {
+                    if (data.toWhom == -1) {
+                        dailyLifePlayerDict[data.index].closeEye();
+                        dailyLifePlayerDict[data.index].resetGazeDots();
+
+                        // someone stop look at me
+                        if (data.index == someoneLookingAtMe) {
+                            firstGuy.wordTexture.clear();
+                            firstGuy.wordBubble.visible = false;
+                            someoneLookingAtMe = -1;
+                        }
+                    } else {
+                        dailyLifePlayerDict[data.index].openEye();
+
+                        // someone look at me
+                        if (data.toWhom == whoIamInLife) {
+                            var h_f_n = dailyLifePlayerDict[data.index].nname;
+                            firstGuy.wordBubble.visible = true;
+                            firstGuy.wordTexture.clear('#dc5e64').drawText(h_f_n + " is gazing you <3", undefined, 96, 'white');
+
+                            someoneLookingAtMe = data.index;
+
+                            // setTimeout(function(){
+                            // 	firstGuy.wordTexture.clear();
+                            // },5000);
+                        }
+                    }
+                }
+            }
+
+            // GAZE_TO_MOVE, ONLY IF we are in the same world
+            if (data.type == 'timestamp') {
+                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index])
+                    dailyLifePlayerDict[data.index].updateTimetag(data.time);
+            }
+
+            // BREATHING, TODO: what if in the middle of breathing in history player?
+            if (data.type == 'startBreathing' && data.index != whoIamInLife) {
+                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index])
+                    dailyLifePlayerDict[data.index].startBreathing();
+            }
+
+            //REMOVE_PLAYER
+            if (data.type == 'removePlayer') {
+                if (data.worldId == meInWorld) {
+                    removePlayer(data.removeID);
+                    console.log('removePlayer #' + data.removeID);
+                }
+            }
+
+            // ADD_HISTORY_PLAYERS
+            // ONE_TIME_EVENT_IN_THE_BEGINNING
+            if (data.length > 0 && !updatePreviousPlayer) {
+
+                for (var i = 0; i < data.length; i++) {
+                    // console.log("whoIamInLife: " + whoIamInLife + ", get history - id #" + data[i].id + " in world #" + data[i].worldId );
+
+                    // if I'm not the coming player && we are in the same world
+                    // this is a history player I want to create!!!
+                    if (whoIamInLife != data[i].id && data[i].worldId == meInWorld) {
+
+                        // if(dailyLifePlayerDict[ data[i].id ]){
+                        // 	console.log("already exit, so not create history players #" + data[i].id + ", in world #" + data[i].worldId);
+                        // } else {
+                        var oldPlayerStartPos = new THREE.Vector3(data[i].playerStartX, data[i].playerStartY, data[i].playerStartZ);
+                        var oldPlayerStartRotY = data[i].playerStartRotY;
+                        var oldHex = data[i].myHex;
+                        var oldPlayerID = data[i].id;
+                        var oldPlayerName = data[i].nname;
+
+                        // var oldPlayer = new Person( oldPlayerStartPos, oldHex, oldPlayerID, oldPlayerName );
+                        // var oldPlayer = new PersonEat( oldPlayerStartPos, new THREE.Color(), oldPlayerID, oldPlayerName, mouth );
+                        var oldPlayer = new PersonSleep(oldPlayerStartPos, oldHex, oldPlayerID, oldPlayerName);
+
+                        dailyLifePlayerDict[oldPlayerID] = oldPlayer;
+                        console.log("create history players #" + data[i].id + ", in world #" + data[i].worldId);
+                        // }															
+                    }
+                    // UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data[i].totalCount, fireVisit );
+                    // totalPplInWorldsCount = data[i].totalCount;
+                }
+                updatePreviousPlayer = true;
+            }
+        }
+        socketOpened = true;
+    }
+
+    //SYNCING_ISSUE
+    //http://stackoverflow.com/questions/23898477/tornado-websockets-invalidstateerror-still-in-connecting-state
+    //but has better solution... e.g. promises
+    function sendMessage(msg) {
+        waitForSocketConnection(ws, function() {
+            ws.send(msg);
+        });
+    };
+
+    function waitForSocketConnection(socket, callback) {
+        setTimeout(
+            function() {
+                if (socket.readyState === 1) {
+                    if (callback !== undefined) {
+                        callback();
+                    }
+                    return;
+                } else {
+                    waitForSocketConnection(socket, callback);
+                }
+            }, 5);
+    };
+
+    function reloadPage() {
+        location.reload(true);
+    }
+    </script>
+    <!-- WebVR Boilerplate -->
+    <script src="js/lib/effects/VREffect.js"></script>
+    <script src="js/lib/webvr-polyfill.js"></script>
+    <script src="js/lib/webvr-manager.js"></script>
+    <script type="text/javascript" src="js/lib/howler.js"></script>
+    <script type="text/javascript" src="js/lib/SPE.min.js"></script>
+    <script type="text/javascript" src="js/lib/BufferLoader.js"></script>
+    <script type="text/javascript" src="js/lib/physi.js"></script>
+    <script type="text/javascript" src="js/lib/ImprovedNoise.js"></script>
+    <script type="text/javascript" src="js/lib/TweenMax.min.js"></script>
+    <script type="text/javascript" src="js/util/EndArrayPlugin.js"></script>
+    <script type="text/javascript" src="js/lib/stats.min.js"></script>
+    <script type="text/javascript" src="js/lib/threex.dynamictexture.js"></script>
+    <script type="text/javascript" src="js/sample.js"></script>
+    <script type="text/javascript" src="js/wave.js"></script>
+    <script type="text/javascript" src="js/personSleep.js"></script>
+    <script type="text/javascript" src="js/AniObject.js"></script>
+    <script type="text/javascript" src="js/controls/DeviceControls_vSleep.js"></script>
+    <script type="text/javascript" src="js/script_functions.js"></script>
+    <script type="text/javascript" src="js/setup_sleep.js"></script>
+    <script type="text/javascript" src="js/loader_sleep.js"></script>
+    <script type="text/javascript" src="js/script_vSleep.js"></script>
+</body>
+
 </html>

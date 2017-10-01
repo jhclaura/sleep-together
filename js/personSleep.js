@@ -17,6 +17,9 @@ function PersonSleep(_pos, _color, _id, _name) {
     this.realBillboardRotation = new THREE.Quaternion();
     this.yaxisInQ = new THREE.Quaternion(0, Math.PI / 2, 0, 0);
 
+    this.tmpPlayerQ = new THREE.Quaternion();
+    this.tmpTargetVector = new THREE.Vector3();
+
     // construct physical existence
     this.player = new THREE.Object3D();
     this.pSkinnedMat = new THREE.MeshLambertMaterial({ skinning: true, map: sleeper_test_Texture, color: this.color, side: THREE.DoubleSide });
@@ -103,11 +106,12 @@ function PersonSleep(_pos, _color, _id, _name) {
 
     // Gaze Dots
     this.gazeDots = new THREE.Object3D();
+    // new texture for manipulating UV
     var g_d_tex = gazeDotTex.clone();
     g_d_tex.needsUpdate = true;
     var g_d_mesh = new THREE.Mesh(gazeDotGeo, new THREE.MeshBasicMaterial({ map: g_d_tex, side: THREE.DoubleSide, transparent: true }));
     g_d_mesh.rotation.x = Math.PI / 2;
-    g_d_mesh.position.set(0, -0.5, 0.5);
+    g_d_mesh.position.set(0.1, -0.5, 0.5);
     g_d_mesh.scale.x = 0.1;
     this.gazeDots.add(g_d_mesh);
     this.player.add(this.gazeDots); //skeleton.bones[1]
@@ -169,13 +173,13 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
     // }
 
     // body
-    var newQ = _playerQ.clone();
-    newQ._x = 0;
-    newQ._z = 0;
-    newQ.normalize();
+    this.tmpPlayerQ.copy (_playerQ);
+    this.tmpPlayerQ._x = 0;
+    this.tmpPlayerQ._z = 0;
+    this.tmpPlayerQ.normalize();
 
     if (this.playerBodyParent) {
-        this.playerBodyParent.quaternion.copy(newQ);
+        this.playerBodyParent.quaternion.copy(this.tmpPlayerQ);
     }
 
     this.realRotation = _playerQ;
@@ -184,6 +188,7 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
     if (this.gazeDotTargetLength > 0) {
         this.gazeDots.scale.lerp(new THREE.Vector3(1, 1, this.gazeDotTargetLength), 0.008);
         this.gazeDots.children[0].material.map.repeat.lerp(new THREE.Vector2(1, this.gazeDotTargetLength), 0.008);
+        this.gazeDots.children[0].material.map.offset.y -= 0.01;
     }
 }
 
@@ -191,11 +196,11 @@ PersonSleep.prototype.updateReal = function(_playerLocX, _playerLocY, _playerLoc
 
     this.realPosition.set(_playerLocX, _playerLocY, _playerLocZ);
     this.realRotation.copy(_playerQ);
-    var newQ = _playerQ.clone();
-    newQ._x = 0;
-    newQ._z = 0;
-    newQ.normalize();
-    this.realBillboardRotation.copy(newQ);
+    this.tmpPlayerQ.copy(_playerQ);
+    this.tmpPlayerQ._x = 0;
+    this.tmpPlayerQ._z = 0;
+    this.tmpPlayerQ.normalize();
+    this.realBillboardRotation.copy(this.tmpPlayerQ);
 }
 
 PersonSleep.prototype.transUpdate = function() {
@@ -225,6 +230,7 @@ PersonSleep.prototype.transUpdate = function() {
     if (this.gazeDotTargetLength > 0) {
         this.gazeDots.scale.lerp(new THREE.Vector3(1, 1, this.gazeDotTargetLength), 0.008);
         this.gazeDots.children[0].material.map.repeat.lerp(new THREE.Vector2(1, this.gazeDotTargetLength), 0.008);
+        this.gazeDots.children[0].material.map.offset.y -= 0.01;
     }
 }
 
@@ -258,12 +264,17 @@ PersonSleep.prototype.startBreathing = function() {
     this.breathingTimeline.play();
 }
 
-PersonSleep.prototype.setGazeDotsRotation = function() {
-    this.gazeDots.quaternion.copy(this.realRotation);
+PersonSleep.prototype.setGazeDotsRotation = function(targetVector) {
+    this.tmpTargetVector.copy( targetVector );
+    this.player.worldToLocal( this.tmpTargetVector );
+    this.gazeDots.lookAt( this.tmpTargetVector );
+    this.gazeDots.visible = true;
 }
 
 PersonSleep.prototype.resetGazeDots = function() {
     this.gazeDotTargetLength = -1;
     this.gazeDots.scale.set(1, 1, 1);
     this.gazeDots.children[0].material.map.repeat.y = 1;
+    this.gazeDots.children[0].material.map.offset.y = 0;
+    this.gazeDots.visible = false;
 }

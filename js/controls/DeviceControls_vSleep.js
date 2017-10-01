@@ -750,8 +750,8 @@ THREE.DeviceControls = function(camera, worldCenter) {
             // calculate the Quaternion
             this.calQ();
 
-            eyeFinalQ.copy(this.finalQ.clone());
-            eyeFinalQ2.copy(this.finalQ2.clone());
+            eyeFinalQ.copy(this.finalQ);	//.clone()
+            eyeFinalQ2.copy(this.finalQ2);	//.clone()
 
             // rotate camera
             yawObject.rotation.setFromQuaternion(this.finalQ);

@@ -15,6 +15,7 @@ var myStartX = 0,
     myStartZ = 10,
     myStartY = 3.5; //y: 3.5, 100
 var myPosition, myStartRotY, worldBubble, pplCount, pplCountTex, pplCountMat;
+var myWorldCenter = new THREE.Vector3();
 
 var perlin = new ImprovedNoise(),
     noiseQuality = 1;
@@ -86,6 +87,7 @@ var EyeMaxSize = 5,
 var lookingAtSomeone = -1,
     someoneLookingAtMe = -1;
 var sleeperStartPositions = {};
+var gazePlayerFrom = new THREE.Vector3(), gazePlayerTo = new THREE.Vector3();
 
 var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
@@ -412,7 +414,7 @@ function AssignIndex() {
     myStartY = myPosition.y;
     myStartZ = myPosition.z;
 
-    myWorldCenter = myPosition.clone();
+    myWorldCenter.copy(myPosition);
     myWorldCenter.z -= 20;
 }
 
@@ -490,6 +492,7 @@ function lateInit() {
 
             setTimeout(() => {
                 controls.movingEnabled = true;
+                nestPos = undefined;
             }, duration * 1000);
         }, 26000);
     }, 5000);
@@ -677,8 +680,8 @@ function update() {
     }
 
     // eyeRay!
-    var directionCam = controls.getDirection(1).clone();
-    eyerayCaster.set(controls.position().clone(), directionCam);
+    var directionCam = controls.getDirection(1);			//.clone()
+    eyerayCaster.set(controls.position(), directionCam);	//.clone()
 
     // v.1
     /*
@@ -830,7 +833,7 @@ function GazeToMove() {
             }
 
             // GazeDot
-            firstGuy.setGazeDotsRotation();
+            firstGuy.setGazeDotsRotation( dailyLifePlayerDict[lookingAtSomeone].player.position );
             firstGuy.gazeDotTargetLength = firstGuy.player.position.distanceTo(dailyLifePlayerDict[lookingAtSomeone].player.position);
 
             // ------ SEND_TO_SERVER_GAZING_TARGET_LENGTH ------
@@ -839,6 +842,7 @@ function GazeToMove() {
                     'type': 'gazeLength',
                     'index': whoIamInLife,
                     'length': firstGuy.gazeDotTargetLength,
+                    'target': lookingAtSomeone,
                     'worldId': meInWorld
                 };
 
@@ -878,37 +882,37 @@ function GazeToMove() {
 
             if (lookingAtSomeone == someoneLookingAtMe) {
                 if (!isGazeMoving && controls.movingEnabled) {
-                    var p_from = firstGuy.player.position.clone();
-                    var p_to = dailyLifePlayerDict[lookingAtSomeone].player.position.clone();
-                    var dist_T = p_from.distanceTo(p_to);
+                    gazePlayerFrom.copy(firstGuy.player.position);
+                    gazePlayerTo.copy(dailyLifePlayerDict[lookingAtSomeone].player.position);
+                    var dist_T = gazePlayerFrom.distanceTo(gazePlayerTo);
                     //console.log(dist_T);
+
                     if (dist_T > 4.5) {
                         var midPoint = new THREE.Vector3();
-                        midPoint.addVectors(p_from, p_to).multiplyScalar(1 / 2);
-                        var myTarget = new THREE.Vector3().subVectors(p_from, midPoint).normalize().multiplyScalar(2);
+                        midPoint.addVectors(gazePlayerFrom, gazePlayerTo).multiplyScalar(1 / 2);
+                        var myTarget = new THREE.Vector3().subVectors(gazePlayerFrom, midPoint).normalize().multiplyScalar(2);
                         myTarget.add(midPoint);
-                        dist_T = p_from.distanceTo(midPoint) * 0.5;
+                        dist_T = gazePlayerFrom.distanceTo(midPoint) * 0.5;
 
                         controls.createTweenForMove(myTarget, dist_T, false);
+                        isGazeMoving = true;
                         console.log("GAZE_TO_MOVE! time: " + dist_T);
 
                         firstGuy.wordTexture.clear();
                         firstGuy.wordBubble.visible = false;
-
                         firstGuy.resetGazeDots();
 
                         setTimeout(function() {
                             console.log("reset isGazeMoving");
                             isGazeMoving = false;
-                        }, dist_T * 1000);
-
-                        isGazeMoving = true;
+                        }, dist_T * 1050);
 
                         // ------ SEND_TO_SERVER_GAZING_TARGET_LENGTH ------
                         var msg = {
                             'type': 'gazeLength',
                             'index': whoIamInLife,
                             'length': -1,
+                            'target': -1,
                             'worldId': meInWorld
                         };
 
@@ -944,7 +948,6 @@ function GazeToMove() {
             isGazeMoving = false;
 
             firstGuy.closeEye();
-
             firstGuy.resetGazeDots();
 
             console.log("stop gaze!");
@@ -967,29 +970,6 @@ function LoadStarTexture() {
             // 	CreateStars();
         });
     }
-}
-
-function LoadTexModelPoopHeart(_tex, _model) {
-    var h_texLoader = new THREE.TextureLoader(loadingManger);
-    // h_texLoader.load(_tex, function(texture){
-    // poopHeartTex = texture;
-    // poopHeartMat = new THREE.MeshLambertMaterial({map: poopHeartTex});
-    poopHeartTex = h_texLoader.load(_tex);
-    poopHeartMat = new THREE.MeshLambertMaterial({ map: poopHeartTex });
-
-    // MODEL_BODY
-    var h_loader = new THREE.JSONLoader(loadingManger);
-    h_loader.load(_model, function(geometry) {
-        poopHeartGeo = geometry.clone();
-        // poopHeartGeo.computeBoundingSphere();
-
-        poopHeart = new THREE.Mesh(poopHeartGeo, poopHeartMat);
-
-        // then create person!
-
-        // loadingCountText("poop heart");
-    });
-    // });
 }
 
 function CreateStars() {
