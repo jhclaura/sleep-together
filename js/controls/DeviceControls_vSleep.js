@@ -113,7 +113,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
         console.log("look at center");
     }
 
-    this.movingEnabled = false;
+    this.movingEnabled = true;	// FOR_REAL: false
     this.clickingTouchingEnabled = true;
 
     var moveForward = false;

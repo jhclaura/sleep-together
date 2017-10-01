@@ -132,14 +132,14 @@ var chewerA, chewerTextures = [],
 var isGazing = false,
     isGazeMoving = false,
     notifyGazeMax = false;
-var eyeTex, eyeGeo, eyeGaze;
+var eyeTex, eyeGeo, eyeGaze, gazeDotTex, gazeDotMat, gazeDotGeo;
 var EyeMaxSize = 5,
     gazeTargetIndex = -1;
 var lookingAtSomeone = -1,
     someoneLookingAtMe = -1;
 var sleeperStartPositions = {};
 
-var socialMediaGroup, socialMediaMat, socialMediaTex, socialMediaScreens = [],
+var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
     sm_materials = [];
 var glowGeo, glowMat1, glowMat2, sm_glow;
@@ -308,10 +308,14 @@ function superInit() {
         eyeGaze = new THREE.Mesh(eyeGeo, new THREE.MeshBasicMaterial({ map: eyeTex }));
     });
 
+    gazeDotTex = textureLoader.load(basedURL + 'images/gazeDot.png');
+    gazeDotTex.wrapT = THREE.RepeatWrapping;
+    //gazeDotMat = new THREE.MeshBasicMaterial({ map: gazeDotTex.clone(), side: THREE.DoubleSide, transparent: true });
+    gazeDotGeo = new THREE.PlaneGeometry(1, 1);
+
     modelLoader.load(basedURL + "models/sleeper3.json", function(geometry, material) {
         sleeperGeo_test = geometry;
         sleep_test = new THREE.SkinnedMesh(sleeperGeo_test, new THREE.MeshLambertMaterial({ map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide }));
-        //scene.add(sleep_test);
     });
 
     stats = new Stats();
@@ -387,7 +391,6 @@ function superInit() {
         ScrollSocialMedia(sm_mat.map.offset);
     }
 
-    //socialMediaGroup = new THREE.Object3D();
     modelLoader.load(basedURL + "models/glow.json", function(geometry, material) {
         glowGeo = geometry;
         glowMat1 = new THREE.MeshBasicMaterial({
@@ -421,7 +424,6 @@ function superInit() {
                 socialMediaScreens.push(sm_screen);
 
                 scene.add(sm_screen);
-                //socialMediaGroup.add(sm_screen);
                 screenIndex++;
             }
         }
@@ -435,8 +437,7 @@ function superInit() {
                 var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
                 sm_screen.position.set(
                     (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                    j * 50 + GetRandomArbitrary(0, 13),
-                    -400 + GetRandomArbitrary(0, 3)
+                    j * 50 + GetRandomArbitrary(0, 13), -400 + GetRandomArbitrary(0, 3)
                 );
 
                 sm_screen.add(glowMesh.clone());
@@ -445,12 +446,9 @@ function superInit() {
                 socialMediaScreens.push(sm_screen);
 
                 scene.add(sm_screen);
-                //socialMediaGroup.add(sm_screen);
                 screenIndex++;
             }
         }
-        //scene.add(socialMediaGroup);
-        //TweenMax.to(glowMeshScales, 2, {x:4.3,y:4.3,z:4.3, yoyo: true, repeat:-1});
     });
 
     nestTex = textureLoader.load(basedURL + 'images/nest.jpg');
@@ -524,7 +522,6 @@ function lateInit() {
     // introRoom.position.set( myPosition.x, myPosition.y-3.5, myPosition.z );
     // UpdateRotationWithMe( introRoom );
 
-
     // start to animate()!
     animate(performance ? performance.now() : Date.now());
 
@@ -551,42 +548,32 @@ function lateInit() {
     nestPos.multiplyScalar(20 / 225);
     nestPos.z = GetRandomArbitrary(-5, 5);
 
+    /*
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
-
-        // TweenMax.to(socialMediaGroup.position, 3, {z:-5000, delay:7, onComplete: ()=>{
-        // 	disposeSocialMedia();
-        // }});
-        // TweenMax.staggerTo(socialMediaScreens, 0, {
-        //     opacity: 0,
-        //     delay: 4,
-        //     onStartParams: ["{self}"],
-        //     onStart: (tween) => {
-        //         tween.target.visible = 0;
-        //     }
-        // }, 0.05, disposeSocialMedia);
 
         setTimeout(() => {
             disposeSocialMedia();
             var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
             firstGuy.startBreathing();
 
-             // ------ SEND_TO_SERVER => START_BREATHING ------
-		    var msg = {
-		        'type': 'startBreathing',
-		        'index': whoIamInLife,
-		        'worldId': meInWorld
-		    };
-		    if (ws) {
-		        sendMessage(JSON.stringify(msg));
-		    }
-		    // --------------------------------------------
+            // ------ SEND_TO_SERVER => START_BREATHING ------
+            var msg = {
+                'type': 'startBreathing',
+                'index': whoIamInLife,
+                'worldId': meInWorld
+            };
+            if (ws) {
+                sendMessage(JSON.stringify(msg));
+            }
+            // --------------------------------------------
 
-            setTimeout(()=>{
-            	controls.movingEnabled = true;
-            }, duration*1000);
+            setTimeout(() => {
+                controls.movingEnabled = true;
+            }, duration * 1000);
         }, 26000);
     }, 5000);
+    */
 }
 
 function disposeSocialMedia() {
@@ -597,19 +584,22 @@ function disposeSocialMedia() {
     socialMediaTweens = undefined;
 
     // mesh
-    // scene.remove(socialMediaGroup);
     for (var i = 0; i < socialMediaScreens.length; i++) {
         scene.remove(socialMediaScreens[i]);
+        DoDispose(socialMediaScreens[i]);
     }
     socialMediaScreens = undefined;
-    //socialMediaGroup = undefined;
 
     // geometry
     glowGeo.dispose();
+    glowGeo = undefined;
 
     // texture
     for (var i = 0; i < sm_materials.length; i++) {
-        sm_materials[i].map.dispose();
+        if (sm_materials[i].map) {
+            sm_materials[i].map.dispose();
+            sm_materials[i].map = undefined;
+        }
     }
     socialMediaTex.dispose();
     socialMediaTex = undefined;
@@ -623,6 +613,7 @@ function disposeSocialMedia() {
     glowMat2 = undefined;
     for (var i = 0; i < sm_materials.length; i++) {
         sm_materials[i].dispose();
+        sm_materials[i] = undefined;
     }
     sm_materials = undefined;
 }
@@ -843,9 +834,6 @@ function update() {
         //-----------------------------------------------
         currMinute = newMinute;
     }
-
-    // social media scrolling
-    // socialMediaTex.offset.y -= 0.001;
 }
 
 function render() {
@@ -855,10 +843,9 @@ function render() {
 function removePlayer(playerID) {
     if (dailyLifePlayerDict[playerID]) {
 
-        // v.1
-        //scene.remove( dailyLifePlayerDict[playerID].player );
-        // v.2
         dailyLifePlayerObject.remove(dailyLifePlayerDict[playerID].player);
+
+        DoDispose(dailyLifePlayerDict[playerID].player);
 
         delete dailyLifePlayerDict[playerID];
     }
@@ -867,11 +854,11 @@ function removePlayer(playerID) {
 function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
     if (bathroom.visible) return;
 
-    pplCountTex.clear().drawText("Pooper", undefined, 100, 'white');
+    pplCountTex.clear().drawText("Sleepers", undefined, 100, 'white');
     pplCountTex.drawText("Counter", undefined, 250, 'white');
     pplCountTex.drawText("this world: " + thisWorldCount, undefined, 400, 'white');
     pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
-    pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
+    pplCountTex.drawText("total slept: " + totalVisit, undefined, 700, 'white');
 }
 
 function GazeToMove() {
@@ -882,6 +869,15 @@ function GazeToMove() {
     // 3) if both EyeSize all 5 (from_index_look: true, to_index_look: true), start moving toward the center point
     // 4) once move, keep moving eventhough look away
     // 5) sync breathing tempo (true for local player)
+
+    //v.2
+    // 1) Look at someone => Extend GazeDot
+    // 2) Once reach, notify target
+    // 3) If target looks back, extend GazeDot
+    // 3) if both GazeDot reach scale, start moving toward the center point
+    // 4) once moved, keep moving eventhough look away, play audio (local)
+    // 5) sync breathing cycle once (local)
+
     if (lookingAtSomeone != -1 && lookingAtSomeone != whoIamInLife) {
         // First gaze!
         if (!isGazing) {
@@ -912,12 +908,36 @@ function GazeToMove() {
                 firstGuy.wordTexture.clear();
                 firstGuy.wordBubble.visible = false;
             }
+
+            // GazeDot
+            firstGuy.setGazeDotsRotation();
+            firstGuy.gazeDotTargetLength = firstGuy.player.position.distanceTo(dailyLifePlayerDict[lookingAtSomeone].player.position);
+
+            // ------ SEND_TO_SERVER_GAZING_TARGET_LENGTH ------
+            if (trulyFullyStart) {
+                var msg = {
+                    'type': 'gazeLength',
+                    'index': whoIamInLife,
+                    'length': firstGuy.gazeDotTargetLength,
+                    'worldId': meInWorld
+                };
+
+                if (ws) {
+                    sendMessage(JSON.stringify(msg));
+                }
+            }
+            // ----------------------------------------------------
         }
 
         // Keep gazing!
-        // grow eye size ++
+
+        // v.1 grow eye size ++
         firstGuy.eye.visible = true;
         firstGuy.eye.scale.lerp(new THREE.Vector3(1, 1, 1), 0.01);
+
+        // v.2 extend GazeDot
+        // firstGuy.gazeDots.scale.lerp(new THREE.Vector3(1, 1, firstGuy.gazeDotTargetLength), 0.008);
+        // firstGuy.gazeDots.children[0].material.map.repeat.lerp(new THREE.Vector2(1,firstGuy.gazeDotTargetLength), 0.008);
 
         // if my eye size >= 1
         if (firstGuy.eye.scale.x >= 0.9) {
@@ -927,8 +947,6 @@ function GazeToMove() {
                     'type': 'gaze',
                     'index': whoIamInLife,
                     'toWhom': lookingAtSomeone,
-                    // 'playerPos': controls.position,
-                    // 'playerDir': controls.getDirection(),
                     'worldId': meInWorld
                 };
 
@@ -950,7 +968,7 @@ function GazeToMove() {
                         midPoint.addVectors(p_from, p_to).multiplyScalar(1 / 2);
                         var myTarget = new THREE.Vector3().subVectors(p_from, midPoint).normalize().multiplyScalar(2);
                         myTarget.add(midPoint);
-                        dist_T = p_from.distanceTo(midPoint) * 1.5;
+                        dist_T = p_from.distanceTo(midPoint) * 0.5;
 
                         controls.createTweenForMove(myTarget, dist_T, false);
                         console.log("GAZE_TO_MOVE! time: " + dist_T);
@@ -958,12 +976,27 @@ function GazeToMove() {
                         firstGuy.wordTexture.clear();
                         firstGuy.wordBubble.visible = false;
 
+                        firstGuy.resetGazeDots();
+
                         setTimeout(function() {
                             console.log("reset isGazeMoving");
                             isGazeMoving = false;
                         }, dist_T * 1000);
 
                         isGazeMoving = true;
+
+                        // ------ SEND_TO_SERVER_GAZING_TARGET_LENGTH ------
+                        var msg = {
+                            'type': 'gazeLength',
+                            'index': whoIamInLife,
+                            'length': -1,
+                            'worldId': meInWorld
+                        };
+
+                        if (ws) {
+                            sendMessage(JSON.stringify(msg));
+                        }
+                        // ----------------------------------------------------
                     }
                 }
             }
@@ -976,8 +1009,7 @@ function GazeToMove() {
                 'type': 'gaze',
                 'index': whoIamInLife,
                 'toWhom': -1,
-                // 'playerPos': yawObject.position,
-                // 'playerDir': scope.getDirection(),
+                'length': -1,
                 'worldId': meInWorld
             };
 
@@ -993,6 +1025,8 @@ function GazeToMove() {
             isGazeMoving = false;
 
             firstGuy.closeEye();
+
+            firstGuy.resetGazeDots();
 
             console.log("stop gaze!");
         }

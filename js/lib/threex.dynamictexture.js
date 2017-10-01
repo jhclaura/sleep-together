@@ -11,16 +11,13 @@ var THREEx	= THREEx	|| {}
  * @param {Number} height height of the canvas
  */
 THREEx.DynamicTexture	= function(width, height){
-	var canvas	= document.createElement( 'canvas' )
-	canvas.width	= width
-	canvas.height	= height
-	this.canvas	= canvas
+	this.canvas	= document.createElement( 'canvas' );
+	this.canvas.width	= width;
+	this.canvas.height	= height;
 
-	var context	= canvas.getContext( '2d' )
-	this.context	= context
+	this.context	= this.canvas.getContext( '2d' );
 
-	var texture	= new THREE.Texture(canvas)
-	this.texture	= texture
+	this.texture	= new THREE.Texture(this.canvas);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -183,4 +180,10 @@ THREEx.DynamicTexture.prototype.drawTextLines = function(text, x, y, fillStyle, 
 	this.texture.needsUpdate	= true;
 	// for chained API
 	return this;
+};
+
+THREEx.DynamicTexture.prototype.dispose = function(){
+	this.texture.dispose();
+	this.context = null;
+	this.canvas = null;
 };

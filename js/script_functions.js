@@ -258,3 +258,34 @@ function GetRandomIntInclusive(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
+
+// on THREE.Object3D
+function DoDispose(obj) {
+	if(obj !== null){
+		for(var i=0; i<obj.children.length; i++){
+			DoDispose(obj.children[i]);
+		}
+		if(obj.geometry){
+			obj.geometry.dispose();
+			obj.geometry = undefined;
+		}
+		if(obj.material){
+			if(obj.material.materials){
+				for(i=0; i<obj.material.materials.length; i++){
+					obj.material.materials[i].dispose();
+				}
+			}
+			if(obj.material.map){
+				obj.material.map.dispose();
+				obj.material.map = undefined;
+			}
+			obj.material.dispose();
+			obj.material = undefined;
+		}
+		if(obj.texture){
+			obj.texture.dispose();
+			obj.texture = undefined;
+		}
+	}
+	obj = undefined;
+}

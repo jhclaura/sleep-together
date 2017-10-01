@@ -318,6 +318,20 @@
 					}
 
 					// GAZE_TO_MOVE, ONLY IF we are in the same world
+					if(data.type == 'gazeLength' && data.worldId == meInWorld)
+					{
+						if(data.index != whoIamInLife && dailyLifePlayerDict[ data.index ])
+						{
+							dailyLifePlayerDict[ data.index ].setGazeDotsRotation();
+							dailyLifePlayerDict[ data.index ].gazeDotTargetLength = data.length;
+
+							if(data.length==-1){
+								dailyLifePlayerDict[ data.index ].resetGazeDots();
+							}
+						}
+					}
+
+					// GAZE_TO_MOVE, ONLY IF we are in the same world
 					if(data.type == 'gaze' && data.worldId == meInWorld)
 					{
 						if(data.index != whoIamInLife && dailyLifePlayerDict[ data.index ])
@@ -325,6 +339,7 @@
 							if(data.toWhom == -1)
 							{
 								dailyLifePlayerDict[ data.index ].closeEye();
+								dailyLifePlayerDict[ data.index ].resetGazeDots();
 
 								// someone stop look at me
 								if(data.index == someoneLookingAtMe) {
