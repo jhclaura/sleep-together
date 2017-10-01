@@ -16,8 +16,6 @@ var myStartX = 0,
     myStartY = 3.5; //y: 3.5, 100
 var myPosition, myStartRotY, worldBubble, pplCount, pplCountTex, pplCountMat;
 
-var model, texture;
-var dummy;
 var perlin = new ImprovedNoise(),
     noiseQuality = 1;
 
@@ -26,62 +24,13 @@ var basedURL = "assets/sleep/";
 var textureLoader, loadingManger;
 var keyIsPressed;
 
-// WAVE
-var timeWs = [0, Math.PI / 2, Math.PI, -Math.PI / 2, Math.PI + 0.3, -Math.PI / 5, Math.PI / 1.1];
-var frequencyWs = [0.02, 0.01];
-var frequencyW = 0.02,
-    amplitudeW = 1,
-    offsetW = 0;
-var sinWave, sinWaves = [],
-    cosWaves = [],
-    tanWaves = [],
-    spin;
-var sinWRun = [],
-    cosWRun = [],
-    tanWRun = [];
-
 // RAYCAST
-var objects = [];
-var ray;
-var projector, eyerayCaster, eyeIntersects;
-var lookDummy, lookVector;
+var eyerayCaster, eyeIntersects;
 
 // PLAYERS
-var skinTexture;
-var guyBodyGeo, guyLAGeo, guyRAGeo, guyHeadGeo;
-var personTex;
-var player, playerBody, playerHead;
-var firstPlayer, secondPlayer;
-var firstGuy, firstGuyBody, firstGuyHead, secondGuy, secondGuyBody, secondGuyHead;
-var QforBodyRotation;
-var fGuyHandHigh = false,
-    sGuyHandHigh = false;
-var bodyGeo;
-var dailyLifeME, colorME;
+var firstGuy;
 var dailyLifePlayerDict = {},
     dailyLifePlayerObject = new THREE.Object3D();
-
-var person, personGeo, personMat, toiletTex, toiletMat;
-var persons = [],
-    personIsWalking = [],
-    personCircle, personAmount = 3;
-var personsAppeared = false,
-    personsAnied = false,
-    personsWalked = false;
-var personWalkTimeoutID, personAniInterval, personAniIntervalCounter = 0,
-    personAniSequence = [1, 3, 5, 6];
-var poop, poopGeo, poopTex, poopMat, poopHat, poopHeartTex;
-var poopM, poopMGeo, poopMTex, poopMMat, poopHeartGeo, poopHeartMat, poopHeart;
-var personBody, personHead, personToilet;
-var keyframe, lastKeyframe, currentKeyframe;
-var animOffset = 1,
-    keyduration = 28;
-var aniStep = 0,
-    aniTime = 0,
-    slowAni = 0.4;
-var personKeyframeSet = [28, 15, 1, 8, 1, 12, 10, 1];
-var personAniOffsetSet = [1, 30, 48, 50, 58, 60, 72, 82]; //2: sit freeze; 4: push freeze; 7: stand freeze
-var personFreeze = false;
 
 // SOUND
 // var usingWebAudio = true, bufferLoader, convolver, mixer;
@@ -127,8 +76,7 @@ var sleeperOrigin = "Earth";
 var currMinute, startTimestamp, endTimestamp;
 var sleeper, sleeperGeo, sleeperTexture, sleep_test, sleeperGeo_test;
 var breathLightTexture;
-var chewerA, chewerTextures = [],
-    chewers = [];
+
 var isGazing = false,
     isGazeMoving = false,
     notifyGazeMax = false;
@@ -148,15 +96,6 @@ var nestTex, nestStickGeos = [],
     nestSticks = [];
 
 var breathingTimeline;
-
-
-// Gaze-To-Move:
-// 1) Look at someone => CreateBigEye (from_index_look: true, to_index_look: false), startGazeTime
-// 2) BigEyeGrow - if not look away, size max: 5
-// 2.5) If other looks back: CreateYellowLine
-// 3) if both EyeSize all 5 (from_index_look: true, to_index_look: true), start moving toward the center point
-// 4) once move, keep moving eventhough look away
-// 5) sync breathing tempo (true for local player)
 
 var worldTotal = 18,
     eaterPerTable = 6,
@@ -246,17 +185,6 @@ function superInit() {
     // RAYCASTER!
     eyerayCaster = new THREE.Raycaster();
 
-    // Sinwave
-    sinWave = new SinWave(timeWs[0], frequencyW, amplitudeW, offsetW);
-
-    for (var i = 0; i < timeWs.length; i++) {
-        var sw = new SinWave(timeWs[i], frequencyW, amplitudeW, offsetW);
-        sinWaves.push(sw);
-    }
-
-    planet = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshLambertMaterial({ color: 0xff0000, side: THREE.DoubleSide }));
-    scene.add(planet);
-
     scene.add(dailyLifePlayerObject);
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -294,8 +222,6 @@ function superInit() {
 
     textureLoader = new THREE.TextureLoader(loadingManger);
     var modelLoader = new THREE.JSONLoader(loadingManger);
-
-    //loadSitModelPlayer(basedURL + "models/personHead.js", basedURL + "models/sleepBody2.json");
 
     LoadStarTexture();
 
