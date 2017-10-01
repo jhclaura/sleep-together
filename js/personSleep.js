@@ -75,15 +75,13 @@ function PersonSleep(_pos, _color, _id, _name) {
     this.playerBody.skeleton.bones[0].add(this.nameBubble);
 
     // 2-3: eye
-    this.eye = eyeGaze.clone();
+    this.eye = new THREE.Object3D();
     this.eye.name = "eye";
-    this.eye.rotation.x = 45 * Math.PI / 180;
-    this.eye.position.set(0, -0.5, 2.4);
     this.eye.scale.multiplyScalar(0.01);
     this.eye.visible = false;
     this.playerBody.add(this.eye);
 
-    // 2-4: light
+    // 2-3: light
     this.breathLight = new THREE.PointLight(0xffff00, 0, 50); //intensity: 0.2
     this.breathLight.name = _id + " breathLight";
     // ori color: 0xffef3b
@@ -181,7 +179,7 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
     }
 
     this.realRotation = _playerQ;
-    
+
     // gazeDot
     if (this.gazeDotTargetLength > 0) {
         this.gazeDots.scale.lerp(new THREE.Vector3(1, 1, this.gazeDotTargetLength), 0.008);
@@ -231,20 +229,22 @@ PersonSleep.prototype.transUpdate = function() {
 }
 
 PersonSleep.prototype.openEye = function() {
-    this.eye.visible = true;
-    TweenMax.to(this.eye.scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeOut.config(2) });
+    //this.eye.visible = true;
+    //TweenMax.to(this.eye.scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeOut.config(2) });
+    this.eye.scale.set(1,1,1);
 }
 
 PersonSleep.prototype.closeEye = function() {
-    TweenMax.to(this.eye.scale, 0.7, {
-        x: 0.01,
-        y: 0.01,
-        z: 0.01,
-        ease: Back.easeIn.config(2),
-        onComplete: () => {
-            this.eye.visible = false;
-        }
-    });
+    // TweenMax.to(this.eye.scale, 0.7, {
+    //     x: 0.01,
+    //     y: 0.01,
+    //     z: 0.01,
+    //     ease: Back.easeIn.config(2),
+    //     onComplete: () => {
+    //         this.eye.visible = false;
+    //     }
+    // });
+    this.eye.scale.set(0.01,0.01,0.01);
 }
 
 PersonSleep.prototype.updateTimetag = function(_time) {

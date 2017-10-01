@@ -80,7 +80,7 @@ var breathLightTexture;
 var isGazing = false,
     isGazeMoving = false,
     notifyGazeMax = false;
-var eyeTex, eyeGeo, eyeGaze, gazeDotTex, gazeDotMat, gazeDotGeo;
+var gazeDotTex, gazeDotMat, gazeDotGeo;
 var EyeMaxSize = 5,
     gazeTargetIndex = -1;
 var lookingAtSomeone = -1,
@@ -227,12 +227,6 @@ function superInit() {
 
     sleeper_test_Texture = textureLoader.load(basedURL + 'images/chef2.jpg');
     breathLightTexture = textureLoader.load("images/glow_edit.png");
-
-    eyeTex = textureLoader.load(basedURL + 'images/eyeGaze.jpg');
-    modelLoader.load(basedURL + "models/eye.json", function(geometry, material) {
-        eyeGeo = geometry;
-        eyeGaze = new THREE.Mesh(eyeGeo, new THREE.MeshBasicMaterial({ map: eyeTex }));
-    });
 
     gazeDotTex = textureLoader.load(basedURL + 'images/gazeDot.png');
     gazeDotTex.wrapT = THREE.RepeatWrapping;
@@ -858,7 +852,6 @@ function GazeToMove() {
         // Keep gazing!
 
         // v.1 grow eye size ++
-        firstGuy.eye.visible = true;
         firstGuy.eye.scale.lerp(new THREE.Vector3(1, 1, 1), 0.01);
 
         // v.2 extend GazeDot
