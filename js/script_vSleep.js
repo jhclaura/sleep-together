@@ -384,6 +384,7 @@ function superInit() {
         optionButtons.add(dummyButton);
     }
     scene.add(optionButtons);
+    optionButtons.visible = false;
 }
 
 function ScrollSocialMedia(el) {
@@ -482,6 +483,7 @@ function lateInit() {
             	// Option time!
                 nestPos = undefined;
                 expStage = 4;
+                optionButtons.visible = true;
             }, duration * 1000);
         }, 26000);
     }, 5000);
@@ -726,6 +728,20 @@ function update() {
 
             if (!isGazeMoving)
                 GazeToMove();
+
+            eyeIntersects = eyerayCaster.intersectObject(optionButtons, true);
+            if (eyeIntersects.length > 0) {
+                var iName = eyeIntersects[0].object.name;
+                iName = iName.split("_");
+                if (iName.length == 2) {
+                    currentOption = iName[1];
+                } else {
+                    currentOption = '';
+                }
+            } else {
+                currentOption = '';
+            }
+            GazeToChoose();
             break;
     }
 
@@ -799,6 +815,8 @@ function OptionStartStage(stageIndex) {
         // Redo breathing exercise
         case 1:
         	controls.movingEnabled = false;
+        	optionButtons.visible = false;
+        	
             var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
             firstGuy.startBreathing(true);
 
@@ -817,6 +835,7 @@ function OptionStartStage(stageIndex) {
             setTimeout(() => {
             	// make new choise / option
                 expStage = 4;
+                optionButtons.visible = true;
             }, duration * 1000);
             break;
 

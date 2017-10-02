@@ -499,6 +499,17 @@ THREE.DeviceControls = function(camera, worldCenter) {
 
     var getInput = function() {
     	switch (expStage) {
+    		// When exploring
+    		case 3:
+	            if (currentOption!='') {
+	            	if(optionLightDicts[currentOption].intensity>1){
+	            		console.log('choose option: ' + currentOption);
+	            		currentOption=='';
+	            		OptionStartStage(optionLightDicts[currentOption].stageIndex);
+	            	}
+	            }
+	            break;
+
 	        // Options
 	        case 4:
 	            if (currentOption!='') {
