@@ -257,11 +257,14 @@ PersonSleep.prototype.updateTimetag = function(_time) {
     this.dataTexture.clear().drawText(_time + " from " + sleeperOrigin, undefined, 50, 'grey');
 }
 
-PersonSleep.prototype.startBreathing = function() {
+PersonSleep.prototype.startBreathing = function(_redo) {
     this.breathSprite.visible = true;
     TweenMax.to(this.breathLight, 1, { intensity: 0.2 });
 
-    this.breathingTimeline.play();
+    if(_redo)
+    	this.breathingTimeline.restart();
+    else
+	    this.breathingTimeline.play();
 }
 
 PersonSleep.prototype.setGazeDotsRotation = function(targetVector) {

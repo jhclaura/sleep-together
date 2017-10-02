@@ -113,7 +113,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
         console.log("look at center");
     }
 
-    this.movingEnabled = true;	// FOR_REAL: false
+    this.movingEnabled = false;	// FOR_REAL: false, FOR_DEV: true
     this.clickingTouchingEnabled = true;
 
     var moveForward = false;
@@ -328,6 +328,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
         if (scope.clickingTouchingEnabled === false) return;
 
         //interact();
+        getInput();
     }
 
     var onKeyDown = function(event) {
@@ -426,7 +427,9 @@ THREE.DeviceControls = function(camera, worldCenter) {
         }
 
         //interact();
-        scope.align();
+        getInput();
+
+        //scope.align();
         //alignBody(firstGuy);
     };
 
@@ -493,6 +496,21 @@ THREE.DeviceControls = function(camera, worldCenter) {
         this.enabled = false;
     else
         this.enabled = true;
+
+    var getInput = function() {
+    	switch (expStage) {
+	        // Options
+	        case 4:
+	            if (currentOption!='') {
+	            	if(optionLightDicts[currentOption].intensity>1){
+	            		console.log('choose option: ' + currentOption);
+	            		currentOption=='';
+	            		OptionStartStage(optionLightDicts[currentOption].stageIndex);
+	            	}
+	            }
+	            break;
+	    }
+    }
 
     var interact = function() {
         if (lookingAtSomeone != -1 && lookingAtSomeone != whoIamInLife) {

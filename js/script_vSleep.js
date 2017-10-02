@@ -17,9 +17,6 @@ var myStartX = 0,
 var myPosition, myStartRotY, worldBubble, pplCount, pplCountTex, pplCountMat;
 var myWorldCenter = new THREE.Vector3();
 
-var perlin = new ImprovedNoise(),
-    noiseQuality = 1;
-
 var basedURL = "assets/sleep/";
 
 var textureLoader, loadingManger;
@@ -87,7 +84,8 @@ var EyeMaxSize = 5,
 var lookingAtSomeone = -1,
     someoneLookingAtMe = -1;
 var sleeperStartPositions = {};
-var gazePlayerFrom = new THREE.Vector3(), gazePlayerTo = new THREE.Vector3();
+var gazePlayerFrom = new THREE.Vector3(),
+    gazePlayerTo = new THREE.Vector3();
 
 var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
@@ -102,6 +100,14 @@ var breathingTimeline;
 var worldTotal = 18,
     eaterPerTable = 6,
     tableAmount = 3;
+
+var optionGeo, optionMat, currentOption, optionLights = [],
+    optionLightDicts = {},
+    optionButtons = new THREE.Object3D(),
+    optionTextures = {},
+    optionTags = ["breath", "sleep", "explore"];
+var expStage = 0; // 0: intro, 1: breathing, 2: explore, 3: sleep, 4: choose_option
+var isAllOver = false;
 
 ////////////////////////////////////////////////////////////
 
@@ -143,7 +149,6 @@ function superInit() {
         loop: true,
         volume: 0.2
     });
-
 
     time = Date.now();
 
@@ -189,7 +194,6 @@ function superInit() {
 
     scene.add(dailyLifePlayerObject);
 
-    //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -258,39 +262,6 @@ function superInit() {
     // lateInit();
 
     //pageIsReadyToStart = true;
-
-    // Create social media clone
-    /*
-	var socialMediaDiv = byId("sm-div");
-	var canvas1 = document.createElement('canvas');
-	var context1 = canvas1.getContext('2d');
-	canvas1.id = "sm-canvas";
-	context1.font = "Bold 40px Arial";
-	context1.fillStyle = "rgba(255,0,0,0.95)";
-    context1.fillText('Hello, world! sdkfjlsakjdhf;asldjf;lskdjf;lskdjf;siajdf;lsakdjf;lsakdf;lksadf;lskadh;a', 0, 50);
-    socialMediaDiv.appendChild(canvas1);
-
-    var testImg = document.createElement("img");
-    testImg.src = "assets/sleep/images/sStar_1.png";
-    socialMediaDiv.appendChild(testImg);
-
-    var testImg2 = new Image();
-    testImg2.src = "assets/sleep/images/sStar_2.png";
-    testImg2.onload = function(){
-    	context1.drawImage(testImg2, 100, 100);
-    };
-
-    // Canvas as texture test
-    var canvasTex = new THREE.CanvasTexture(canvas1);
-    var canvasMat = new THREE.MeshBasicMaterial({map: canvasTex, side: THREE.DoubleSide});
-    canvasMat.transparent = true;
-    var canvasMesh = new THREE.Mesh(
-    	new THREE.PlaneGeometry(canvas1.width, canvas1.height),
-    	canvasMat
-    );
-    canvasMesh.scale.multiplyScalar(0.01);
-    scene.add(canvasMesh);
-    */
 
     // Social Media Wall
     socialMediaTex = textureLoader.load(basedURL + 'images/socialScreen.jpg');
@@ -389,6 +360,30 @@ function superInit() {
     //     basedURL + "models/stick3.json", basedURL + "models/stick4.json",
     //     basedURL + "models/stick5.json"
     // );
+
+    // OPTIONS_AFTER_BREATHING
+    optionGeo = new THREE.CylinderGeometry(1, 1, 1, 20);
+    for (var i = 0; i < optionTags.length; i++) {
+        optionTextures[i] = textureLoader.load(basedURL + 'images/options_' + optionTags[i] + '.jpg');
+    }
+    for (var i = 0; i < 3; i++) {
+        var dummyButton = new THREE.Mesh(new THREE.BoxGeometry(6, 2, 6), new THREE.MeshBasicMaterial({ visible: false }));
+        var optionMesh = new THREE.Mesh(optionGeo, new THREE.MeshLambertMaterial({ map: optionTextures[i] }));
+        var optionLight = new THREE.PointLight(0xffff00, 0, 5); //intensity: 0.2
+        optionLight.position.y = -2;
+        optionLight.name = optionTags[i];
+        optionLight.stageIndex = i+1;
+        optionLights.push(optionLight);
+        optionLightDicts[optionTags[i]] = optionLight;
+
+        dummyButton.add(optionMesh);
+        dummyButton.add(optionLight);
+        dummyButton.position.set(0, 30, (i - 1) * 8);
+        dummyButton.name = 'option_' + optionTags[i];
+
+        optionButtons.add(dummyButton);
+    }
+    scene.add(optionButtons);
 }
 
 function ScrollSocialMedia(el) {
@@ -401,15 +396,9 @@ function ScrollSocialMedia(el) {
 function AssignIndex() {
     // console.log("whoIamInLife: " + whoIamInLife);
 
-    // Assign position
-    // meInWorld = Math.floor(whoIamInLife/18);			// which world <== dealt at Server
+    myPosition = sleeperStartPositions[whoIamInLife];	// for_real
+    // myPosition = new THREE.Vector3();				// for_dev
 
-
-    // myStartX = 50;
-    // myStartY = 50;
-    // myStartZ = 50;
-    //myPosition = new THREE.Vector3(myStartX, myStartY, myStartZ);
-    myPosition = sleeperStartPositions[whoIamInLife];
     myStartX = myPosition.x;
     myStartY = myPosition.y;
     myStartZ = myPosition.z;
@@ -432,9 +421,6 @@ function lateInit() {
     console.log(myPosition);
     firstGuy = new PersonSleep(myPosition, myColor, whoIamInLife, playerNName);
     dailyLifePlayerDict[whoIamInLife] = firstGuy;
-
-    // secGuy = new PersonSleep( myPosition, new THREE.Color(), 8, "andy" );
-    // secGuy.player.position.x = 5;
 
     // create controls
     controls = new THREE.DeviceControls(camera, myWorldCenter, true);
@@ -470,20 +456,22 @@ function lateInit() {
     nestPos.multiplyScalar(20 / 225);
     nestPos.z = GetRandomArbitrary(-5, 5);
 
-    /*
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
 
         setTimeout(() => {
             disposeSocialMedia();
             var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
-            firstGuy.startBreathing();
+            firstGuy.startBreathing(false);
+			
+			expStage = 1;
 
             // ------ SEND_TO_SERVER => START_BREATHING ------
             var msg = {
                 'type': 'startBreathing',
                 'index': whoIamInLife,
-                'worldId': meInWorld
+                'worldId': meInWorld,
+                'redo': false
             };
             if (ws) {
                 sendMessage(JSON.stringify(msg));
@@ -491,12 +479,12 @@ function lateInit() {
             // --------------------------------------------
 
             setTimeout(() => {
-                controls.movingEnabled = true;
+            	// Option time!
                 nestPos = undefined;
+                expStage = 4;
             }, duration * 1000);
         }, 26000);
     }, 5000);
-    */
 }
 
 function disposeSocialMedia() {
@@ -557,19 +545,6 @@ function createHeart(fromIndex, toIndex) {
     poopH.position.copy(dailyLifePlayerDict[fromIndex].player.position);
     poopH.lookAt(dailyLifePlayerDict[toIndex].player.position);
     scene.add(poopH);
-
-    // var mHOut = new TWEEN.Tween(poopH.position)
-    // 			.to( {x: position_to.x,
-    // 				  y: position_to.y-1,
-    // 				  z: position_to.z}, Math.floor(shootT)*400 )
-    // 			.easing( TWEEN.Easing.Quadratic.InOut );
-
-    // var mHGone = new TWEEN.Tween(poopH.scale)
-    // 			.to( {x: 0.01, y: 0.01, z: 0.01}, 1000 )
-    // 			.easing( TWEEN.Easing.Elastic.In )
-    // 			.onComplete(function(){
-    // 				scene.remove(poopH);
-    // 			});
 
     TweenMax.to(poopH.position, Math.floor(shootT) * 0.4, {
         x: position_to.x,
@@ -651,16 +626,16 @@ function myKeyUp(event) {
 var lastRender = 0;
 
 function animate(timestamp) {
-    // if(!isAllOver){
-    var delta = Math.min(timestamp - lastRender, 500);
-    lastRender = timestamp;
+    if(!isAllOver){
+	    var delta = Math.min(timestamp - lastRender, 500);
+	    lastRender = timestamp;
 
-    update();
+	    update();
 
-    // Render the scene through the manager.
-    vrmanager.render(scene, camera, timestamp);
-    stats.update();
-    // }
+	    // Render the scene through the manager.
+	    vrmanager.render(scene, camera, timestamp);
+	    stats.update();
+    }
     requestAnimationFrame(animate);
 }
 
@@ -680,8 +655,8 @@ function update() {
     }
 
     // eyeRay!
-    var directionCam = controls.getDirection(1);			//.clone()
-    eyerayCaster.set(controls.position(), directionCam);	//.clone()
+    var directionCam = controls.getDirection(1); //.clone()
+    eyerayCaster.set(controls.position(), directionCam); //.clone()
 
     // v.1
     /*
@@ -715,22 +690,45 @@ function update() {
     }
     */
 
-    // v.2 - PLAYERS_ONLY
-    eyeIntersects = eyerayCaster.intersectObject(dailyLifePlayerObject, true);
-    if (eyeIntersects.length > 0) {
-        var iName = eyeIntersects[0].object.name;
-        iName = iName.split(" ");
-        if (iName.length == 2) {
-            lookingAtSomeone = iName[0];
-        } else {
-            lookingAtSomeone = -1;
-        }
-    } else {
-        lookingAtSomeone = -1;
+    // INTERACTIONS
+    switch (expStage) {
+        // Options
+        case 4:
+            eyeIntersects = eyerayCaster.intersectObject(optionButtons, true);
+            if (eyeIntersects.length > 0) {
+                var iName = eyeIntersects[0].object.name;
+                iName = iName.split("_");
+                if (iName.length == 2) {
+                    currentOption = iName[1];
+                } else {
+                    currentOption = '';
+                }
+            } else {
+                currentOption = '';
+            }
+            GazeToChoose();
+            break;
+
+        // Gaze-to-move
+        case 3:
+            eyeIntersects = eyerayCaster.intersectObject(dailyLifePlayerObject, true);
+            if (eyeIntersects.length > 0) {
+                var iName = eyeIntersects[0].object.name;
+                iName = iName.split(" ");
+                if (iName.length == 2) {
+                    lookingAtSomeone = iName[0];
+                } else {
+                    lookingAtSomeone = -1;
+                }
+            } else {
+                lookingAtSomeone = -1;
+            }
+
+            if (!isGazeMoving)
+                GazeToMove();
+            break;
     }
 
-    if (!isGazeMoving)
-        GazeToMove();
 
     // Update all the player
     for (var p in dailyLifePlayerDict) {
@@ -784,6 +782,63 @@ function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
     pplCountTex.drawText("total slept: " + totalVisit, undefined, 700, 'white');
 }
 
+function GazeToChoose() {
+    for (var i = 0; i < optionLights.length; i++) {
+        if (optionLights[i].name == currentOption) {
+            if (optionLights[i].intensity < 1.02)
+                optionLights[i].intensity += 0.02;
+        } else if (optionLights[i].intensity >= 0.04) {
+            optionLights[i].intensity -= 0.04;
+        }
+    }
+}
+
+function OptionStartStage(stageIndex) {
+    expStage = stageIndex;
+    switch (expStage) {
+        // Redo breathing exercise
+        case 1:
+        	controls.movingEnabled = false;
+            var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
+            firstGuy.startBreathing(true);
+
+            // ------ SEND_TO_SERVER => START_BREATHING ------
+            var msg = {
+                'type': 'startBreathing',
+                'index': whoIamInLife,
+                'worldId': meInWorld,
+                'redo': true
+            };
+            if (ws) {
+                sendMessage(JSON.stringify(msg));
+            }
+            // --------------------------------------------
+
+            setTimeout(() => {
+            	// make new choise / option
+                expStage = 4;
+            }, duration * 1000);
+            break;
+
+        // Sleep
+        case 2:
+        	controls.movingEnabled = false;
+        	// play good night audio
+			renderCanvas.style.opacity = 0;
+			setTimeout(()=>{
+				isAllOver = true;
+				// DISPOSE_TO_RELEASE_MEMORY!
+				DoDispose(scene);
+			}, 2500);
+			break;
+
+        // Explore
+        case 3:
+        	controls.movingEnabled = true;
+			break;
+    }
+}
+
 function GazeToMove() {
     // Gaze-To-Move
     // 1) Look at someone => CreateBigEye (from_index_look: true, to_index_look: false), startGazeTime
@@ -833,7 +888,7 @@ function GazeToMove() {
             }
 
             // GazeDot
-            firstGuy.setGazeDotsRotation( dailyLifePlayerDict[lookingAtSomeone].player.position );
+            firstGuy.setGazeDotsRotation(dailyLifePlayerDict[lookingAtSomeone].player.position);
             firstGuy.gazeDotTargetLength = firstGuy.player.position.distanceTo(dailyLifePlayerDict[lookingAtSomeone].player.position);
 
             // ------ SEND_TO_SERVER_GAZING_TARGET_LENGTH ------

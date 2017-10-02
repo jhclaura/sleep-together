@@ -201,6 +201,9 @@
 
         ws.onmessage = function(msg) {
 
+        	if(isAllOver)
+        		return;
+
             var data = JSON.parse(msg.data);
 
             if (data.type != "index" && !trulyFullyStart) return;
@@ -265,9 +268,6 @@
                 playerQ = new THREE.Quaternion(data.playerQ._x, data.playerQ._y, data.playerQ._z, data.playerQ._w);
 
                 if (dailyLifePlayerDict[data.index] && data.index != whoIamInLife) {
-                    // v.1 - no interpolation
-                    // dailyLifePlayerDict[ data.index ].update( playerPosX, playerPosY, playerPosZ, playerRotY, playerQ );
-
                     // v.2 interpolation
                     dailyLifePlayerDict[data.index].updateReal(playerPosX, playerPosY, playerPosZ, playerQ);
                 }
@@ -294,7 +294,6 @@
                                 firstGuy.wordBubble.visible = false;
                             }, 5000);
 
-                            //
                             // if( final_statistic.othersToMe[ h_f_n ] == undefined ){
                             // 	final_statistic.othersToMe[ h_f_n ] = 1;
                             // } else {
@@ -302,11 +301,8 @@
                             // }
                         }
                     }
-                    // if it's NOT aim at someone, shot out star
+                    // if it's NOT aim at someone
                     else {
-                        // var poopPos = new THREE.Vector3(data.playerPos.x, data.playerPos.y, data.playerPos.z);
-                        // var poopQ = new THREE.Vector3(data.playerDir.x, data.playerDir.y, data.playerDir.z);
-
                         // createPoop(poopPos, poopQ);
 
                         // final_statistic.totalPoop ++;
@@ -372,7 +368,7 @@
             // BREATHING, TODO: what if in the middle of breathing in history player?
             if (data.type == 'startBreathing' && data.index != whoIamInLife) {
                 if (data.worldId == meInWorld && dailyLifePlayerDict[data.index])
-                    dailyLifePlayerDict[data.index].startBreathing();
+                    dailyLifePlayerDict[data.index].startBreathing(data.redo);
             }
 
             //REMOVE_PLAYER
@@ -452,18 +448,18 @@
     <script src="js/lib/webvr-polyfill.js"></script>
     <script src="js/lib/webvr-manager.js"></script>
     <script type="text/javascript" src="js/lib/howler.js"></script>
-    <script type="text/javascript" src="js/lib/SPE.min.js"></script>
+    <!-- <script type="text/javascript" src="js/lib/SPE.min.js"></script> -->
     <script type="text/javascript" src="js/lib/BufferLoader.js"></script>
-    <script type="text/javascript" src="js/lib/physi.js"></script>
-    <script type="text/javascript" src="js/lib/ImprovedNoise.js"></script>
+    <!-- <script type="text/javascript" src="js/lib/physi.js"></script> -->
+    <!-- <script type="text/javascript" src="js/lib/ImprovedNoise.js"></script> -->
     <script type="text/javascript" src="js/lib/TweenMax.min.js"></script>
     <script type="text/javascript" src="js/util/EndArrayPlugin.js"></script>
     <script type="text/javascript" src="js/lib/stats.min.js"></script>
     <script type="text/javascript" src="js/lib/threex.dynamictexture.js"></script>
     <script type="text/javascript" src="js/sample.js"></script>
-    <script type="text/javascript" src="js/wave.js"></script>
+    <!-- <script type="text/javascript" src="js/wave.js"></script> -->
     <script type="text/javascript" src="js/personSleep.js"></script>
-    <script type="text/javascript" src="js/AniObject.js"></script>
+    <!-- <script type="text/javascript" src="js/AniObject.js"></script> -->
     <script type="text/javascript" src="js/controls/DeviceControls_vSleep.js"></script>
     <script type="text/javascript" src="js/script_functions.js"></script>
     <script type="text/javascript" src="js/setup_sleep.js"></script>
