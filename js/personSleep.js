@@ -115,6 +115,7 @@ function PersonSleep(_pos, _color, _id, _name) {
     g_d_mesh.scale.x = 0.1;
     this.gazeDots.add(g_d_mesh);
     this.player.add(this.gazeDots); //skeleton.bones[1]
+    this.gazeDots.visible = false;
 
     this.playerBody.position.y -= 1; //0.6
 
