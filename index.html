@@ -359,10 +359,12 @@
                 }
             }
 
-            // GAZE_TO_MOVE, ONLY IF we are in the same world
+            // UPDATE_TIME
             if (data.type == 'timestamp') {
-                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index])
+                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]){
                     dailyLifePlayerDict[data.index].updateTimetag(data.time);
+                    dailyLifePlayerDict[data.index].sleeperOrigin = data.origin;
+                }
             }
 
             // BREATHING, TODO: what if in the middle of breathing in history player?

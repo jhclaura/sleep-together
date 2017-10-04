@@ -203,7 +203,7 @@ function GetGeoData()
 			sleeperOrigin = data.country_name;
 		}
 		console.log("Sleeper is from: " + sleeperOrigin);
-
+		
 	  } else {
 	    // We reached our target server, but it returned an error
 	  }

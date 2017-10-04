@@ -7,6 +7,7 @@ function PersonSleep(_pos, _color, _id, _name) {
     this.whoIam = _id;
     this.ahhRotation;
     this.nname = _name;
+    this.sleeperOrigin = 'Earth';
 
     this.lookAt = -1;
     this.gazeDotTargetLength = -1;
@@ -255,7 +256,7 @@ PersonSleep.prototype.closeEye = function() {
 }
 
 PersonSleep.prototype.updateTimetag = function(_time) {
-    this.dataTexture.clear().drawText(_time + " from " + sleeperOrigin, undefined, 50, 'grey');
+    this.dataTexture.clear().drawText(_time + " from " + this.sleeperOrigin, undefined, 50, 'grey');
 }
 
 PersonSleep.prototype.startBreathing = function(_redo) {

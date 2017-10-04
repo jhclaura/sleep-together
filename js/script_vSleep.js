@@ -444,6 +444,7 @@ function lateInit() {
         'type': 'timestamp',
         'index': whoIamInLife,
         'time': new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
+        'origin': sleeperOrigin,
         'worldId': meInWorld
     };
 
@@ -762,6 +763,7 @@ function update() {
             'type': 'timestamp',
             'index': whoIamInLife,
             'time': new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
+            'origin': sleeperOrigin,
             'worldId': meInWorld
         };
 
