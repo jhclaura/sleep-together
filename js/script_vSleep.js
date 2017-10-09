@@ -2,6 +2,8 @@
 // SET_UP_VARIABLES
 ////////////////////////////////////////////////////////////
 
+var devMode = true;
+
 var scene, camera, container, renderer, effect, stats;
 var vrmanager;
 var hemiLight, controls;
@@ -90,9 +92,9 @@ var gazePlayerFrom = new THREE.Vector3(),
 var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
     sm_materials = [];
-var glowGeo, glowMat1, glowMat2, sm_glow;
-
-var nestTex, nestStickGeos = [],
+var sm_screenGeo, glowGeo, glowMat1, glowMat2, sm_glow;
+var annoucement, annoucementTexture;
+var nest, nestTex, nestStickGeos = [],
     nestSticks = [];
 
 var breathingTimeline;
@@ -105,7 +107,7 @@ var optionGeo, optionMat, currentOption, optionLights = [],
     optionLightDicts = {},
     optionButtons = new THREE.Object3D(),
     optionTextures = {},
-    optionTags = ["breath", "sleep", "explore"];
+    optionTags = ["breath", "explore", "sleep"];
 var expStage = 0; // 0: intro, 1: breathing, 2: explore, 3: sleep, 4: choose_option
 var isAllOver = false;
 
@@ -126,7 +128,7 @@ function superInit() {
         for (var i = 7; i < 13; i++) {
             var startPos = new THREE.Vector3(
                 (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                j * 50 + GetRandomArbitrary(0, 13), -400 + GetRandomArbitrary(0, 3)
+                j * 50 + GetRandomArbitrary(0, 10), -400 + GetRandomArbitrary(0, 2)
             );
             sleeperStartPositions[s_index] = startPos;
             s_index++;
@@ -216,7 +218,7 @@ function superInit() {
     loadingManger.onLoad = function() {
 
         CreateStars();
-        //CreateNest();
+        CreateNest();
 
         console.log("ALL LOADED!");
         startLink.style.display = "";
@@ -284,6 +286,72 @@ function superInit() {
         ScrollSocialMedia(sm_mat.map.offset);
     }
 
+    modelLoader.load(basedURL + "models/sm_screen.json", function(geometry, material) {
+        sm_screenGeo = geometry;
+
+        modelLoader.load(basedURL + "models/glow.json", function(geometryB, material) {
+            glowGeo = geometryB;
+            glowMat1 = new THREE.MeshBasicMaterial({
+                map: sm_glow,
+                transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
+            });
+            glowMat2 = new THREE.MeshBasicMaterial({
+                map: sm_glow,
+                transparent: true,
+                side: THREE.BackSide
+            });
+            var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
+            //glowMesh.scale.multiplyScalar(4);
+            var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
+            //glowMesh2.scale.multiplyScalar(4);
+
+            // Create Social Medai Wall
+            var screenIndex = 0;
+            // --- Real for indexing (6*3=18 total)
+            for (var j = 0; j < 3; j++) {
+                for (var i = 7; i < 13; i++) {
+                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
+                    sm_screen.add(glowMesh.clone());
+                    sm_screen.add(glowMesh2.clone());
+                    sm_screen.scale.multiplyScalar(4);
+
+                    sm_screen.position.copy(sleeperStartPositions[screenIndex]);
+                    sm_screen.position.z -= 4;
+                    sm_screen.position.y += 10;
+
+                    socialMediaScreens.push(sm_screen);
+
+                    scene.add(sm_screen);
+                    screenIndex++;
+                }
+            }
+            // --- Fake
+            for (var j = 0; j < 5; j++) {
+                for (var i = 0; i < 20; i++) {
+
+                    if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
+                        continue;
+
+                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
+                    sm_screen.add(glowMesh.clone());
+                    sm_screen.add(glowMesh2.clone());
+                    sm_screen.scale.multiplyScalar(4);
+
+                    sm_screen.position.set(
+                        (i - 10) * 45 + GetRandomArbitrary(0, 15),
+                        j * 50 + GetRandomArbitrary(0, 10), -400 + GetRandomArbitrary(0, 2)
+                    );
+
+                    socialMediaScreens.push(sm_screen);
+
+                    scene.add(sm_screen);
+                    screenIndex++;
+                }
+            }
+        });
+    });
+
+    /*
     modelLoader.load(basedURL + "models/glow.json", function(geometry, material) {
         glowGeo = geometry;
         glowMat1 = new THREE.MeshBasicMaterial({
@@ -301,7 +369,8 @@ function superInit() {
         glowMesh2.scale.multiplyScalar(4);
 
         // Create Social Medai Wall
-        var sm_plane = new THREE.PlaneGeometry(16, 28);
+        //var sm_plane = new THREE.PlaneGeometry(16, 28);
+        var sm_plane = new THREE.BoxGeometry(16, 28, 1);
         var screenIndex = 0;
         // --- Real for indexing (6*3=18 total)
         for (var j = 0; j < 3; j++) {
@@ -330,7 +399,8 @@ function superInit() {
                 var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
                 sm_screen.position.set(
                     (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                    j * 50 + GetRandomArbitrary(0, 13), -400 + GetRandomArbitrary(0, 3)
+                    j * 50 + GetRandomArbitrary(0, 10),
+                    -400 + GetRandomArbitrary(0, 2)
                 );
 
                 sm_screen.add(glowMesh.clone());
@@ -343,25 +413,34 @@ function superInit() {
             }
         }
     });
+    */
 
     nestTex = textureLoader.load(basedURL + 'images/nest.jpg');
     nestTex.wrapT = nestTex.wrapS = THREE.RepeatWrapping;
     nestTex.repeat.set(2, 2);
 
-    modelLoader.load(basedURL + "models/nest.json", function(geometry, material) {
-        var nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
-            map: nestTex
-        }));
-        nest.scale.multiplyScalar(2);
-        scene.add(nest);
-    });
-    // loadModelSticks(
-    //     basedURL + "models/stick1.json", basedURL + "models/stick2.json",
-    //     basedURL + "models/stick3.json", basedURL + "models/stick4.json",
-    //     basedURL + "models/stick5.json"
-    // );
+    // modelLoader.load(basedURL + "models/nest2.json", function(geometry, material) {
+    //     nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+    //         map: nestTex
+    //     }));
+    //     nest.scale.multiplyScalar(2);
+    //     scene.add(nest);
+    // });
+    loadModelWholeNest(
+        basedURL + "models/nest2.json", basedURL + "models/stick1.json", basedURL + "models/stick2.json",
+        basedURL + "models/stick3.json", basedURL + "models/stick4.json",
+        basedURL + "models/stick5.json"
+    );
 
-    // OPTIONS_AFTER_BREATHING
+    // THINGS_TO_CREATE_AFTER_FONT_LOADED
+    waitForWebfonts(['StupidFont'], ()=>{
+    	AfterFontLoaded();
+    });
+}
+
+function AfterFontLoaded() {
+	
+	// OPTIONS_AFTER_BREATHING
     optionGeo = new THREE.CylinderGeometry(1, 1, 1, 20);
     for (var i = 0; i < optionTags.length; i++) {
         optionTextures[i] = textureLoader.load(basedURL + 'images/options_' + optionTags[i] + '.jpg');
@@ -372,12 +451,25 @@ function superInit() {
         var optionLight = new THREE.PointLight(0xffff00, 0, 5); //intensity: 0.2
         optionLight.position.y = -2;
         optionLight.name = optionTags[i];
-        optionLight.stageIndex = i+1;
+        optionLight.stageIndex = i + 1;
         optionLights.push(optionLight);
         optionLightDicts[optionTags[i]] = optionLight;
 
+        // label
+        var optionTextTexture = new THREEx.DynamicTexture(256, 128); //512,512; 1000,128
+	    optionTextTexture.context.font = "bolder 70px StupidFont";
+	    optionTextTexture.clear().drawText(optionTags[i], undefined, 96, 'white');
+	    var optionMaterial = new THREE.MeshBasicMaterial({ map: optionTextTexture.texture, transparent: true, side: THREE.DoubleSide });
+	    var optionTextMesh = new THREE.Mesh(new THREE.PlaneGeometry(optionTextTexture.canvas.width, optionTextTexture.canvas.height), optionMaterial);
+	    optionTextMesh.scale.multiplyScalar(0.02);
+	    optionTextMesh.rotation.x = Math.PI/2;
+	    optionTextMesh.rotation.z = Math.PI/2;
+	    optionTextMesh.position.x = 1.5;
+	    optionTextMesh.visible = false;
+
         dummyButton.add(optionMesh);
         dummyButton.add(optionLight);
+        dummyButton.add(optionTextMesh);
         dummyButton.position.set(0, 30, (i - 1) * 8);
         dummyButton.name = 'option_' + optionTags[i];
 
@@ -385,6 +477,20 @@ function superInit() {
     }
     scene.add(optionButtons);
     optionButtons.visible = false;
+
+	// INFO_TEXT_DISPLY
+	annoucement = new THREE.Object3D();
+    annoucementTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
+    annoucementTexture.context.font = "bolder 70px StupidFont";
+    annoucementTexture.clear().drawText("annoucement:", undefined, 96, 'white');
+    // //annoucementTexture.clear();
+    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true, depthTest: false });
+    var annoucementMesh = new THREE.Mesh(new THREE.PlaneGeometry(annoucementTexture.canvas.width, annoucementTexture.canvas.height), annoucementMaterial);
+    annoucementMesh.scale.multiplyScalar(0.01);
+    annoucementMesh.position.z = -20;
+    annoucement.add(annoucementMesh);
+    //annoucement.rotation.y = -Math.PI/2;
+    scene.add(annoucement);
 }
 
 function ScrollSocialMedia(el) {
@@ -397,8 +503,10 @@ function ScrollSocialMedia(el) {
 function AssignIndex() {
     // console.log("whoIamInLife: " + whoIamInLife);
 
-    myPosition = sleeperStartPositions[whoIamInLife];	// for_real
-    // myPosition = new THREE.Vector3();				// for_dev
+    if (devMode)
+        myPosition = new THREE.Vector3();
+    else
+        myPosition = sleeperStartPositions[whoIamInLife];
 
     myStartX = myPosition.x;
     myStartY = myPosition.y;
@@ -428,7 +536,7 @@ function lateInit() {
     scene.add(controls.getObject());
 
     // update stuff position based on myPosition
-    // introRoom.position.set( myPosition.x, myPosition.y-3.5, myPosition.z );
+    nest.position.set(myPosition.x, myPosition.y, 0);
     // UpdateRotationWithMe( introRoom );
 
     // start to animate()!
@@ -453,40 +561,54 @@ function lateInit() {
     }
     // --------------------------------------------
 
-    // Moving
-    var nestPos = controls.position().clone();
-    nestPos.multiplyScalar(20 / 225);
+    // --------------------------------------------
+    // EXPERIENCE_START
+    // --------------------------------------------
+    if (devMode)
+        return;
+
+    // 1. Moving to NEST
+    //var nestPos = controls.position().clone();
+    //nestPos.multiplyScalar(20 / 225);
+    var nestPos = nest.position.clone();
     nestPos.z = GetRandomArbitrary(-5, 5);
 
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
 
         setTimeout(() => {
-            disposeSocialMedia();
-            var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
-            firstGuy.startBreathing(false);
-			
-			expStage = 1;
+            TweenMax.to(nest.rotation, 3, {
+                y: -Math.PI / 2,
+                ease: Back.easeInOut.config(1),
+                setOnComplete: () => {
+                    disposeSocialMedia();
+                    var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
+                    firstGuy.startBreathing(false);
 
-            // ------ SEND_TO_SERVER => START_BREATHING ------
-            var msg = {
-                'type': 'startBreathing',
-                'index': whoIamInLife,
-                'worldId': meInWorld,
-                'redo': false
-            };
-            if (ws) {
-                sendMessage(JSON.stringify(msg));
-            }
-            // --------------------------------------------
+                    expStage = 1;
 
-            setTimeout(() => {
-            	// Option time!
-                nestPos = undefined;
-                expStage = 4;
-                optionButtons.visible = true;
-            }, duration * 1000);
+                    // ------ SEND_TO_SERVER => START_BREATHING ------
+                    var msg = {
+                        'type': 'startBreathing',
+                        'index': whoIamInLife,
+                        'worldId': meInWorld,
+                        'redo': false
+                    };
+                    if (ws) {
+                        sendMessage(JSON.stringify(msg));
+                    }
+                    // --------------------------------------------
+
+                    setTimeout(() => {
+                        // Option time!
+                        nestPos = undefined;
+                        expStage = 4;
+                        optionButtons.visible = true;
+                    }, duration * 1000);
+                }
+            });
         }, 26000);
+
     }, 5000);
 }
 
@@ -507,6 +629,8 @@ function disposeSocialMedia() {
     // geometry
     glowGeo.dispose();
     glowGeo = undefined;
+    sm_screenGeo.dispose();
+    sm_screenGeo = undefined;
 
     // texture
     for (var i = 0; i < sm_materials.length; i++) {
@@ -629,15 +753,15 @@ function myKeyUp(event) {
 var lastRender = 0;
 
 function animate(timestamp) {
-    if(!isAllOver){
-	    var delta = Math.min(timestamp - lastRender, 500);
-	    lastRender = timestamp;
+    if (!isAllOver) {
+        var delta = Math.min(timestamp - lastRender, 500);
+        lastRender = timestamp;
 
-	    update();
+        update();
 
-	    // Render the scene through the manager.
-	    vrmanager.render(scene, camera, timestamp);
-	    stats.update();
+        // Render the scene through the manager.
+        vrmanager.render(scene, camera, timestamp);
+        stats.update();
     }
     requestAnimationFrame(animate);
 }
@@ -712,8 +836,8 @@ function update() {
             GazeToChoose();
             break;
 
-        // Gaze-to-move
-        case 3:
+        // Explore mode: Gaze-to-move
+        case 2:
             eyeIntersects = eyerayCaster.intersectObject(dailyLifePlayerObject, true);
             if (eyeIntersects.length > 0) {
                 var iName = eyeIntersects[0].object.name;
@@ -805,8 +929,15 @@ function GazeToChoose() {
         if (optionLights[i].name == currentOption) {
             if (optionLights[i].intensity < 1.02)
                 optionLights[i].intensity += 0.02;
+
+            if(optionButtons.children[i].children[2].visible == false)
+	            optionButtons.children[i].children[2].visible = true;
+
         } else if (optionLights[i].intensity >= 0.04) {
             optionLights[i].intensity -= 0.04;
+
+            if(optionButtons.children[i].children[2].visible == true)
+	            optionButtons.children[i].children[2].visible = false;
         }
     }
 }
@@ -816,9 +947,9 @@ function OptionStartStage(stageIndex) {
     switch (expStage) {
         // Redo breathing exercise
         case 1:
-        	controls.movingEnabled = false;
-        	optionButtons.visible = false;
-        	
+            controls.movingEnabled = false;
+            optionButtons.visible = false;
+
             var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
             firstGuy.startBreathing(true);
 
@@ -835,28 +966,28 @@ function OptionStartStage(stageIndex) {
             // --------------------------------------------
 
             setTimeout(() => {
-            	// make new choise / option
+                // make new choise / option
                 expStage = 4;
                 optionButtons.visible = true;
             }, duration * 1000);
             break;
 
-        // Sleep
-        case 2:
-        	controls.movingEnabled = false;
-        	// play good night audio
-			renderCanvas.style.opacity = 0;
-			setTimeout(()=>{
-				isAllOver = true;
-				// DISPOSE_TO_RELEASE_MEMORY!
-				DoDispose(scene);
-			}, 2500);
-			break;
-
         // Explore
+        case 2:
+            controls.movingEnabled = true;
+            break;
+
+        // Sleep
         case 3:
-        	controls.movingEnabled = true;
-			break;
+            controls.movingEnabled = false;
+            // play good night audio
+            renderCanvas.style.opacity = 0;
+            setTimeout(() => {
+                isAllOver = true;
+                // DISPOSE_TO_RELEASE_MEMORY!
+                DoDispose(scene);
+            }, 2500);
+            break;
     }
 }
 
@@ -1065,10 +1196,12 @@ function CreateNest() {
     var stickMat = new THREE.MeshLambertMaterial({ map: nestTex });
     for (var i = 0; i < nestStickGeos.length; i++) {
         var n_stick = new THREE.Mesh(nestStickGeos[i], stickMat);
-        n_stick.scale.multiplyScalar(2);
-        scene.add(n_stick);
+        //n_stick.scale.multiplyScalar(2);
+        //scene.add(n_stick);
+        nest.add(n_stick);
         nestSticks.push(n_stick);
     }
+    scene.add(nest);
 }
 
 function fullscreen() {

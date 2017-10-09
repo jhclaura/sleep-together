@@ -93,6 +93,9 @@ THREE.DeviceControls = function(camera, worldCenter) {
     this.lookAtCenterQ = new THREE.Quaternion();
     this.worldCenter = worldCenter.clone();
 
+    var tempEuler = new THREE.Euler(0, -Math.PI, 0, 'YXZ');
+    eyeFinalQ2.setFromEuler(tempEuler);
+
     //LOOKAT_CENTER
     if (toLookAtCenter) {
         var m1 = new THREE.Matrix4();
@@ -113,7 +116,12 @@ THREE.DeviceControls = function(camera, worldCenter) {
         console.log("look at center");
     }
 
-    this.movingEnabled = false;	// FOR_REAL: false, FOR_DEV: true
+    // FOR_REAL: false, FOR_DEV: true
+    if (devMode)
+        this.movingEnabled = true;
+    else
+        this.movingEnabled = false;
+
     this.clickingTouchingEnabled = true;
 
     var moveForward = false;
@@ -299,7 +307,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
             yawObject.rotation.y -= movementX * 0.001;
 
         pitchObject.rotation.x -= movementY * 0.001;
-        pitchObject.rotation.x = Math.max(-PI_2, Math.min(PI_2, pitchObject.rotation.x));
+        pitchObject.rotation.x = Math.max(-PI_2, Math.min(PI_2+PI_2/20, pitchObject.rotation.x));
 
         if (!thisIsTouchDevice) {
 
@@ -310,7 +318,10 @@ THREE.DeviceControls = function(camera, worldCenter) {
             eyeFinalQ.setFromEuler(tempEuler);
 
             // for rotating things other than fixed eyeScreen
+            // v.1
             tempEuler.set(-pitchObject.rotation.x, yawObject.rotation.y - Math.PI, 0, 'YXZ');
+            // v.2
+            // tempEuler.set(-pitchObject.rotation.x, yawObject.rotation.y, 0, 'YXZ');
             eyeFinalQ2.setFromEuler(tempEuler);
             //
             eyeFinalQ3.copy(yawObject.quaternion);
@@ -498,29 +509,27 @@ THREE.DeviceControls = function(camera, worldCenter) {
         this.enabled = true;
 
     var getInput = function() {
-    	switch (expStage) {
-    		// When exploring
-    		case 3:
-	            if (currentOption!='') {
-	            	if(optionLightDicts[currentOption].intensity>1){
-	            		console.log('choose option: ' + currentOption);
-	            		currentOption=='';
-	            		OptionStartStage(optionLightDicts[currentOption].stageIndex);
-	            	}
-	            }
-	            break;
+        switch (expStage) {
+            // Explore Mode
+            case 2:
+                optionOnInput();
+                break;
 
-	        // Options
-	        case 4:
-	            if (currentOption!='') {
-	            	if(optionLightDicts[currentOption].intensity>1){
-	            		console.log('choose option: ' + currentOption);
-	            		currentOption=='';
-	            		OptionStartStage(optionLightDicts[currentOption].stageIndex);
-	            	}
-	            }
-	            break;
-	    }
+            // Options Mode
+            case 4:
+                optionOnInput();
+                break;
+        }
+    }
+
+    var optionOnInput = function() {
+        if (currentOption != '') {
+            if (optionLightDicts[currentOption].intensity > 1) {
+                console.log('choose option: ' + currentOption);
+                currentOption == '';
+                OptionStartStage(optionLightDicts[currentOption].stageIndex);
+            }
+        };
     }
 
     var interact = function() {
@@ -718,12 +727,12 @@ THREE.DeviceControls = function(camera, worldCenter) {
                 z: _newPos.z,
                 ease: Power1.easeInOut,
                 onStart: () => {
-                	if(_toHide)
-	                    firstGuy.player.visible = false;
+                    if (_toHide)
+                        firstGuy.player.visible = false;
                 },
                 onComplete: () => {
-                	if(_toHide)
-	                    firstGuy.player.visible = true;
+                    if (_toHide)
+                        firstGuy.player.visible = true;
                 }
                 /*
                 ,onUpdate: ()=>{
@@ -773,14 +782,13 @@ THREE.DeviceControls = function(camera, worldCenter) {
         // 	velocity.y = Math.max( 0, velocity.y );
         // }
 
-
         // Rotate by Device
         if (thisIsTouchDevice) {
             // calculate the Quaternion
             this.calQ();
 
-            eyeFinalQ.copy(this.finalQ);	//.clone()
-            eyeFinalQ2.copy(this.finalQ2);	//.clone()
+            eyeFinalQ.copy(this.finalQ); //.clone()
+            eyeFinalQ2.copy(this.finalQ2); //.clone()
 
             // rotate camera
             yawObject.rotation.setFromQuaternion(this.finalQ);
@@ -843,8 +851,10 @@ THREE.DeviceControls = function(camera, worldCenter) {
         ////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////
 
-        if (firstGuy)
+        if (firstGuy) {
+            // console.log(eyeFinalQ2);
             firstGuy.update(yawObject.position.x, yawObject.position.y, yawObject.position.z, yawObject.rotation.y, eyeFinalQ2);
+        }
     };
 
     // //debug
@@ -877,6 +887,12 @@ function UpdateRotationWithMe(item) {
     var vv1 = new THREE.Vector3();
     vv1 = new THREE.Euler().setFromQuaternion(eyeFinalQ3, 'YXZ');
     item.rotation.y = vv1.y + Math.PI;
+}
+
+function UpdateFrontRotationWithMe(item) {
+    var vv1 = new THREE.Vector3();
+    vv1 = new THREE.Euler().setFromQuaternion(eyeFinalQ3, 'YXZ');
+    item.rotation.y = vv1.y;
 }
 
 function smooth(target, readings, input) {

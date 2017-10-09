@@ -1,5 +1,12 @@
-function loadModelSticks(_S1, _S2, _S3, _S4, _S5) {
+function loadModelWholeNest(_N, _S1, _S2, _S3, _S4, _S5) {
     var loader = new THREE.JSONLoader(loadingManger);
+
+    loader.load(_N, function(geometry) {
+        nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+            map: nestTex
+        }));
+        nest.scale.multiplyScalar(2);
+    });
 
     loader.load(_S1, function(geoA1) {
         nestStickGeos.push(geoA1);
