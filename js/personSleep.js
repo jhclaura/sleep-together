@@ -28,7 +28,7 @@ function PersonSleep(_pos, _color, _id, _name) {
     // 2-body
     //this.playerBody = new THREE.Mesh( sleeperGeo, this.pSkinnedMat);
     this.playerBody = new THREE.SkinnedMesh(sleeperGeo_test, this.pSkinnedMat);
-    //this.playerBody.position.z = -0.02;
+    //this.playerBody.visible = true;
     this.playerBody.name = _id + " body";
 
     // if it's ME, create inner stuff
@@ -43,10 +43,10 @@ function PersonSleep(_pos, _color, _id, _name) {
         scope.wordTexture.context.font = "bolder 70px StupidFont";
         // scope.wordTexture.clear('#dc5e64').drawText("You got a poop heart from --- <3", undefined, 96, 'white');
         scope.wordTexture.clear();
-        scope.wordMaterial = new THREE.MeshBasicMaterial({ map: this.wordTexture.texture, side: THREE.DoubleSide, transparent: true });
+        scope.wordMaterial = new THREE.MeshBasicMaterial({ map: this.wordTexture.texture, side: THREE.DoubleSide, transparent: true, depthTest: false });
         scope.wordBubble = new THREE.Mesh(new THREE.PlaneGeometry(this.wordTexture.canvas.width, this.wordTexture.canvas.height), this.wordMaterial);
         scope.wordBubble.scale.set(0.002, 0.002, 0.002);
-        scope.wordBubble.position.z = 2.5;
+        scope.wordBubble.position.z = 3;
         scope.wordBubble.position.y = 0;
         scope.wordBubble.rotation.y = Math.PI;
         scope.wordBubble.name = "wordBubble";
@@ -124,6 +124,14 @@ function PersonSleep(_pos, _color, _id, _name) {
     this.playerBodyParent = new THREE.Mesh(new THREE.BoxGeometry(4, 2, 4), new THREE.MeshBasicMaterial({ visible: false }));
     this.playerBodyParent.name = _id + " parentBody";
     this.playerBodyParent.add(this.playerBody);
+
+    // UPDATE_FOR_FACING_FRONT
+    var tempEuler = new THREE.Euler(0, -Math.PI, 0, 'YXZ');
+    if (this.whoIam == whoIamInLife)
+        this.playerBodyParent.quaternion.setFromEuler(tempEuler);
+    else
+        this.playerBody.skeleton.bones[0].quaternion.setFromEuler(tempEuler);
+
     this.player.add(this.playerBodyParent);
 
     this.player.position.copy(_pos);
@@ -187,7 +195,8 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
     this.realRotation = _playerQ;
 
     // gazeDot
-    if (this.gazeDotTargetLength > 0) {
+    if (this.gazeDotTargetLength > 0)
+    {
         this.gazeDots.scale.lerp(new THREE.Vector3(1, 1, this.gazeDotTargetLength), 0.008);
         this.gazeDots.children[0].material.map.repeat.lerp(new THREE.Vector2(1, this.gazeDotTargetLength), 0.008);
         this.gazeDots.children[0].material.map.offset.y -= 0.01;
