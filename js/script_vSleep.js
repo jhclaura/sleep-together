@@ -2,7 +2,7 @@
 // SET_UP_VARIABLES
 ////////////////////////////////////////////////////////////
 
-var devMode = true;
+var devMode = false;
 
 var scene, camera, container, renderer, effect, stats;
 var vrmanager;
@@ -56,8 +56,9 @@ var dailyLifePlayerDict = {},
 // var audioContext = new AudioContext();
 // var sample = new SoundsSample(audioContext);
 
-// var sound_fire, sound_bathroom, sound_stomach, sound_forest, sound_poop, sound_meditation, sound_opening;
-// var initSound = false, yogaOver = false;
+var sound_digital, sound_opening, sound_practice, sound_night;
+var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets;
+var initSound = false, practiceOver = false;
 
 // var switchSound_1 = false;
 
@@ -146,11 +147,38 @@ function superInit() {
     };
 
     // HOWLER
-    sound_forest = new Howl({
-        urls: ['../audios/duet/nightForest.mp3'],
+    sound_night = new Howl({
+        src: [basedURL + 'audios/night_lower.mp3'],
         loop: true,
-        volume: 0.2
+        volume: 0
     });
+    sound_digital = new Howl({
+    	src: [basedURL + 'audios/digitaltrech.mp3'],
+    	loop: true,
+        volume: 0
+    });
+    sound_hello = new Howl({
+        src: [basedURL + 'audios/voice/hello.mp3'],
+        volume: .5
+    });
+    sound_visitor_alone = new Howl({
+        src: [basedURL + 'audios/voice/onlySleeper.mp3'],
+        volume: .5
+    });
+    sound_visitor_others = new Howl({
+        src: [basedURL + 'audios/voice/lookAround.mp3'],
+        volume: .5
+    });
+    sound_lets = new Howl({
+        src: [basedURL + 'audios/voice/letsPractice.mp3'],
+        volume: .5
+    });
+    sound_practice = new Howl({
+        src: [basedURL + 'audios/voice/breathingPractice.mp3'],
+        volume: .5
+    });
+
+    //sound_night.play();
 
     time = Date.now();
 
@@ -564,6 +592,11 @@ function lateInit() {
     // --------------------------------------------
     // EXPERIENCE_START
     // --------------------------------------------
+
+    // AUDIOS
+    sound_digital.play();
+    sound_digital.fade(0,0.1,2000);
+
     if (devMode)
         return;
 
@@ -576,40 +609,82 @@ function lateInit() {
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
 
+        sound_digital.fade(0.1, 0, 10 * 1000);
+        sound_digital.once('fade', function(){
+        	console.log('digital finishes fading');
+        });
+
+        sound_night.play();
+        sound_night.fade(0, 0.3, 10 * 1000);
+
         setTimeout(() => {
             TweenMax.to(nest.rotation, 3, {
                 y: -Math.PI / 2,
                 ease: Back.easeInOut.config(1),
-                setOnComplete: () => {
+                onComplete: () => {
+
                     disposeSocialMedia();
-                    var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
-                    firstGuy.startBreathing(false);
+                    //sound_digital.unload();
 
-                    expStage = 1;
-
-                    // ------ SEND_TO_SERVER => START_BREATHING ------
-                    var msg = {
-                        'type': 'startBreathing',
-                        'index': whoIamInLife,
-                        'worldId': meInWorld,
-                        'redo': false
-                    };
-                    if (ws) {
-                        sendMessage(JSON.stringify(msg));
-                    }
-                    // --------------------------------------------
-
-                    setTimeout(() => {
-                        // Option time!
-                        nestPos = undefined;
-                        expStage = 4;
-                        optionButtons.visible = true;
-                    }, duration * 1000);
+                    sound_hello.play();
+                    console.log('play sound');
+                    sound_hello.once('end', ()=>{
+                    	var size = Object.keys(dailyLifePlayerDict).length;
+                    	if(size>1){
+                    		sound_visitor_others.play();
+                    		sound_visitor_others.once('end', ()=>{
+                    			playLetsAudio();
+                    		});
+                    	}
+                    	else{
+                    		sound_visitor_alone.play();
+                    		sound_visitor_alone.once('end', ()=>{
+                    			playLetsAudio();
+                    		});
+                    	}
+                    });
                 }
             });
         }, 26000);
 
     }, 5000);
+}
+
+function playLetsAudio()
+{
+	sound_lets.play();
+	sound_lets.once('end', ()=>{
+		startBreathingPractice();
+	});
+}
+
+function startBreathingPractice()
+{
+	sound_practice.play();
+
+	var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
+    firstGuy.startBreathing(false);
+
+    expStage = 1;
+
+    // ------ SEND_TO_SERVER => START_BREATHING ------
+    var msg = {
+        'type': 'startBreathing',
+        'index': whoIamInLife,
+        'worldId': meInWorld,
+        'redo': false
+    };
+    if (ws) {
+        sendMessage(JSON.stringify(msg));
+    }
+    // --------------------------------------------
+
+    setTimeout(() => {
+        // Option time!
+        nestPos = undefined;
+        expStage = 4;
+        optionButtons.visible = true;
+    }, duration * 1000);
 }
 
 function disposeSocialMedia() {

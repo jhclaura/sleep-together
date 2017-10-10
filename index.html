@@ -82,6 +82,9 @@
 
     var renderCanvas = byId("render-canvas");
     var blockerDiv = byId("blocker");
+
+    renderCanvas.style.opacity = 0;
+    
     </script>
     <div id="splashPage" style="display:block; position:absolute;">
         <h1>Sleep Together</h1>
@@ -124,6 +127,8 @@
         final_statistic.playerName = playerNName;
 
         renderCanvas.style.display = "inline";
+        renderCanvas.style.opacity = 1;
+
         if (blockerDiv) blockerDiv.style.display = "-webkit-box";
 
         splashPage.style.display = "none";
