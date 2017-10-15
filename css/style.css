@@ -21,7 +21,7 @@ body {
     width: 100% !important;
     height: 100% !important;
     position: absolute;
-    top: 0;
+    top: 40px;
     left: 0;
     
     -webkit-transition: opacity 2s;

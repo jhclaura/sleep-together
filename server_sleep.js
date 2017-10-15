@@ -6,14 +6,53 @@ var server = http.createServer(app);
 var port = process.env.PORT || 6969;
 var compression = require('compression');
 var geolocator = require('ip2countrify');
+
+var cons = require("consolidate");
+var request = require("request");
+
 //
 server.listen(port);
 
 app.use(compression());
 
+app.engine('html', cons.swig);
+app.set("views", __dirname);
+app.set("view engine", "html");
+app.set('trust proxy', true);
+
 app.get('*', function(req, res){
+
+	if ( ["/", "/de", "/fr", "/en"].indexOf(req.path) != -1) {
+		var lang = (req.path == "/") ? "" : req.path.substr(1);
+
+		request.post(
+		    {
+		    	url: "http://veryveryshort-dev.nfb.ca/api/all", // dev
+		    	form: {
+		    		language: lang,
+		    		folder: "", //temp
+		    		ip: req.ip,
+		    		settings: req.protocol + '://' + req.get('host') + "/settings.json" },
+		    },
+		    function (error, response, body) {
+		        if (!error && response.statusCode == 200) {
+		           
+		            body = JSON.parse(body);
+		           
+		           	//change share URL
+				  	var url = req.protocol + '://' + req.get('host') + req.originalUrl;
+			  		body.share[3] = '<meta property="og:url" content="'+url+'" />';
+		  	
+		  			res.render("index", {data: body});
+		        }
+		    }
+		);
+		return;
+	}
+
 	res.sendFile(__dirname + req.url);
 });
+
 console.log('Server started on port ' + port);
 
 ///////////////////////////////////////////////////////////

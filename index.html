@@ -2,11 +2,21 @@
 <html lang="en">
 
 <head>
-    <title>Sleep Together</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    {% for str in data.dependencies -%}
+        {% autoescape false %}{{ str }}{% endautoescape %}
+    {%- endfor %}
+
+    {% for str in data.share -%}
+        {% autoescape false %}{{ str }}{% endautoescape %}
+    {%- endfor %}
+
+  
+
     <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
@@ -14,8 +24,12 @@
 </head>
 
 <body>
+    {% for str in data.header -%}
+        {% autoescape false %}{{ str }}{% endautoescape %}
+    {%- endfor %}
     <div id="render-canvas" style="display:none;"></div>
     <!-- <div id="render-canvas"></div> -->
+
     <script type="text/javascript" src="js/lib/three.js"></script>
     <script type="text/javascript" src="js/lib/Detector.js"></script>
     <script type="text/javascript">
@@ -86,7 +100,7 @@
     renderCanvas.style.opacity = 0;
     
     </script>
-    <div id="splashPage" style="display:block; position:absolute;">
+    <div id="splashPage" style="display:block; position:absolute;top:65px;">
         <h1>Sleep Together</h1>
         <input type="text" id="playerName" placeholder="Who's this?" style="width:20em;height:2em"></input>
         <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
@@ -472,6 +486,19 @@
     <script type="text/javascript" src="js/setup_sleep.js"></script>
     <script type="text/javascript" src="js/loader_sleep.js"></script>
     <script type="text/javascript" src="js/script_vSleep.js"></script>
+
+    {% for str in data.footer -%}
+        <!-- {% autoescape false %}{{ str }}{% endautoescape %} -->
+    {%- endfor %}
+
+    {% for str in data.tag -%}
+        {% autoescape false %}{{ str }}{% endautoescape %}
+    {%- endfor %}
+
+    <script>   
+      var frameworkJS = new Framework('{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}');
+      // frameworkJS.track("test_de_statistique"); //exemple de tag
+    </script>
 </body>
 
 </html>

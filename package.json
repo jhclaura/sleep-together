@@ -2,10 +2,10 @@
   "name": "sleep-together",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server_sleep.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server_sleep.js"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,11 @@
   "homepage": "https://github.com/jhclaura/sleep-together#readme",
   "dependencies": {
     "compression": "^1.6.2",
+    "consolidate": "^0.14.5",
     "express": "^4.15.3",
     "ip2countrify": "^0.2.0",
+    "request": "^2.83.0",
+    "swig": "^1.4.2",
     "ws": "^3.0.0"
   }
 }
