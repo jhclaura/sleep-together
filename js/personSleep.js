@@ -265,7 +265,7 @@ PersonSleep.prototype.closeEye = function() {
 }
 
 PersonSleep.prototype.updateTimetag = function(_time) {
-    this.dataTexture.clear().drawText(_time + " from " + this.sleeperOrigin, undefined, 50, 'grey');
+    this.dataTexture.clear().drawText(_time + ", " + this.sleeperOrigin, undefined, 50, 'grey');
 }
 
 PersonSleep.prototype.startBreathing = function(_redo) {
