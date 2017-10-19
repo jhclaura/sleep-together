@@ -19,8 +19,8 @@
 
     <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-database.js"></script>
 </head>
 
 <body>
@@ -28,7 +28,6 @@
         {% autoescape false %}{{ str }}{% endautoescape %}
     {%- endfor %}
     <div id="render-canvas" style="display:none;"></div>
-    <!-- <div id="render-canvas"></div> -->
 
     <script type="text/javascript" src="js/lib/three.js"></script>
     <script type="text/javascript" src="js/lib/Detector.js"></script>
@@ -100,14 +99,34 @@
     renderCanvas.style.opacity = 0;
     
     </script>
-    <div id="splashPage" style="display:block; position:absolute;top:65px;">
+    <div id="splashPage" style="display:block; position:absolute; top:65px;">
         <h1>Sleep Together</h1>
-        <input type="text" id="playerName" placeholder="Who's this?" style="width:20em;height:2em"></input>
+        <input type="text" id="playerName" placeholder="Who is this sleepyhead?" style="width:20em;height:2em"></input>
         <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
         <div id="loadingTxt" style="color:yellow">loading</div>
         <p></p>
         <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="getNameToStart();">Start</a>
     </div>
+
+    <div id="aboutPage" style="display:block; position:absolute;">
+		<a clase="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#fc81a6" onclick="ToggleAbout();">About (↑)</a>
+		<a clase="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#0ecbf9" onclick="ToggleInstruction();">Instruction (↑)</a>
+		<!-- <a clase="aboutLink" href="http://about.dailylifevr.com" target='_blank'>Dev Blog</a> -->
+		<div id="aboutPageDetail" style="display:none;">
+			<p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
+			<li>Creator: <a href="http://www.jhclaura.com/" target='_blank'>Laura Juo-Hsin Chen</a></li>
+			<li>Co-Producers: ONF and ARTE</li>
+			<li>Inspired from a conversation with <a href="http://lav.io/" target='_blank'>Sam Lavigne</a>, for <a href="http://dailylifevr.com/" target='_blank'>Daily Life VR</a> of <a href="http://uselesspress.org/" target='_blank'>Useless Press</a></li>
+			<li>Great support by <a href="http://andysigler.com/" target='_blank'>Andy Sigler</a></li>
+			<li>Thank <a href="https://twitter.com/tojiro" target='_blank'>Brandon Jones</a> and <a href="https://twitter.com/vvuk" target='_blank'>Vladimir Vukicevic</a> for WebVR spec. <a href="http://smus.com/" target='_blank'>Boris Smus</a> for WebVR polyfill and boilerplate. <a href="https://twitter.com/mrdoob" target='_blank'>Ricardo Cabello</a> for THREE.js</li>
+		</div>
+		<div id="instructionDetail" style="display:none;">
+			<!-- <img class="insImg" src="images/instructions/toPoop.jpg">
+			<img class="insImg" src="images/instructions/toWalk.jpg">
+			<img class="insImg" src="images/instructions/toVR.jpg"> -->
+		</div>
+	</div>
+
     <script>
     var final_statistic = {};
     final_statistic.eaterCount = 0;
@@ -147,6 +166,12 @@
 
         splashPage.style.display = "none";
 
+        aboutPage.style.display = "none";
+		aboutPage.style.height = '';
+		aboutDetail.style.display = "none";
+		aboutTitle.innerText = "About (↑)";
+		showAbout = false;
+
         // superInit();
         // connectSocket();
 
@@ -161,6 +186,47 @@
             });
         });
     }
+
+    // ABOUT_PAGE
+    var showAbout = false, showInstruction = false;
+	var aboutDetail = byId("aboutPageDetail");
+	var aboutTitle = byId("aboutPageTitle");
+	var instructDetail = byId("instructionDetail");
+	var instructTitle = byId("instructionTitle");
+	// → ← ↑ ↓
+	var ToggleAbout = function() {
+		showAbout = !showAbout;
+
+		if(showAbout){
+			if(showInstruction) ToggleInstruction();
+
+			aboutDetail.style.display = "block";
+			if(isMobile)
+				aboutPage.style.height = '100%';
+
+			aboutTitle.innerText = "About (↓)";
+		} else {
+			aboutDetail.style.display = "none";
+			aboutPage.style.height = '';
+
+			aboutTitle.innerText = "About (↑)";
+		}
+	}
+
+	var ToggleInstruction = function() {
+		showInstruction = !showInstruction;
+
+		if(showInstruction){
+			if(showAbout) ToggleAbout();
+
+			instructDetail.style.display = "block";
+			instructTitle.innerText = "Instruction (↓)";
+		} else {
+			instructDetail.style.display = "none";
+			instructTitle.innerText = "Instruction (↑)";
+		}
+	}
+	///////////
 
     window.addEventListener('keydown', myFakeEnter, false);
 

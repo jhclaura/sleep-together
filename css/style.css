@@ -13,10 +13,6 @@ body {
 	font-family: StupidFont;
 }
 
-/** {
-   -webkit-user-select: none;
-}*/
-
 #render-canvas {
     width: 100% !important;
     height: 100% !important;
@@ -81,6 +77,48 @@ h1 {
 
 input {
 	text-align: center;
+}
+
+#splashPage {
+	/*position: absolute;*/
+	left:0; right:0; top:0; bottom:0;
+	margin: auto;
+	padding: 2em;	
+	line-height: 26px;
+	text-align:center;
+
+	font-size:16pt;
+	/*background: url("../images/poopPoster.gif") no-repeat center center fixed;*/
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+#aboutPage {
+	left:0; right:0; bottom:0; /*top:0; */
+	/*margin: auto;*/
+	padding: 5px;	
+	padding-left: 1em;
+	padding-right: 1em;
+	text-align: center;
+	font-size: 16pt;
+	background-color: #ffffff;
+	overflow: scroll;
+}
+
+#aboutPageDetail {
+	text-align: left;
+	padding-bottom: 1em;
+}
+
+#instructionDetail {
+	width: 100%;
+	padding: 0;
+}
+
+.insImg {
+	width: 24%;
 }
 
 /* For width 500px and smaller: */

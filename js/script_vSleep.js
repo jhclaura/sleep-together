@@ -595,7 +595,7 @@ function lateInit() {
 
     // AUDIOS
     sound_digital.play();
-    sound_digital.fade(0,0.1,2000);
+    sound_digital.fade(0,0.5,2000);
 
     if (devMode)
         return;
@@ -609,13 +609,13 @@ function lateInit() {
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
 
-        sound_digital.fade(0.1, 0, 10 * 1000);
+        sound_digital.fade(0.5, 0, 10 * 1000);
         sound_digital.once('fade', function(){
         	console.log('digital finishes fading');
         });
 
         sound_night.play();
-        sound_night.fade(0, 0.3, 10 * 1000);
+        sound_night.fade(0, 0.8, 10 * 1000);
 
         setTimeout(() => {
             TweenMax.to(nest.rotation, 3, {
