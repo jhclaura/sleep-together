@@ -115,7 +115,7 @@
 		<div id="aboutPageDetail" style="display:none;">
 			<p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
 			<li>Creator: <a href="http://www.jhclaura.com/" target='_blank'>Laura Juo-Hsin Chen</a></li>
-			<li>Co-Producers: ONF and ARTE</li>
+			<li>Co-Producers: <a href="https://www.nfb.ca/" target='_blank'>ONF/NFB</a> & <a href="https://www.arte.tv/fr/" target='_blank'>arte</a></li>
 			<li>Inspired from a conversation with <a href="http://lav.io/" target='_blank'>Sam Lavigne</a>, for <a href="http://dailylifevr.com/" target='_blank'>Daily Life VR</a> of <a href="http://uselesspress.org/" target='_blank'>Useless Press</a></li>
 			<li>Great support by <a href="http://andysigler.com/" target='_blank'>Andy Sigler</a></li>
 			<li>Thank <a href="https://twitter.com/tojiro" target='_blank'>Brandon Jones</a> and <a href="https://twitter.com/vvuk" target='_blank'>Vladimir Vukicevic</a> for WebVR spec. <a href="http://smus.com/" target='_blank'>Boris Smus</a> for WebVR polyfill and boilerplate. <a href="https://twitter.com/mrdoob" target='_blank'>Ricardo Cabello</a> for THREE.js</li>
@@ -176,15 +176,6 @@
         // connectSocket();
 
         lateInit();
-
-        // FIREBASE_TOTAL_VISTI
-        visitDataRef.once("value", function(snapshot) {
-            fireVisit = snapshot.val().visit_count;
-            fireVisit++;
-            visitDataRef.set({
-                visit_count: fireVisit
-            });
-        });
     }
 
     // ABOUT_PAGE
@@ -454,8 +445,10 @@
 
             // BREATHING, TODO: what if in the middle of breathing in history player?
             if (data.type == 'startBreathing' && data.index != whoIamInLife) {
-                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index])
+                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]){
+                    dailyLifePlayerDict[data.index].prepForBreathing();
                     dailyLifePlayerDict[data.index].startBreathing(data.redo);
+                }
             }
 
             //REMOVE_PLAYER
