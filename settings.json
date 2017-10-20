@@ -1,9 +1,10 @@
 {
     "projectName": "Sleep Together",
-    "external": true,
+    "external": false,
     "root_folder": "/sleep-together/",
     "www_folder": "www",
     "cdn": "https://amazon.ca",
+    "switch_lang_by_query": false,
     "share": {
         "en": {
             "title": "Sleep Together EN",
