@@ -447,7 +447,7 @@ function AfterFontLoaded() {
     annoucementTexture.context.font = "bolder 70px StupidFont";
     annoucementTexture.clear().drawText("annoucement:", undefined, 96, 'white');
     annoucementTexture.clear();
-    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true, depthTest: false });
+    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true }); //depthTest: false
     var annoucementMesh = new THREE.Mesh(new THREE.PlaneGeometry(annoucementTexture.canvas.width, annoucementTexture.canvas.height), annoucementMaterial);
     annoucementMesh.scale.multiplyScalar(0.01);
     annoucementMesh.position.z = -20;
