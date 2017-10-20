@@ -383,81 +383,10 @@ function superInit() {
         });
     });
 
-    /*
-    modelLoader.load(basedURL + "models/glow.json", function(geometry, material) {
-        glowGeo = geometry;
-        glowMat1 = new THREE.MeshBasicMaterial({
-            map: sm_glow,
-            transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
-        });
-        glowMat2 = new THREE.MeshBasicMaterial({
-            map: sm_glow,
-            transparent: true,
-            side: THREE.BackSide
-        });
-        var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
-        glowMesh.scale.multiplyScalar(4);
-        var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
-        glowMesh2.scale.multiplyScalar(4);
-
-        // Create Social Medai Wall
-        //var sm_plane = new THREE.PlaneGeometry(16, 28);
-        var sm_plane = new THREE.BoxGeometry(16, 28, 1);
-        var screenIndex = 0;
-        // --- Real for indexing (6*3=18 total)
-        for (var j = 0; j < 3; j++) {
-            for (var i = 7; i < 13; i++) {
-                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                sm_screen.position.copy(sleeperStartPositions[screenIndex]);
-                sm_screen.position.z -= 4;
-                sm_screen.position.y += 10;
-
-                sm_screen.add(glowMesh.clone());
-                sm_screen.add(glowMesh2.clone());
-
-                socialMediaScreens.push(sm_screen);
-
-                scene.add(sm_screen);
-                screenIndex++;
-            }
-        }
-        // --- Fake
-        for (var j = 0; j < 5; j++) {
-            for (var i = 0; i < 20; i++) {
-
-                if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
-                    continue;
-
-                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                sm_screen.position.set(
-                    (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                    j * 50 + GetRandomArbitrary(0, 10),
-                    -400 + GetRandomArbitrary(0, 2)
-                );
-
-                sm_screen.add(glowMesh.clone());
-                sm_screen.add(glowMesh2.clone());
-
-                socialMediaScreens.push(sm_screen);
-
-                scene.add(sm_screen);
-                screenIndex++;
-            }
-        }
-    });
-    */
-
     nestTex = textureLoader.load(basedURL + 'images/nest.jpg');
     nestTex.wrapT = nestTex.wrapS = THREE.RepeatWrapping;
     nestTex.repeat.set(2, 2);
 
-    // modelLoader.load(basedURL + "models/nest2.json", function(geometry, material) {
-    //     nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
-    //         map: nestTex
-    //     }));
-    //     nest.scale.multiplyScalar(2);
-    //     scene.add(nest);
-    // });
     loadModelWholeNest(
         basedURL + "models/nest2.json", basedURL + "models/stick1.json", basedURL + "models/stick2.json",
         basedURL + "models/stick3.json", basedURL + "models/stick4.json",
@@ -502,8 +431,10 @@ function AfterFontLoaded() {
         dummyButton.add(optionMesh);
         dummyButton.add(optionLight);
         dummyButton.add(optionTextMesh);
-        dummyButton.position.set(0, 30, (i - 1) * 8);
+        dummyButton.position.set((i - 1) * 8, 30, -8);	//0, 30, (i - 1) * 8
         dummyButton.name = 'option_' + optionTags[i];
+
+        dummyButton.rotation.y = Math.PI/2;
 
         optionButtons.add(dummyButton);
     }
@@ -522,6 +453,19 @@ function AfterFontLoaded() {
     annoucementMesh.position.z = -20;
     annoucement.add(annoucementMesh);
     scene.add(annoucement);
+
+    // PEOPLE_COUNT
+	pplCountTex = new THREEx.DynamicTexture(1024,1024);
+	pplCountTex.context.font = "bolder 150px StupidFont";
+	pplCountTex.clear();
+	pplCountMat = new THREE.MeshBasicMaterial({map: pplCountTex.texture, side: THREE.DoubleSide, transparent: true});
+	var pCountMesh = new THREE.Mesh(new THREE.PlaneGeometry( pplCountTex.canvas.width, pplCountTex.canvas.height), pplCountMat );
+	pCountMesh.rotation.x = Math.PI/2;
+	pplCount = new THREE.Object3D();
+	pplCount.add(pCountMesh);
+	pplCount.scale.set(0.04,0.04,0.04);
+	pplCount.position.y = 80;
+	scene.add( pplCount );
 }
 
 function ScrollSocialMedia(el) {
@@ -641,6 +585,8 @@ function lateInit() {
 	    });
 
         setTimeout(() => {
+        	UpdatePplCount( Object.keys(dailyLifePlayerDict).length, totalPplInWorldsCount, totalVisitCount );
+
             TweenMax.to(nest.rotation, 3, {
                 y: -Math.PI / 2,
                 ease: Back.easeInOut.config(1),
@@ -1056,6 +1002,8 @@ function OptionStartStage(stageIndex) {
 			annoucementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
 
             // Move up to be out of the nest
+            pplCountTex.clear();
+            pplCount.visible = false;
             firstGuy.player.visible = false;
             controls.setMovYAnimation(90, 5, false, false);
 
@@ -1087,16 +1035,17 @@ function OptionStartStage(stageIndex) {
 
             setTimeout(() => {
                 renderCanvas.style.opacity = 0;
-            }, 7000);
+            }, 14000);
 
             setTimeout(() => {
                 isAllOver = true;
                 
-                nestStickTween.kill();
+                //nestStickTween.kill();
+                TweenMax.killAll();
 
                 // DISPOSE_TO_RELEASE_MEMORY!
                 DoDispose(scene);
-            }, 9500);
+            }, 16500);
             break;
     }
 }
@@ -1311,6 +1260,16 @@ function CreateNest() {
         nestSticksPos.push(n_stick.position);
     }
     scene.add(nest);
+}
+
+function UpdatePplCount( thisWorldCount, totalCount, totalVisit ) {
+	if(expStage==3) return;
+
+	pplCountTex.clear().drawText("Sleeper", undefined, 100, 'white');
+	pplCountTex.drawText("Counter", undefined, 250, 'white');
+	pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
+	pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
+	pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
 }
 
 function fullscreen() {

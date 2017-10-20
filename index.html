@@ -5,18 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-
-    {% for str in data.dependencies -%}
-        {% autoescape false %}{{ str }}{% endautoescape %}
-    {%- endfor %}
-
-    {% for str in data.share -%}
-        {% autoescape false %}{{ str }}{% endautoescape %}
-    {%- endfor %}
-
-  
-
+    <meta name="apple-mobile-web-app-capable" content="yes" /> {% for str in data.dependencies -%} {% autoescape false %}{{ str }}{% endautoescape %} {%- endfor %} {% for str in data.share -%} {% autoescape false %}{{ str }}{% endautoescape %} {%- endfor %}
     <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js"></script>
@@ -24,11 +13,8 @@
 </head>
 
 <body>
-    {% for str in data.header -%}
-        {% autoescape false %}{{ str }}{% endautoescape %}
-    {%- endfor %}
+    {% for str in data.header -%} {% autoescape false %}{{ str }}{% endautoescape %} {%- endfor %}
     <div id="render-canvas" style="display:none;"></div>
-
     <script type="text/javascript" src="js/lib/three.js"></script>
     <script type="text/javascript" src="js/lib/Detector.js"></script>
     <script type="text/javascript">
@@ -97,7 +83,6 @@
     var blockerDiv = byId("blocker");
 
     renderCanvas.style.opacity = 0;
-    
     </script>
     <div id="splashPage" style="display:block; position:absolute; top:65px;">
         <h1>Sleep Together</h1>
@@ -107,26 +92,24 @@
         <p></p>
         <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="getNameToStart();">Start</a>
     </div>
-
     <div id="aboutPage" style="display:block; position:absolute;">
-		<a clase="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#fc81a6" onclick="ToggleAbout();">About (↑)</a>
-		<a clase="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#0ecbf9" onclick="ToggleInstruction();">Instruction (↑)</a>
-		<!-- <a clase="aboutLink" href="http://about.dailylifevr.com" target='_blank'>Dev Blog</a> -->
-		<div id="aboutPageDetail" style="display:none;">
-			<p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
-			<li>Creator: <a href="http://www.jhclaura.com/" target='_blank'>Laura Juo-Hsin Chen</a></li>
-			<li>Co-Producers: <a href="https://www.nfb.ca/" target='_blank'>ONF/NFB</a> & <a href="https://www.arte.tv/fr/" target='_blank'>arte</a></li>
-			<li>Inspired from a conversation with <a href="http://lav.io/" target='_blank'>Sam Lavigne</a>, for <a href="http://dailylifevr.com/" target='_blank'>Daily Life VR</a> of <a href="http://uselesspress.org/" target='_blank'>Useless Press</a></li>
-			<li>Great support by <a href="http://andysigler.com/" target='_blank'>Andy Sigler</a></li>
-			<li>Thank <a href="https://twitter.com/tojiro" target='_blank'>Brandon Jones</a> and <a href="https://twitter.com/vvuk" target='_blank'>Vladimir Vukicevic</a> for WebVR spec. <a href="http://smus.com/" target='_blank'>Boris Smus</a> for WebVR polyfill and boilerplate. <a href="https://twitter.com/mrdoob" target='_blank'>Ricardo Cabello</a> for THREE.js</li>
-		</div>
-		<div id="instructionDetail" style="display:none;">
-			<!-- <img class="insImg" src="images/instructions/toPoop.jpg">
+        <a clase="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#fc81a6" onclick="ToggleAbout();">About (↑)</a>
+        <a clase="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#0ecbf9" onclick="ToggleInstruction();">Instruction (↑)</a>
+        <!-- <a clase="aboutLink" href="http://about.dailylifevr.com" target='_blank'>Dev Blog</a> -->
+        <div id="aboutPageDetail" style="display:none;">
+            <p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
+            <li>Creator: <a href="http://www.jhclaura.com/" target='_blank'>Laura Juo-Hsin Chen</a></li>
+            <li>Co-Producers: <a href="https://www.nfb.ca/" target='_blank'>ONF/NFB</a> & <a href="https://www.arte.tv/fr/" target='_blank'>arte</a></li>
+            <li>Inspired from a conversation with <a href="http://lav.io/" target='_blank'>Sam Lavigne</a>, for <a href="http://dailylifevr.com/" target='_blank'>Daily Life VR</a> of <a href="http://uselesspress.org/" target='_blank'>Useless Press</a></li>
+            <li>Great support by <a href="http://andysigler.com/" target='_blank'>Andy Sigler</a></li>
+            <li>Thank <a href="https://twitter.com/tojiro" target='_blank'>Brandon Jones</a> and <a href="https://twitter.com/vvuk" target='_blank'>Vladimir Vukicevic</a> for WebVR spec. <a href="http://smus.com/" target='_blank'>Boris Smus</a> for WebVR polyfill and boilerplate. <a href="https://twitter.com/mrdoob" target='_blank'>Ricardo Cabello</a> for THREE.js</li>
+        </div>
+        <div id="instructionDetail" style="display:none;">
+            <!-- <img class="insImg" src="images/instructions/toPoop.jpg">
 			<img class="insImg" src="images/instructions/toWalk.jpg">
 			<img class="insImg" src="images/instructions/toVR.jpg"> -->
-		</div>
-	</div>
-
+        </div>
+    </div>
     <script>
     var final_statistic = {};
     final_statistic.eaterCount = 0;
@@ -167,10 +150,10 @@
         splashPage.style.display = "none";
 
         aboutPage.style.display = "none";
-		aboutPage.style.height = '';
-		aboutDetail.style.display = "none";
-		aboutTitle.innerText = "About (↑)";
-		showAbout = false;
+        aboutPage.style.height = '';
+        aboutDetail.style.display = "none";
+        aboutTitle.innerText = "About (↑)";
+        showAbout = false;
 
         // superInit();
         // connectSocket();
@@ -179,45 +162,46 @@
     }
 
     // ABOUT_PAGE
-    var showAbout = false, showInstruction = false;
-	var aboutDetail = byId("aboutPageDetail");
-	var aboutTitle = byId("aboutPageTitle");
-	var instructDetail = byId("instructionDetail");
-	var instructTitle = byId("instructionTitle");
-	// → ← ↑ ↓
-	var ToggleAbout = function() {
-		showAbout = !showAbout;
+    var showAbout = false,
+        showInstruction = false;
+    var aboutDetail = byId("aboutPageDetail");
+    var aboutTitle = byId("aboutPageTitle");
+    var instructDetail = byId("instructionDetail");
+    var instructTitle = byId("instructionTitle");
+    // → ← ↑ ↓
+    var ToggleAbout = function() {
+        showAbout = !showAbout;
 
-		if(showAbout){
-			if(showInstruction) ToggleInstruction();
+        if (showAbout) {
+            if (showInstruction) ToggleInstruction();
 
-			aboutDetail.style.display = "block";
-			if(isMobile)
-				aboutPage.style.height = '100%';
+            aboutDetail.style.display = "block";
+            if (isMobile)
+                aboutPage.style.height = '100%';
 
-			aboutTitle.innerText = "About (↓)";
-		} else {
-			aboutDetail.style.display = "none";
-			aboutPage.style.height = '';
+            aboutTitle.innerText = "About (↓)";
+        } else {
+            aboutDetail.style.display = "none";
+            aboutPage.style.height = '';
 
-			aboutTitle.innerText = "About (↑)";
-		}
-	}
+            aboutTitle.innerText = "About (↑)";
+        }
+    }
 
-	var ToggleInstruction = function() {
-		showInstruction = !showInstruction;
+    var ToggleInstruction = function() {
+        showInstruction = !showInstruction;
 
-		if(showInstruction){
-			if(showAbout) ToggleAbout();
+        if (showInstruction) {
+            if (showAbout) ToggleAbout();
 
-			instructDetail.style.display = "block";
-			instructTitle.innerText = "Instruction (↓)";
-		} else {
-			instructDetail.style.display = "none";
-			instructTitle.innerText = "Instruction (↑)";
-		}
-	}
-	///////////
+            instructDetail.style.display = "block";
+            instructTitle.innerText = "Instruction (↓)";
+        } else {
+            instructDetail.style.display = "none";
+            instructTitle.innerText = "Instruction (↑)";
+        }
+    }
+    ///////////
 
     window.addEventListener('keydown', myFakeEnter, false);
 
@@ -277,8 +261,8 @@
 
         ws.onmessage = function(msg) {
 
-        	if(isAllOver)
-        		return;
+            if (isAllOver)
+                return;
 
             var data = JSON.parse(msg.data);
 
@@ -304,10 +288,10 @@
                         currentPplAmount++;
                     }
 
-                    // update people counting of this world & total worlds
-                    // UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data.totalCount, fireVisit );
-                    // totalPplInWorldsCount = data.totalCount;
-                    // totalVisitCount = fireVisit;
+                    // update sleeper counting of this world(nest) & total worlds
+                    UpdatePplCount(Object.keys(dailyLifePlayerDict).length, data.totalCount, fireVisit);
+                    totalPplInWorldsCount = data.totalCount;
+                    totalVisitCount = fireVisit;
 
                     // final_statistic.pooperCount ++;
                     // final_statistic.totalVisit = totalVisitCount;
@@ -323,7 +307,7 @@
 
                     whoIamInLife = data.index;
                     meInWorld = data.worldId;
-                    // totalVisitCount = fireVisit;
+                    totalVisitCount = fireVisit;
                     final_statistic.totalVisit = totalVisitCount;
 
                     console.log("I am #" + whoIamInLife + " in the #" + meInWorld + " Sleep-Together world, with total visit: " + totalVisitCount);
@@ -437,7 +421,7 @@
 
             // UPDATE_TIME
             if (data.type == 'timestamp') {
-                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]){
+                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]) {
                     dailyLifePlayerDict[data.index].updateTimetag(data.time);
                     dailyLifePlayerDict[data.index].sleeperOrigin = data.origin;
                 }
@@ -445,7 +429,7 @@
 
             // BREATHING, TODO: what if in the middle of breathing in history player?
             if (data.type == 'startBreathing' && data.index != whoIamInLife) {
-                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]){
+                if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]) {
                     dailyLifePlayerDict[data.index].prepForBreathing();
                     dailyLifePlayerDict[data.index].startBreathing(data.redo);
                 }
@@ -457,6 +441,9 @@
                     removePlayer(data.removeID);
                     console.log('removePlayer #' + data.removeID);
                 }
+                console.log("removed; total: " + Object.keys(dailyLifePlayerDict).length);
+                UpdatePplCount(Object.keys(dailyLifePlayerDict).length, data.totalCount, fireVisit);
+                totalPplInWorldsCount = data.totalCount;
             }
 
             // ADD_HISTORY_PLAYERS
@@ -486,10 +473,11 @@
                         dailyLifePlayerDict[oldPlayerID] = oldPlayer;
                         console.log("create history players #" + data[i].id + ", in world #" + data[i].worldId);
                         // }															
-                    }
-                    // UpdatePplCount( Object.keys(dailyLifePlayerDict).length, data[i].totalCount, fireVisit );
-                    // totalPplInWorldsCount = data[i].totalCount;
+                    }                    
+                    totalPplInWorldsCount = data[i].totalCount;
                 }
+                UpdatePplCount( Object.keys(dailyLifePlayerDict).length, totalPplInWorldsCount, fireVisit );
+                totalVisitCount = fireVisit;
                 updatePreviousPlayer = true;
             }
         }
@@ -545,18 +533,12 @@
     <script type="text/javascript" src="js/setup_sleep.js"></script>
     <script type="text/javascript" src="js/loader_sleep.js"></script>
     <script type="text/javascript" src="js/script_vSleep.js"></script>
-
     {% for str in data.footer -%}
-        <!-- {% autoescape false %}{{ str }}{% endautoescape %} -->
-    {%- endfor %}
-
-    {% for str in data.tag -%}
-        {% autoescape false %}{{ str }}{% endautoescape %}
-    {%- endfor %}
-
-    <script>   
-      var frameworkJS = new Framework('{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}');
-      // frameworkJS.track("test_de_statistique"); //exemple de tag
+    <!-- {% autoescape false %}{{ str }}{% endautoescape %} -->
+    {%- endfor %} {% for str in data.tag -%} {% autoescape false %}{{ str }}{% endautoescape %} {%- endfor %}
+    <script>
+    var frameworkJS = new Framework('{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}');
+    // frameworkJS.track("test_de_statistique"); //exemple de tag
     </script>
 </body>
 
