@@ -93,8 +93,8 @@
         <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="getNameToStart();">Start</a>
     </div>
     <div id="aboutPage" style="display:block; position:absolute;">
-        <a clase="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#fc81a6" onclick="ToggleAbout();">About (↑)</a>
-        <a clase="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#0ecbf9" onclick="ToggleInstruction();">Instruction (↑)</a>
+        <a clase="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#fc81a6" onclick="ToggleAbout();">About (ΘL_Θ)</a>
+        <a clase="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#0ecbf9" onclick="ToggleInstruction();">Instruction (ΘL_Θ)</a>
         <!-- <a clase="aboutLink" href="http://about.dailylifevr.com" target='_blank'>Dev Blog</a> -->
         <div id="aboutPageDetail" style="display:none;">
             <p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
@@ -179,12 +179,12 @@
             if (isMobile)
                 aboutPage.style.height = '100%';
 
-            aboutTitle.innerText = "About (↓)";
+            aboutTitle.innerText = "About (◉L_◉)";
         } else {
             aboutDetail.style.display = "none";
             aboutPage.style.height = '';
 
-            aboutTitle.innerText = "About (↑)";
+            aboutTitle.innerText = "About (ΘL_Θ)";
         }
     }
 
@@ -195,10 +195,10 @@
             if (showAbout) ToggleAbout();
 
             instructDetail.style.display = "block";
-            instructTitle.innerText = "Instruction (↓)";
+            instructTitle.innerText = "Instruction (◉L_◉)";
         } else {
             instructDetail.style.display = "none";
-            instructTitle.innerText = "Instruction (↑)";
+            instructTitle.innerText = "Instruction (ΘL_Θ)";
         }
     }
     ///////////

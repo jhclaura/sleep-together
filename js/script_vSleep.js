@@ -47,7 +47,7 @@ var dailyLifePlayerDict = {},
 // var sample = new SoundsSample(audioContext);
 
 var sound_digital, sound_opening, sound_practice, sound_night;
-var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets, sound_options;
+var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets, sound_options, sound_bamboo;
 var initSound = false,
     practiceOver = false;
 
@@ -55,7 +55,8 @@ var initSound = false,
 var star, starMat, glowTexture, glowTextures = [],
     starAnimator, starAnimators = [],
     stars = [];
-var starFiles = [basedURL + "images/sStar_1.png", basedURL + "images/sStar_2.png",
+var starFiles = [
+    basedURL + "images/sStar_1.png", basedURL + "images/sStar_2.png",
     basedURL + "images/sStar_3.png", basedURL + "images/sStar_4.png"
 ];
 
@@ -86,11 +87,12 @@ var sm_screenGeo, glowGeo, glowMat1, glowMat2, sm_glow;
 var annoucement, annoucementTexture;
 var nest, nestTex, nestStickGeos = [],
     nestSticks = []
-var nestSticksPos = [], nestStickTween,
+var nestSticksPos = [],
+    nestStickTween,
     nestSticksMovement = {
-    	x: [0.1, 0.1, -0.1, -0.1, 0.1],
-    	y: [0.1, -0.1, 0.1, 0.1, -0.1],
-    	z: [-0.1, 0.1, 0.1, -0.1, -0.1]
+        x: [0.1, 0.1, -0.1, -0.1, 0.1],
+        y: [0.1, -0.1, 0.1, 0.1, -0.1],
+        z: [-0.1, 0.1, 0.1, -0.1, -0.1]
     };
 
 var breathingTimeline;
@@ -180,10 +182,35 @@ function superInit() {
         volume: .8,
         sprite: {
             intro: [0, 11327],
-            breath: [12310, 3290], 	//12310, 15600
-            explore: [16500, 8000],	//16500, 24500
-            sleep: [25300, 10250]	//25300, 35550
+            breath: [12310, 3290], //12310, 15600
+            explore: [16500, 8000], //16500, 24500
+            sleep: [25300, 10250] //25300, 35550
         }
+    });
+    sound_bamboo = new Howl({
+    	src: [basedURL + 'audios/bamboo.mp3'],
+    	volume: .8,
+    	sprite: {
+    		1: [635, 2000],
+    		2: [3715, 2000],
+    		3: [8433, 2000],
+    		4: [13243, 2000],
+    		5: [19707, 2000],
+    		6: [21936, 2000],
+    		7: [25223, 2000],
+    		8: [28708, 2000],
+    		9: [37356, 2000],
+    		10: [40472, 2000],
+    		11: [1892, 500],
+    		12: [9265, 500],
+    		13: [17172, 500],
+    		14: [20053, 500],
+    		15: [24091, 500],
+    		16: [33718, 500],
+    		17: [34689, 500],
+    		18: [38788, 500],
+    		19: [44000, 500]
+    	}
     });
 
     // THREE.JS -------------------------------------------
@@ -431,10 +458,10 @@ function AfterFontLoaded() {
         dummyButton.add(optionMesh);
         dummyButton.add(optionLight);
         dummyButton.add(optionTextMesh);
-        dummyButton.position.set((i - 1) * 8, 30, -8);	//0, 30, (i - 1) * 8
+        dummyButton.position.set((i - 1) * 8, 30, -8); //0, 30, (i - 1) * 8
         dummyButton.name = 'option_' + optionTags[i];
 
-        dummyButton.rotation.y = Math.PI/2;
+        dummyButton.rotation.y = Math.PI / 2;
 
         optionButtons.add(dummyButton);
     }
@@ -455,17 +482,17 @@ function AfterFontLoaded() {
     scene.add(annoucement);
 
     // PEOPLE_COUNT
-	pplCountTex = new THREEx.DynamicTexture(1024,1024);
-	pplCountTex.context.font = "bolder 150px StupidFont";
-	pplCountTex.clear();
-	pplCountMat = new THREE.MeshBasicMaterial({map: pplCountTex.texture, side: THREE.DoubleSide, transparent: true});
-	var pCountMesh = new THREE.Mesh(new THREE.PlaneGeometry( pplCountTex.canvas.width, pplCountTex.canvas.height), pplCountMat );
-	pCountMesh.rotation.x = Math.PI/2;
-	pplCount = new THREE.Object3D();
-	pplCount.add(pCountMesh);
-	pplCount.scale.set(0.04,0.04,0.04);
-	pplCount.position.y = 80;
-	scene.add( pplCount );
+    pplCountTex = new THREEx.DynamicTexture(1024, 1024);
+    pplCountTex.context.font = "bolder 150px StupidFont";
+    pplCountTex.clear();
+    pplCountMat = new THREE.MeshBasicMaterial({ map: pplCountTex.texture, side: THREE.DoubleSide, transparent: true });
+    var pCountMesh = new THREE.Mesh(new THREE.PlaneGeometry(pplCountTex.canvas.width, pplCountTex.canvas.height), pplCountMat);
+    pCountMesh.rotation.x = Math.PI / 2;
+    pplCount = new THREE.Object3D();
+    pplCount.add(pCountMesh);
+    pplCount.scale.set(0.04, 0.04, 0.04);
+    pplCount.position.y = 80;
+    scene.add(pplCount);
 }
 
 function ScrollSocialMedia(el) {
@@ -551,10 +578,13 @@ function lateInit() {
     // EXPERIENCE_START
     // -------------------------------------------- 
 
-    if (devMode)
+    if (devMode){
+    	expStage = 4;
+    	optionButtons.visible = true;
         return;
+    }
 
-     // AUDIOS
+    // AUDIOS
     sound_digital.play();
     sound_digital.fade(0, 0.5, 2000);
 
@@ -576,16 +606,16 @@ function lateInit() {
         sound_night.fade(0, 0.8, 10 * 1000);
 
         nestStickTween = TweenMax.to(nestSticksPos, 3, {
-	        x: nestSticksMovement.x,
-	        y: nestSticksMovement.y,
-	        z: nestSticksMovement.z,
-	        ease: Power1.easeInOut,
-			yoyo: true,
-			repeat: -1
-	    });
+            x: nestSticksMovement.x,
+            y: nestSticksMovement.y,
+            z: nestSticksMovement.z,
+            ease: Power1.easeInOut,
+            yoyo: true,
+            repeat: -1
+        });
 
         setTimeout(() => {
-        	UpdatePplCount( Object.keys(dailyLifePlayerDict).length, totalPplInWorldsCount, totalVisitCount );
+            UpdatePplCount(Object.keys(dailyLifePlayerDict).length, totalPplInWorldsCount, totalVisitCount);
 
             TweenMax.to(nest.rotation, 3, {
                 y: -Math.PI / 2,
@@ -593,8 +623,10 @@ function lateInit() {
                 onComplete: () => {
 
                     disposeSocialMedia();
-                    //sound_digital.unload();
 
+                    sound_digital.unload();
+                    sound_digital = undefined;
+                    
                     sound_hello.play();
                     console.log('play sound');
 
@@ -627,11 +659,13 @@ function playLetsAudio() {
 }
 
 function startBreathingPractice(_redo) {
-	expStage = 1;
-	
-	// Eye-level info
-	UpdateFrontRotationWithMe(annoucement);
-	annoucementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
+    expStage = 1;
+
+    // Eye-level info
+    UpdateFrontRotationWithMe(annoucement);
+    annoucementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
+
+    sound_night.fade(0.8, 0.4, 1000);
 
     sound_practice.play();
     var duration = sound_practice.duration() + 0.5;
@@ -651,8 +685,9 @@ function startBreathingPractice(_redo) {
     }
     // --------------------------------------------
 
-    setTimeout(()=>{
-	    firstGuy.startBreathing(_redo);
+    // Start animating the light
+    setTimeout(() => {
+        firstGuy.startBreathing(_redo);
     }, 23600);
 
     setTimeout(() => {
@@ -662,13 +697,14 @@ function startBreathingPractice(_redo) {
         expStage = 4;
         optionButtons.visible = true;
 
+        sound_night.fade(0.4, 0.8, 1000);
         sound_options.play('intro');
 
         UpdateFrontRotationWithMe(annoucement);
-		annoucementTexture.clear().drawText("Look at the sky", undefined, 60, 'white');
-		annoucementTexture.drawText("Gaze upon options to choose next step", undefined, 120, 'white');
+        annoucementTexture.clear().drawText("Look at the sky", undefined, 60, 'white');
+        annoucementTexture.drawText("Gaze upon options to choose next step", undefined, 120, 'white');
 
-    }, duration*1000);
+    }, duration * 1000);
 }
 
 function disposeSocialMedia() {
@@ -956,8 +992,10 @@ function GazeToChoose() {
             if (optionLights[i].intensity < 1.02)
                 optionLights[i].intensity += 0.02;
 
-            if (optionButtons.children[i].children[2].visible == false)
+            if (optionButtons.children[i].children[2].visible == false){
                 optionButtons.children[i].children[2].visible = true;
+                sound_bamboo.play(GetRandomInt(11,20)+"");
+            }
 
         } else if (optionLights[i].intensity >= 0.04) {
             optionLights[i].intensity -= 0.04;
@@ -973,7 +1011,7 @@ function OptionStartStage(stageIndex) {
     switch (expStage) {
         // Redo breathing exercise
         case 1:
-        	annoucementTexture.clear();
+            annoucementTexture.clear();
             controls.movingEnabled = false;
             optionButtons.visible = false;
 
@@ -982,24 +1020,24 @@ function OptionStartStage(stageIndex) {
 
             setTimeout(() => {
                 startBreathingPractice(true);
-            }, s_b_duration*1000);
+            }, s_b_duration * 1000);
             break;
 
-        // Explore
+            // Explore
         case 2:
-        	UpdateFrontRotationWithMe(annoucement);
-			annoucementTexture.clear().drawText("Make eye contact to navigate the world", undefined, 96, 'white');
+            UpdateFrontRotationWithMe(annoucement);
+            annoucementTexture.clear().drawText("Make eye contact to navigate the world", undefined, 96, 'white');
 
-	        sound_options.play('explore');
+            sound_options.play('explore');
             controls.movingEnabled = true;
             break;
 
-        // Sleep
+            // Sleep
         case 3:
             controls.movingEnabled = false;
-            
+
             UpdateFrontRotationWithMe(annoucement);
-			annoucementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
+            annoucementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
 
             // Move up to be out of the nest
             pplCountTex.clear();
@@ -1009,7 +1047,7 @@ function OptionStartStage(stageIndex) {
 
             sound_night.fade(0.8, 0.3, 2 * 1000);
 
-            TweenMax.to( hemiLight.groundColor, 2, { r:0.569, g:0.506, b:0.1 } );
+            TweenMax.to(hemiLight.groundColor, 2, { r: 0.569, g: 0.506, b: 0.1 });
 
             // play good night audio
             sound_options.play('sleep');
@@ -1017,19 +1055,19 @@ function OptionStartStage(stageIndex) {
             // Populate several Nests around
             for (var i = 0; i < 6; i++) {
                 for (var j = 0; j < 4; j++) {
-                	 for (var k = 0; k < 4; k++) {
+                    for (var k = 0; k < 4; k++) {
 
-                	 	if(i==4 || j==2 || k==2)
-                	 		continue;
+                        if (i == 4 || j == 2 || k == 2)
+                            continue;
 
-	                    var dupNest = nest.clone();
-	                    dupNest.position.set(
-	                        (j - 2) * 100 + GetRandomArbitrary(-45, 45),
-	                        (i - 4) * 60 + GetRandomArbitrary(0, 20),
-	                        (k - 2) * 100 + GetRandomArbitrary(-45, 45),
-	                    );
-	                    scene.add(dupNest);
-	                }
+                        var dupNest = nest.clone();
+                        dupNest.position.set(
+                            (j - 2) * 100 + GetRandomArbitrary(-45, 45),
+                            (i - 4) * 60 + GetRandomArbitrary(0, 20),
+                            (k - 2) * 100 + GetRandomArbitrary(-45, 45),
+                        );
+                        scene.add(dupNest);
+                    }
                 }
             }
 
@@ -1039,7 +1077,7 @@ function OptionStartStage(stageIndex) {
 
             setTimeout(() => {
                 isAllOver = true;
-                
+
                 //nestStickTween.kill();
                 TweenMax.killAll();
 
@@ -1262,14 +1300,14 @@ function CreateNest() {
     scene.add(nest);
 }
 
-function UpdatePplCount( thisWorldCount, totalCount, totalVisit ) {
-	if(expStage==3) return;
+function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
+    if (expStage == 3) return;
 
-	pplCountTex.clear().drawText("Sleeper", undefined, 100, 'white');
-	pplCountTex.drawText("Counter", undefined, 250, 'white');
-	pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
-	pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
-	pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
+    pplCountTex.clear().drawText("Sleeper", undefined, 100, 'white');
+    pplCountTex.drawText("Counter", undefined, 250, 'white');
+    pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
+    pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
+    pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
 }
 
 function fullscreen() {
