@@ -241,9 +241,9 @@ html {
 	/*}*/
 
 	#creditText {
-	-moz-column-count: 1;
-	-moz-columns: 1;
-	-webkit-columns: 1;
-	columns: 1;
-}
+		-moz-column-count: 1;
+		-moz-columns: 1;
+		-webkit-columns: 1;
+		columns: 1;
+	}
 }
