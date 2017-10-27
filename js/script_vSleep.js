@@ -6,6 +6,7 @@ var devMode = false;
 
 var scene, camera, container, renderer, effect, stats;
 var vrmanager;
+var enterVR, animationDisplay;
 var hemiLight, controls;
 var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
@@ -136,7 +137,8 @@ function superInit() {
     }
 
     // Use http://freegeoip.net in script_functions.js
-    GetGeoData();
+    if(hasInternet)
+	    GetGeoData();
 
     myColor = new THREE.Color();
     time = Date.now();
@@ -158,33 +160,41 @@ function superInit() {
         volume: 0
     });
     sound_hello = new Howl({
-        src: [basedURL + 'audios/voice/hello.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V2/sleep_hello.mp3'],
+        volume: 1.3
     });
     sound_visitor_alone = new Howl({
-        src: [basedURL + 'audios/voice/onlySleeper.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V2/sleep_onlyone.mp3'],
+        volume: 1.3
     });
     sound_visitor_others = new Howl({
-        src: [basedURL + 'audios/voice/lookAround.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V2/sleep_other.mp3'],
+        volume: 1.3
     });
     sound_lets = new Howl({
-        src: [basedURL + 'audios/voice/letsPractice.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V2/sleep_lets.mp3'],
+        volume: 1.3
     });
     sound_practice = new Howl({
-        src: [basedURL + 'audios/voice/breathing_practice.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V2/sleep_practice.mp3'],
+        volume: 1.3
     });
     sound_options = new Howl({
-        src: [basedURL + 'audios/voice/optionSprites.mp3'],
-        volume: .8,
+        src: [basedURL + 'audios/voice/V2/sleep_options.mp3'],
+        volume: 1.3,
         sprite: {
+        	/*
+        	//v.1
             intro: [0, 11327],
             breath: [12310, 3290], //12310, 15600
             explore: [16500, 8000], //16500, 24500
             sleep: [25300, 10250] //25300, 35550
+            */
+            //v.2
+            intro: [0, 8126],
+            breath: [8506, 4871], //8506, 13377
+            explore: [13683, 9477], //13683, 23160
+            sleep: [23620, 12114] //23620, 35743
         }
     });
     sound_bamboo = new Howl({
@@ -219,7 +229,7 @@ function superInit() {
     // RENDERER
     container = document.getElementById('render-canvas');
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
     renderer.setClearColor(0x34122a, 1); // nighttime
     container.appendChild(renderer.domElement);
 
@@ -227,12 +237,73 @@ function superInit() {
     effect = new THREE.VREffect(renderer);
     effect.setSize(window.innerWidth, window.innerHeight);
 
+    // DEPRECATED(?) - WebVR Manager
+    /*
     // Create a VR manager helper to enter and exit VR mode.
     var params = {
         hideButton: false, // Default: false.
         isUndistorted: false // Default: false.
     };
     vrmanager = new WebVRManager(renderer, effect, params);
+	*/
+
+	// =============== WebVR-UI =================
+	// reference: https://github.com/googlevr/webvr-ui/blob/master/examples/basic.html
+	var vrUIOptions = {
+		color: 'white',
+		background: false,
+		corners: 'square'
+	};
+
+	enterVR = new webvrui.EnterVRButton(renderer.domElement, vrUIOptions)
+		.on("ready", function(){
+			// enterVR.hide();
+		})
+		.on("enter", function(){
+			console.log("enter VR");
+		})
+		.on("exit", function(){
+			console.log("exit VR");
+			// enterVR.show();
+		})
+		.on("error", function(error){
+			document.getElementById("vr-learn-more").style.display = "inline";
+			console.log("error => no webvr");
+
+			enterVR.hide();
+		})
+		.on("hide", function(){
+			document.getElementById("vr-ui").style.display = "none";
+			// On iOS there is no button to close fullscreen mode, so we need to provide one
+            if(enterVR.state == webvrui.State.PRESENTING_FULLSCREEN) document.getElementById("vr-exit").style.display = "initial";
+            
+            console.log("vr hide");
+		})
+		.on("show", function(){
+			document.getElementById("vr-ui").style.display = "inherit";
+			document.getElementById("vr-exit").style.display = "none";
+
+			console.log("vr show");
+		});
+
+	// Add button to the #button element
+	document.getElementById("vr-button").appendChild(enterVR.domElement);
+
+	window.addEventListener('vrdisplaypresentchange', onWindowResize, true);
+
+	// Get the HMD
+	enterVR.getVRDisplay()
+		.then(function(display){
+			animationDisplay = display;
+			// display.requestAnimationFrame(animate);
+		})
+		.catch(function(){
+			// If there is no display available, fallback to window
+			animationDisplay = window;
+			// window.requestAnimationFrame(animate);
+		});
+
+	// ==========================================
 
     // SCENE
     scene = new THREE.Scene();
@@ -305,13 +376,15 @@ function superInit() {
         sleep_test = new THREE.SkinnedMesh(sleeperGeo_test, new THREE.MeshLambertMaterial({ map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide }));
     });
 
-    stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.bottom = '5px';
-    stats.domElement.style.zIndex = 100;
-    stats.domElement.children[0].style.background = "transparent";
-    stats.domElement.children[0].children[1].style.display = "none";
-    container.appendChild(stats.domElement);
+    if(devMode){
+	    stats = new Stats();
+	    stats.domElement.style.position = 'absolute';
+	    stats.domElement.style.bottom = '5px';
+	    stats.domElement.style.zIndex = 100;
+	    stats.domElement.children[0].style.background = "transparent";
+	    stats.domElement.children[0].children[1].style.display = "none";
+	    container.appendChild(stats.domElement);
+	}
 
     // EVENTS
     window.addEventListener('resize', onWindowResize, false);
@@ -474,7 +547,7 @@ function AfterFontLoaded() {
     annoucementTexture.context.font = "bolder 70px StupidFont";
     annoucementTexture.clear().drawText("annoucement:", undefined, 96, 'white');
     annoucementTexture.clear();
-    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true }); //depthTest: false
+    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true, depthTest: false }); //depthTest: false
     var annoucementMesh = new THREE.Mesh(new THREE.PlaneGeometry(annoucementTexture.canvas.width, annoucementTexture.canvas.height), annoucementMaterial);
     annoucementMesh.scale.multiplyScalar(0.01);
     annoucementMesh.position.z = -20;
@@ -491,7 +564,7 @@ function AfterFontLoaded() {
     pplCount = new THREE.Object3D();
     pplCount.add(pCountMesh);
     pplCount.scale.set(0.04, 0.04, 0.04);
-    pplCount.position.y = 80;
+    pplCount.position.y = 120;
     scene.add(pplCount);
 }
 
@@ -520,16 +593,18 @@ function AssignIndex() {
 
 // lateInit() happens after click "Start"
 function lateInit() {
-    // console.log("late init!");
+    console.log("late init!");
 
     // FIREBASE_TOTAL_VISTI
-    visitDataRef.once("value", function(snapshot) {
-        fireVisit = snapshot.val().visit_count;
-        fireVisit++;
-        visitDataRef.set({
-            visit_count: fireVisit
-        });
-    });
+    if(hasInternet){
+	    visitDataRef.once("value", function(snapshot) {
+	        fireVisit = snapshot.val().visit_count;
+	        fireVisit++;
+	        visitDataRef.set({
+	            visit_count: fireVisit
+	        });
+	    });
+	}
 
     document.body.addEventListener('touchmove', noScrolling, false);
     window.addEventListener('keydown', myKeyPressed, false);
@@ -553,7 +628,8 @@ function lateInit() {
     // UpdateRotationWithMe( introRoom );
 
     // start to animate()!
-    animate(performance ? performance.now() : Date.now());
+    //animate(performance ? performance.now() : Date.now());
+    animationDisplay.requestAnimationFrame(animate);
 
     trulyFullyStart = true;
 
@@ -573,6 +649,13 @@ function lateInit() {
         sendMessage(JSON.stringify(msg));
     }
     // --------------------------------------------
+
+    // Hide player body
+    // firstGuy.player.visible = false;
+
+    // WebVR-UI
+    if(animationDisplay != window)
+	    enterVR.show();
 
     // --------------------------------------------
     // EXPERIENCE_START
@@ -624,9 +707,11 @@ function lateInit() {
 
                     disposeSocialMedia();
 
+                    sound_night.fade(0.8, 0.3, 1000);
+
                     sound_digital.unload();
                     sound_digital = undefined;
-                    
+
                     sound_hello.play();
                     console.log('play sound');
 
@@ -647,7 +732,6 @@ function lateInit() {
                 }
             });
         }, 26000);
-
     }, 5000);
 }
 
@@ -665,7 +749,7 @@ function startBreathingPractice(_redo) {
     UpdateFrontRotationWithMe(annoucement);
     annoucementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
 
-    sound_night.fade(0.8, 0.4, 1000);
+    //sound_night.fade(0.8, 0.4, 1000);
 
     sound_practice.play();
     var duration = sound_practice.duration() + 0.5;
@@ -688,7 +772,7 @@ function startBreathingPractice(_redo) {
     // Start animating the light
     setTimeout(() => {
         firstGuy.startBreathing(_redo);
-    }, 23600);
+    }, 35500);	//v.1 23600
 
     setTimeout(() => {
         // Option time!
@@ -697,7 +781,7 @@ function startBreathingPractice(_redo) {
         expStage = 4;
         optionButtons.visible = true;
 
-        sound_night.fade(0.4, 0.8, 1000);
+        sound_night.fade(0.3, 0.8, 2000);
         sound_options.play('intro');
 
         UpdateFrontRotationWithMe(annoucement);
@@ -813,7 +897,6 @@ function myKeyUp(event) {
 // v.2
 // Request animation frame loop function
 var lastRender = 0;
-
 function animate(timestamp) {
     if (!isAllOver) {
         var delta = Math.min(timestamp - lastRender, 500);
@@ -821,11 +904,21 @@ function animate(timestamp) {
 
         update();
 
-        // Render the scene through the manager.
-        vrmanager.render(scene, camera, timestamp);
-        stats.update();
+        // v.1 - WebVR-Manager: Render the scene through the manager.
+        // vrmanager.render(scene, camera, timestamp);
+
+        // v.2 - WebVR-UI
+        if(enterVR.isPresenting()){
+        	renderer.render(scene, camera);
+        	effect.render(scene, camera);
+        }else{
+        	renderer.render(scene, camera);
+        }
+    
+        if(devMode)
+	        stats.update();
     }
-    requestAnimationFrame(animate);
+    animationDisplay.requestAnimationFrame(animate);
 }
 
 
@@ -1322,7 +1415,7 @@ function fullscreen() {
     }
 }
 
-function onWindowResize() {
+function onWindowResize(e) {
     effect.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
