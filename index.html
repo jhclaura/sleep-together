@@ -34,6 +34,7 @@
 
     <script type="text/javascript" src="js/lib/Detector.js"></script>
     <script type="text/javascript" src="js/lib/inobounce.js"></script>
+    <script type="text/javascript" src="js/lib/TweenMax.min.js"></script>
     <script type="text/javascript">
 
     var hasInternet = true;
@@ -112,59 +113,55 @@
 
     <div id="splashPage" style="display:block; position:absolute; top:65px;">
         <h1>Sleep Together</h1>
-        <input type="text" id="playerName" placeholder="Who is this sleepyhead?" style="width:20em;height:2em"></input>
-        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
-        <div id="loadingTxt" style="color:yellow">loading</div>
-        <p></p>
-        <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="getNameToStart();">Start</a>
+        <div id="introTextGroup">
+        	<div class="introText" style="display: none; opacity: 0;">
+	        	<b><ins>"An Instruction For Your Mind"</ins></b>
+	        </div>
+	        <div class="introText" style="display: none; opacity: 0;">
+	        	Sleep sleep sleep
+	    		<br>
+	    		Everyone needs some sleep
+	        </div>
+	        <div class="introText" style="display: none; opacity: 0;">
+	        	If I don't want to sleep alone
+	    		<br>
+	    		Where can I go to sleep?
+	        </div>
+	        <div class="introText" style="display: none; opacity: 0;">
+	        	If I don't want to breathe alone
+	    		<br>
+	    		Are you willing to breathe with me?
+	        </div>
+	        <div class="introText" style="display: none; opacity: 0;">
+	        	Sleep sleep sleep
+	    		<br>
+	    		(breathe breathe breathe)
+	        </div>
+        </div>
+        <div id="inputGroupt">
+        	<input type="text" id="playerName" placeholder="Who is this sleepyhead?" style="width:20em;height:2em"></input>
+	        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
+	        <div id="loadingTxt" style="color:yellow">loading</div>
+	        <p></p>
+	        <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="startToShowInstruction();">Enter</a>
+        </div>        
     </div>
     <div id="aboutPage" style="display:block; position:absolute;">
         <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleAbout();">About</a>
-        <a class="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleInstruction();">Instruction</a>
-        <a class="aboutLink" id="creditTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleCredit();">Credit</a>
-        <!-- <a class="aboutLink" href="http://about.dailylifevr.com" target='_blank'>Dev Blog</a> -->
+        <!-- <a class="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleInstruction();">Instruction</a> -->
+        <!-- <a class="aboutLink" href="..." target='_blank'>Dev Blog</a> -->
     </div>
+    <div id="infoBG" style="display:none;"></div>
     <div class="infoBlock" id="aboutPageDetail" style="display:none;">
-    	<div class="infoText">
-	        <p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
-        </div>
-    </div>
-    <div class="infoBlock" id="instructionDetail" style="display:none;">
-    	<div class="infoText">
-    		<b><ins>"An Instruction For Your Mind"</ins></b>
-    		<br>
-    		Sleep sleep sleep
-    		<br>
-    		Everyone needs some sleep
-    		<br>
-    		<br>
-    		If I don't want to sleep alone
-    		<br>
-    		Where can I go to sleep?
-    		<br>
-    		If I don't want to breathe alone
-    		<br>
-    		Are you willing to breathe with me?
-    		<br>
-    		<br>
-    		Sleep sleep sleep
-    		<br>
-    		(breathe breathe breathe)
-	    	<br>
-	    	<br>
-	    	<b><ins>"An Instruction For Your Phone"</ins></b>
-	    	<br>
-	    	<img class="insImg" src="images/instructions/instruction_click.jpg">
-			<img class="insImg" src="images/instructions/instruction_move.jpg">
-			<img class="insImg" src="images/instructions/instruction_view.jpg">
-    	</div>
-    </div>
-    <div class="infoBlock" id="creditDetail" style="display:none;">
     	<div class="closeContainer">
-        	<div class="close" onclick="ToggleCredit();">&times;</div>
+        	<div class="close" onclick="ToggleAbout();">&times;</div>
         </div>
-        <div class="infoText" id="creditText">
-            <b><ins>CREATION</ins></b>
+    	<div class="infoText">
+    		<p style="font-size: 1.3em;">/// SLEEP TOGETHER ///</p>
+	        <p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
+	        <br>
+	        <p style="font-size: 1.3em;">/// CREDITS ///</p>
+	        <b><ins>CREATION</ins></b>
             <br>
             <br>
             <b>Creator</b>
@@ -318,10 +315,35 @@
             <b>Brandon Jones</b> and
             <br><b>Vladimir Vukicevic</b> for WebVR spec
             <br>
+            <br>
             <b>Boris Smus</b> for WebVR polyfill and boilerplate
+            <br>
             <br>
             <b>Ricardo Cabello</b> for THREE.js
         </div>
+    </div>
+    <div class="infoBlock" id="vrOption" style="display:none;">
+    	<div class="infoText">
+	    	<b><ins>Sleep in</ins></b>
+	    	<div style="text-align: center;">
+				<a style="cursor:pointer; text-decoration: underline; color:#0af5e1;" onclick="getNameToStart();">VR mode</a>
+				<a style="cursor:pointer; text-decoration: underline; color:#0af5e1;" onclick="getNameToStart();">nature mode</a>
+			</div>
+    	</div>
+    </div>
+    <div class="infoBlock" id="instructionDetail" style="display:none;">
+    	<div class="infoText">
+	    	<b><ins>"An Instruction For Your Phone"</ins></b>
+	    	<br>
+	    	<img class="insImg" src="images/instructions/instruction_click.jpg">
+			<img class="insImg" src="images/instructions/instruction_move.jpg">
+			<img class="insImg" src="images/instructions/instruction_view.jpg">
+			<br>
+			<br>
+			<div style="text-align: center;">
+				<a style="cursor:pointer; text-decoration: underline; color:#0af5e1;" onclick="getNameToStart();">Ready!</a>
+			</div>
+    	</div>
     </div>
 
     <!-- WebVR UI -->
@@ -358,8 +380,11 @@
 
     var playerNName = "";
     var readyToStart = false;
+    var enableStart = true;
 
     var getNameToStart = function() {
+
+    	ToggleInstruction();
 
         if (playerNameInput.value == playerNName) {
             playerNName = "Anonymous";
@@ -386,6 +411,13 @@
         lateInit();
     }
 
+    var startToShowInstruction = function () {
+    	if(!enableStart)
+    		return;
+    	aboutPage.style.opacity = 0;
+    	ToggleInstruction();
+    }
+
     // ABOUT_PAGE
     var showAbout = false,
         showInstruction = false,
@@ -394,53 +426,64 @@
     var aboutTitle = byId("aboutPageTitle");
     var instructDetail = byId("instructionDetail");
     var instructTitle = byId("instructionTitle");
-    var creditDetail = byId("creditDetail");
-    var creditTitle = byId("creditTitle");
+    var infoBG = byId("infoBG");
     // → ← ↑ ↓
     var ToggleAbout = function() {
         showAbout = !showAbout;
 
         if (showAbout) {
-            if (showInstruction) ToggleInstruction();
-            if (showCredit) ToggleCredit();
+        	infoBG.style.opacity = 1;
+        	// infoBG.style.height = "100%";
+        	infoBG.style.display = "block";
 
             aboutDetail.style.display = "block";
-            // if (isMobile)
-            //     aboutPage.style.height = '80%';
+            enableStart = false;
         } else {
+        	infoBG.style.opacity = 0;
             aboutDetail.style.display = "none";
-            // aboutPage.style.height = '';
+
+            setTimeout(function () {
+            	// infoBG.style.height = "0";
+            	infoBG.style.display = "none";
+            	enableStart = true;
+            }, 1000);
         }
     }
     var ToggleInstruction = function() {
         showInstruction = !showInstruction;
 
         if (showInstruction) {
-            if (showAbout) ToggleAbout();
-            if (showCredit) ToggleCredit();
-
+        	infoBG.style.opacity = 1;
+        	// infoBG.style.height = "100%";
+        	infoBG.style.display = "block";
             instructDetail.style.display = "block";
         } else {
+        	infoBG.style.opacity = 0;
             instructDetail.style.display = "none";
+            setTimeout(function () {
+            	// infoBG.style.height = "0";
+            	infoBG.style.display = "none";
+            }, 1000);
         }
     }
-    var ToggleCredit = function() {
-        showCredit = !showCredit;
-
-        if (showCredit) {
-            if (showAbout) ToggleAbout();
-            if (showInstruction) ToggleInstruction();
-
-            creditDetail.style.display = "block";
-            // if (isMobile)
-            //     aboutPage.style.height = '80%';
-        } else {
-            // aboutPage.style.height = '';
-            creditDetail.style.display = "none";
-        }
+    //////////////////////////////////////////////////////////////////
+    var showIntroTween = new TimelineMax();
+    showIntroTween.staggerTo(".introText", 1, {
+    	opacity: 1, repeatDelay: 1, repeat: 1, yoyo: true,
+    	onStart: introTweenStart, onStartParams:["{self}"],
+    	onComplete: introTweenComplete, onCompleteParams:["{self}"]
+    }, 3.5, "+=4", introCompleteAll);
+    function introTweenStart(tween) {
+    	tween.target.style.display = "block";
     }
-    ///////////
-
+    function introTweenComplete(tween) {
+    	tween.target.style.display = "none";
+    }
+    function introCompleteAll() {
+    	console.log(showIntroTween);
+    	showIntroTween.restart();
+    }
+    //////////////////////////////////////////////////////////////////
     if (!isMobile) {
         window.addEventListener('click', closeInfoDiv, false);
     } else {
@@ -448,8 +491,9 @@
     }
 
     function closeInfoDiv(event) {
-        if (event.target == splashPage) {
-            console.log("click");
+    	console.log(event.target);
+        if (event.target == infoBG) {
+            // console.log("click splashPage");
             if (showAbout) ToggleAbout();
             if (showInstruction) ToggleInstruction();
             if (showCredit) ToggleCredit();
@@ -776,7 +820,6 @@
     <script type="text/javascript" src="js/lib/BufferLoader.js"></script>
     <!-- <script type="text/javascript" src="js/lib/physi.js"></script> -->
     <!-- <script type="text/javascript" src="js/lib/ImprovedNoise.js"></script> -->
-    <script type="text/javascript" src="js/lib/TweenMax.min.js"></script>
     <!-- <script type="text/javascript" src="js/util/EndArrayPlugin.js"></script> -->
 
     <script type="text/javascript" src="js/lib/stats.min.js"></script>

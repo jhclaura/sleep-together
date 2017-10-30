@@ -24,7 +24,7 @@ body {
     -webkit-transition: opacity 2s;
 	-moz-transition: opacity 2s;
 	-o-transition: opacity 2s;
-	-ms-transition: opacity 2s;       
+	-ms-transition: opacity 2s;
 	transition: opacity 2s;
 	opacity: 1;
 
@@ -84,7 +84,9 @@ input[type=text] {
 	/*position: absolute;*/
 	left:0; right:0; top:0; bottom:0;
 	margin: auto;
-	padding: 2em;	
+	/*padding: 2em;*/
+	padding-top: 2em;
+	padding-bottom: 2em;
 	line-height: 26px;
 	text-align:center;
 
@@ -100,34 +102,65 @@ input[type=text] {
 	z-index: 100;
 }
 
+#inputGroupt {
+	width: 100%;
+	bottom: 50px;
+	position: fixed;
+
+	-webkit-transition: opacity 2s;
+	-moz-transition: opacity 2s;
+	-o-transition: opacity 2s;
+	-ms-transition: opacity 2s;
+	transition: opacity 2s;
+}
+
+#infoBG {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index: 110;
+
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
+	opacity: 0;
+}
+
 #aboutPage {
 	left:0; right:0; bottom:0; /*top:0; */
-	/*margin: auto;*/
-	padding: 5px;	
-	/*padding-left: 1em;
-	padding-right: 1em;*/
-	text-align: center;
+	/*padding: 10px;*/
+	padding-top: 5px;
+	padding-bottom: 5px;	
+	/*text-align: center;*/
 	font-size: 16pt;
 	background-color: #ffffff;
 	/*overflow: scroll;*/
 	/*-webkit-overflow-scrolling: touch;*/
 
 	z-index: 200;
+
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
+}
+
+#aboutPageTitle {
+	padding-left: 10px;
 }
 
 #aboutPageDetail {
 	text-align: left;
 	/*padding-bottom: 1em;*/
-}
-
-#instructionDetail {
-	/*width: 100%;
-	padding: 0;*/
-}
-
-#creditDetail {
-	/*overflow: scroll !important;
-	-webkit-overflow-scrolling: touch;*/
+	font-size: 1em;
+	-moz-column-count: 5;
+	-moz-columns: 5;
+	-webkit-columns: 5;
+	columns: 5;
 }
 
 .insImg {
@@ -179,6 +212,11 @@ input[type=text] {
     cursor: pointer;
 }
 
+/* The instruction for your mind */
+.introText {
+	color: white;
+}
+
 html {
     -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
 }
@@ -221,7 +259,9 @@ html {
 /* For width 500px and smaller: */
 @media only screen and (max-width: 500px) {
 	#splashPage {
-		padding: 1em;
+		/*padding: 1em;*/
+		padding-top: 1em;
+		padding-bottom: 1em;
 	}
     .insImg {
 		width: 100%;
@@ -240,7 +280,7 @@ html {
 		/*overflow-y: scroll !important;*/
 	/*}*/
 
-	#creditText {
+	#aboutPageDetail {
 		-moz-column-count: 1;
 		-moz-columns: 1;
 		-webkit-columns: 1;
