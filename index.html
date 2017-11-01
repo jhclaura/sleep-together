@@ -143,11 +143,11 @@
 	        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
 	        <div id="loadingTxt" style="color:yellow">loading</div>
 	        <p></p>
-	        <a id="startLink" style="display:none;cursor:pointer;color:#0af5e1;" onclick="startToShowInstruction();">Enter</a>
+	        <a id="startLink" style="display:none; color:#0af5e1; cursor:pointer;" onclick="startToShowInstruction();">Enter</a>
         </div>        
     </div>
     <div id="aboutPage" style="display:block; position:absolute;">
-        <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleAbout();">About</a>
+        <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; color:#000000" onclick="ToggleAbout();">About</a>
         <!-- <a class="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleInstruction();">Instruction</a> -->
         <!-- <a class="aboutLink" href="..." target='_blank'>Dev Blog</a> -->
     </div>
@@ -322,26 +322,41 @@
             <b>Ricardo Cabello</b> for THREE.js
         </div>
     </div>
-    <div class="infoBlock" id="vrOption" style="display:none;">
+    <div class="infoBlock" id="instructionDetail" style="display:none;">
     	<div class="infoText">
-	    	<b><ins>Sleep in</ins></b>
-	    	<div style="text-align: center;">
-				<a style="cursor:pointer; text-decoration: underline; color:#0af5e1;" onclick="getNameToStart();">VR mode</a>
-				<a style="cursor:pointer; text-decoration: underline; color:#0af5e1;" onclick="getNameToStart();">nature mode</a>
+    		<div style="text-align: center;">
+		    	<b><ins>"An Instruction For Your Phone"</ins></b>
+		    </div>
+		    <br>
+	    	<img class="insImg" src="images/instructions/instruction_sound.jpg">
+	    	<!-- <img class="insImg" src="images/instructions/instruction_click.jpg"> -->
+			<img class="insImg" src="images/instructions/instruction_move.jpg">
+			<!-- <img class="insImg" src="images/instructions/instruction_view.jpg"> -->
+			<br>
+			<div style="position: absolute; bottom: 1em; left: 0; right: 0;">
+				<a class="roundButton" style="cursor:pointer; background-color: black; color:#0af5e1;" onclick="ToggleVR();">OK</a>
 			</div>
     	</div>
     </div>
-    <div class="infoBlock" id="instructionDetail" style="display:none;">
+    <div class="infoBlock" id="vrOption" style="display:none;">
     	<div class="infoText">
-	    	<b><ins>"An Instruction For Your Phone"</ins></b>
-	    	<br>
-	    	<img class="insImg" src="images/instructions/instruction_click.jpg">
-			<img class="insImg" src="images/instructions/instruction_move.jpg">
-			<img class="insImg" src="images/instructions/instruction_view.jpg">
-			<br>
-			<br>
-			<div style="text-align: center;">
-				<a style="cursor:pointer; text-decoration: underline; color:#0af5e1;" onclick="getNameToStart();">Ready!</a>
+    		<div style="text-align: center;">
+	    		<b><ins>And, I want to sleep...</ins></b>
+	    		<br>
+	    		<br>
+	    		<div class="vrImg">
+					<img id="yesVR" style="width: 35%;" src="images/instructions/instruction_vr.png" onclick="chooseVRmode();">
+					<br>in VR mode
+				</div>
+				<br>			
+				<div class="vrImg">
+					<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr.png" onclick="chooseNonVRmode();">
+					<br>in nature mode
+				</div>
+				<br>
+			</div>
+			<div style="position: absolute; bottom: 1em; left: 0; right: 0;">
+				<a class="roundButton" id="vrToStart" style="cursor:pointer; background-color:black; color:grey;" onclick="getNameToStart();">START</a>
 			</div>
     	</div>
     </div>
@@ -379,12 +394,14 @@
     // var finalStat = byId("finalStat");
 
     var playerNName = "";
-    var readyToStart = false;
+    var readyToStart = false, chooseVRtoStart = false;
     var enableStart = true;
 
     var getNameToStart = function() {
+    	if(!chooseVRtoStart)
+    		return;
 
-    	ToggleInstruction();
+    	ToggleVR();
 
         if (playerNameInput.value == playerNName) {
             playerNName = "Anonymous";
@@ -421,12 +438,17 @@
     // ABOUT_PAGE
     var showAbout = false,
         showInstruction = false,
-        showCredit = false;
+        showVRoption = false;
     var aboutDetail = byId("aboutPageDetail");
     var aboutTitle = byId("aboutPageTitle");
     var instructDetail = byId("instructionDetail");
     var instructTitle = byId("instructionTitle");
+    var vrOption = byId("vrOption");
     var infoBG = byId("infoBG");
+    var yesVR = byId("yesVR");
+    var noVR = byId("noVR");
+    var vrToStart = byId("vrToStart");
+    var chooseVRimg = false, chooseNonVRimg = false;
     // → ← ↑ ↓
     var ToggleAbout = function() {
         showAbout = !showAbout;
@@ -453,18 +475,85 @@
         showInstruction = !showInstruction;
 
         if (showInstruction) {
-        	infoBG.style.opacity = 1;
-        	// infoBG.style.height = "100%";
         	infoBG.style.display = "block";
-            instructDetail.style.display = "block";
+        	instructDetail.style.display = "block";
+        	// infoBG.style.height = "100%";
+        	instructDetail.style.height = "75%";
+        	vrOption.style.height = "75%";
+        	
+            setTimeout(function () {
+            	infoBG.style.opacity = 1;
+            	instructDetail.style.opacity = 1;
+            }, 100);
+
         } else {
         	infoBG.style.opacity = 0;
-            instructDetail.style.display = "none";
+            instructDetail.style.opacity = 0;
             setTimeout(function () {
             	// infoBG.style.height = "0";
             	infoBG.style.display = "none";
+            	instructDetail.style.display = "none";
             }, 1000);
         }
+    }
+    var ToggleVR = function() {
+        showVRoption = !showVRoption;
+
+        if (showVRoption) {
+        	instructDetail.style.opacity = 0;
+        	vrOption.style.display = "block";
+        	
+            setTimeout(function () {
+            	vrOption.style.opacity = 1;
+            }, 100);
+            setTimeout(function () {
+            	instructDetail.style.display = "none";
+            }, 1000);
+        } else {
+        	infoBG.style.opacity = 0;
+            vrOption.style.opacity = 0;
+            setTimeout(function () {
+            	infoBG.style.display = "none";
+            	vrOption.style.display = "none";
+            }, 1000);
+        }
+    }
+    var chooseVRmode = function () {
+    	chooseVRimg = !chooseVRimg;
+    	if(chooseVRimg) {
+    		yesVR.src = "images/instructions/instruction_vr_select.png";
+    		if(chooseNonVRimg){
+    			chooseNonVRimg = false;
+    			noVR.src = "images/instructions/instruction_nonvr.png";
+    		}
+    	} else {
+    		yesVR.src = "images/instructions/instruction_vr.png";
+    	}
+    	checkForStart();
+    }
+    var chooseNonVRmode = function () {
+    	chooseNonVRimg = !chooseNonVRimg;
+    	if(chooseNonVRimg) {
+    		noVR.src = "images/instructions/instruction_nonvr_select.png";
+    		if(chooseVRimg){
+    			chooseVRimg = false;
+    			yesVR.src = "images/instructions/instruction_vr.png";
+    		}
+    	} else {
+    		noVR.src = "images/instructions/instruction_nonvr.png";
+    	}
+    	checkForStart();
+    }
+    var checkForStart = function () {
+    	if(chooseNonVRimg || chooseVRimg){
+    		chooseVRtoStart = true;
+    		vrToStart.style.color = "white";
+    	}
+    	else
+    	{
+    		chooseVRtoStart = false;
+    		vrToStart.style.color = "grey";
+    	}
     }
     //////////////////////////////////////////////////////////////////
     var showIntroTween = new TimelineMax();
@@ -496,7 +585,7 @@
             // console.log("click splashPage");
             if (showAbout) ToggleAbout();
             if (showInstruction) ToggleInstruction();
-            if (showCredit) ToggleCredit();
+            // if (showCredit) ToggleCredit();
         }
     }
 

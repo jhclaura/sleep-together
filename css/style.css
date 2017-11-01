@@ -78,6 +78,31 @@ h1 {
 
 input[type=text] {
 	text-align: center;
+
+	border: none;
+	/*border-bottom: dashed 2px grey;*/
+	background-color: rgba(255,255,255,0.9);
+}
+
+input[type=text]::placeholder {
+	color: rgb(50,50,50);
+}
+
+input[type=text]:focus,
+input[type=text].focus {
+	background-color: rgba(255,255,255,1);
+}
+
+.roundButton {
+	display: block;
+	margin:0 auto;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	border-radius: 50%;
+	text-align: center;
+	background: #464646;
+	cursor: pointer;
 }
 
 #splashPage {
@@ -129,6 +154,24 @@ input[type=text] {
 	opacity: 0;
 }
 
+#instructionDetail {
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
+	opacity: 0;
+}
+
+#vrOption {
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
+	opacity: 0;
+}
+
 #aboutPage {
 	left:0; right:0; bottom:0; /*top:0; */
 	/*padding: 10px;*/
@@ -164,7 +207,11 @@ input[type=text] {
 }
 
 .insImg {
-	width: 32.5%;
+	width: 49%;
+}
+
+.vrImg {
+	width: 49%;
 }
 
 .infoBlock {
@@ -196,19 +243,19 @@ input[type=text] {
 /* The Close Button */
 .closeContainer {
 	float: right;
-	width: 20px;
+	width: 30px;
 }
 .close {
     color: #09ddcb;
-    font-size: 28px;
+    font-size: 40px;
     font-weight: bold;
     position: fixed;
 }
 
 .close:hover,
 .close:focus {
-    color: black;
-    text-decoration: none;
+    /*color: black;
+    text-decoration: none;*/
     cursor: pointer;
 }
 
@@ -239,6 +286,7 @@ html {
 #vr-button {
 	/*margin-top: 40px;*/
 	/*margin-bottom: 20px;*/
+	display: none;
 }
 
 #vr-exit {
@@ -266,6 +314,9 @@ html {
     .insImg {
 		width: 100%;
 		/*height: 32.8%;*/
+	}
+	.vrImg {
+		width: 100%;
 	}
 	/*#aboutPageDetail {*/
 		/*max-height: 600px;*/
