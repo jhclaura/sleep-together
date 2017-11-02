@@ -1434,3 +1434,53 @@ function onWindowResize(e) {
 function isTouchDevice() {
     return 'ontouchstart' in window || !!(navigator.msMaxTouchPoints);
 }
+
+// Page Visibility API
+// use visibility API to check if current tab is active or not
+// reference: https://greensock.com/forums/topic/9887-tween-paused-when-switch-to-other-tabs/
+var vis = (function(){
+    var stateKey, 
+        eventKey, 
+        keys = {
+                hidden: "visibilitychange",
+                webkitHidden: "webkitvisibilitychange",
+                mozHidden: "mozvisibilitychange",
+                msHidden: "msvisibilitychange"
+    };
+    for (stateKey in keys) {
+        if (stateKey in document) {
+            eventKey = keys[stateKey];
+            break;
+        }
+    }
+    return function(c) {
+        if (c) document.addEventListener(eventKey, c);
+        return !document[stateKey];
+    }
+})();
+
+// check if current tab is active or not
+vis(function(){
+    if(vis()){
+        // tween resume() code goes here
+        // the setTimeout() is used due to a delay 
+        // before the tab gains focus again, very important!	
+		setTimeout(function(){            
+	            console.log("tab is visible - has focus");
+
+	            Howler.mute(false);
+
+	            if(expStage==1)
+	        		sound_practice.play();
+
+	        },300);		
+    } else {
+        // tween pause() code goes here
+        console.log("tab is invisible - has blur");
+
+        Howler.mute(true);
+
+        if(expStage==1)
+	        sound_practice.pause();
+    }
+});
