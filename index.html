@@ -371,7 +371,9 @@
 	    	</span>
     	</div>
     </div>
-    <a href="#" id="vr-exit" onclick="enterVR.requestExit()">x</a>
+    <a href="#" id="vr-exit" onclick="enterVR.requestExit();">x</a>
+
+    <img id="vr-enter-circle" style="display: none;" src="images/entervr.png" onclick="enterVR.requestEnterVR();">
 
     <script>
     var final_statistic = {};
@@ -392,6 +394,8 @@
     var splashPage = byId("splashPage");
     // var finalBG = byId("finalBG");
     // var finalStat = byId("finalStat");
+    var onfHeader = byId("header");
+    var vrEnterCircle = byId("vr-enter-circle");
 
     var playerNName = "";
     var readyToStart = false, chooseVRtoStart = false;
@@ -401,7 +405,8 @@
     	if(!chooseVRtoStart)
     		return;
 
-    	ToggleVR();
+    	if(isMobile)
+	    	ToggleVR();	// turn off
 
         if (playerNameInput.value == playerNName) {
             playerNName = "Anonymous";
@@ -416,16 +421,21 @@
         if (blockerDiv) blockerDiv.style.display = "-webkit-box";
 
         splashPage.style.display = "none";
-
         aboutPage.style.display = "none";
         aboutPage.style.height = '';
         aboutDetail.style.display = "none";
         showAbout = false;
 
-        // superInit();
-        // connectSocket();
-
         lateInit();
+
+        if(isMobile) {
+        	if(chooseVRimg){
+	        	enterVR.requestEnterVR();
+        	}
+	        else{
+	        	enterVR.requestEnterFullscreen();
+	        }
+        }
 
         // Remove Events
         window.removeEventListener('keydown', myFakeEnter, false);
@@ -457,6 +467,7 @@
     var noVR = byId("noVR");
     var vrToStart = byId("vrToStart");
     var chooseVRimg = false, chooseNonVRimg = false;
+
     // → ← ↑ ↓
     var ToggleAbout = function() {
         showAbout = !showAbout;
@@ -506,6 +517,20 @@
         }
     }
     var ToggleVR = function() {
+
+    	if(!isMobile){
+    		chooseVRtoStart = true;
+    		getNameToStart();
+
+    		instructDetail.style.opacity = 0;
+    		infoBG.style.opacity = 0;
+    		setTimeout(function () {
+            	instructDetail.style.display = "none";
+            	infoBG.style.display = "none";
+            }, 1000);
+    		return;
+    	}
+
         showVRoption = !showVRoption;
 
         if (showVRoption) {

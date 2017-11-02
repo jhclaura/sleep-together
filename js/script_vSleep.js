@@ -261,10 +261,21 @@ function superInit() {
 		})
 		.on("enter", function(){
 			console.log("enter VR");
+
+			if(chooseVRimg)
+			{
+				onfHeader.style.display = "none";
+				vrEnterCircle.style.display = "none";
+			}			
 		})
 		.on("exit", function(){
 			console.log("exit VR");
-			// enterVR.show();
+			
+			if(chooseVRimg)
+			{
+				onfHeader.style.display = "";
+				vrEnterCircle.style.display = "";
+			}			
 		})
 		.on("error", function(error){
 			document.getElementById("vr-learn-more").style.display = "inline";
@@ -677,6 +688,11 @@ function lateInit() {
     var nestPos = nest.position.clone();
     nestPos.z = GetRandomArbitrary(-5, 5);
 
+    var waitingTimeBeforeStart = 5000;
+    // In VR mode, give extra 5 sec to buffer time for setup viewer
+    if(chooseVRimg)
+    	waitingTimeBeforeStart = 10000;
+
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
 
@@ -732,7 +748,7 @@ function lateInit() {
                 }
             });
         }, 26000);
-    }, 5000);
+    }, waitingTimeBeforeStart);
 }
 
 function playLetsAudio() {
