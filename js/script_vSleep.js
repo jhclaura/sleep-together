@@ -1107,6 +1107,8 @@ function OptionStartStage(stageIndex) {
             annoucementTexture.clear();
             controls.movingEnabled = false;
             optionButtons.visible = false;
+            if(!optionButtons.children[1].visible)
+	            optionButtons.children[1].visible = true;
 
             var s_b_id = sound_options.play('breath');
             var s_b_duration = sound_options.duration(s_b_id);
@@ -1120,6 +1122,7 @@ function OptionStartStage(stageIndex) {
         case 2:
             UpdateFrontRotationWithMe(annoucement);
             annoucementTexture.clear().drawText("Make eye contact to navigate the world", undefined, 96, 'white');
+            optionButtons.children[1].visible = false;
 
             sound_options.play('explore');
             controls.movingEnabled = true;
@@ -1128,6 +1131,7 @@ function OptionStartStage(stageIndex) {
             // Sleep
         case 3:
             controls.movingEnabled = false;
+            optionButtons.visible = false;
 
             UpdateFrontRotationWithMe(annoucement);
             annoucementTexture.clear().drawText("Good night :)", undefined, 96, 'white');

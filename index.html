@@ -426,6 +426,14 @@
         // connectSocket();
 
         lateInit();
+
+        // Remove Events
+        window.removeEventListener('keydown', myFakeEnter, false);
+        if (!isMobile) {
+            window.removeEventListener('click', closeInfoDiv, false);
+        } else {
+            window.removeEventListener('touchstart', closeInfoDiv, false);
+        }
     }
 
     var startToShowInstruction = function () {
@@ -484,6 +492,7 @@
             setTimeout(function () {
             	infoBG.style.opacity = 1;
             	instructDetail.style.opacity = 1;
+            	doIntroAnimation = false;
             }, 100);
 
         } else {
@@ -557,6 +566,7 @@
     }
     //////////////////////////////////////////////////////////////////
     var showIntroTween = new TimelineMax();
+    var doIntroAnimation = true;
     showIntroTween.staggerTo(".introText", 1, {
     	opacity: 1, repeatDelay: 1, repeat: 1, yoyo: true,
     	onStart: introTweenStart, onStartParams:["{self}"],
@@ -570,7 +580,8 @@
     }
     function introCompleteAll() {
     	console.log(showIntroTween);
-    	showIntroTween.restart();
+    	if(doIntroAnimation)
+	    	showIntroTween.restart();
     }
     //////////////////////////////////////////////////////////////////
     if (!isMobile) {
@@ -597,12 +608,6 @@
         switch (event.keyCode) {
             case 13: //enter
                 getNameToStart();
-                window.removeEventListener('keydown', myFakeEnter, false);
-                if (!isMobile) {
-                    window.removeEventListener('click', closeInfoDiv, false);
-                } else {
-                    window.removeEventListener('touchstart', closeInfoDiv, false);
-                }
                 break;
         }
     }
