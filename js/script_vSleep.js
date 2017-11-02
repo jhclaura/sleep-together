@@ -991,7 +991,7 @@ function update() {
             GazeToChoose();
             break;
 
-            // Explore mode: Gaze-to-move
+        // Explore mode: Gaze-to-move
         case 2:
             eyeIntersects = eyerayCaster.intersectObject(dailyLifePlayerObject, true);
             if (eyeIntersects.length > 0) {
@@ -1092,6 +1092,12 @@ function GazeToChoose() {
 
         } else if (optionLights[i].intensity >= 0.04) {
             optionLights[i].intensity -= 0.04;
+
+            if (optionButtons.children[i].children[2].visible == true)
+                optionButtons.children[i].children[2].visible = false;
+
+        } else if (optionLights[i].intensity < 0.04) {
+            optionLights[i].intensity = 0;
 
             if (optionButtons.children[i].children[2].visible == true)
                 optionButtons.children[i].children[2].visible = false;
