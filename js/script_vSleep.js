@@ -95,6 +95,7 @@ var nestSticksPos = [],
         y: [0.1, -0.1, 0.1, 0.1, -0.1],
         z: [-0.1, 0.1, 0.1, -0.1, -0.1]
     };
+var panelGroupt;
 
 var breathingTimeline;
 
@@ -508,6 +509,24 @@ function superInit() {
     waitForWebfonts(['StupidFont'], () => {
         AfterFontLoaded();
     });
+
+    // panelGroupt = new THREE.Object3D();
+    // // INVISIBLE_PANEL_FOR_DETECTING_EYE_GAZING
+    // for(var i=0; i<6; i++){
+    // 	var panel = new THREE.Mesh(
+    // 		new THREE.PlaneGeometry(20,12),
+    // 		new THREE.MeshBasicMaterial({side: THREE.DoubleSide, color: 0xff0000})
+    // 	);
+    // 	panel.rotation.set(0, Math.PI*2/6*i, 0);
+    // 	panel.position.set(
+    // 		Math.sin(Math.PI*2/6*i)*18,
+    // 		0,
+    // 		Math.cos(Math.PI*2/6*i)*18
+    // 	);
+    // 	panel.name = "panel";
+    // 	panelGroupt.add(panel);
+    // }
+    // scene.add(panelGroupt);
 }
 
 function AfterFontLoaded() {
@@ -636,6 +655,8 @@ function lateInit() {
     // update things position based on myPosition
     nest.position.set(myPosition.x * 20 / 255, myPosition.y * 20 / 255, 0);
     announcement.position.copy(nest.position);
+    // panelGroupt.position.copy(nest.position);
+
     // UpdateRotationWithMe( introRoom );
 
     // start to animate()!
@@ -1149,7 +1170,8 @@ function OptionStartStage(stageIndex) {
             // Explore
         case 2:
             UpdateFrontRotationWithMe(announcement);
-            announcementTexture.clear().drawText("Make eye contact to navigate the world", undefined, 96, 'white');
+            announcementTexture.clear().drawText("Make eye contact", undefined, 60, 'white');
+            announcementTexture.drawText("to navigate the world", undefined, 120, 'white');
             optionButtons.children[1].visible = false;
 
             sound_options.play('explore');
