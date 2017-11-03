@@ -628,7 +628,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
     };
 
     this.setPosition = function(newPositin) {
-        yawObject.position.copy(newPosition);
+        yawObject.position.copy(newPositin);
     };
 
     this.dirF = function() {

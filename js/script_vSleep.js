@@ -125,12 +125,13 @@ superInit(); // init automatically
 function superInit() {
 
     // Determine Sleepers Start Positions (45, 50)
-    var s_index = 0;
+    var s_index = 1;
     for (var j = 0; j < 3; j++) {
         for (var i = 7; i < 13; i++) {
             var startPos = new THREE.Vector3(
                 (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                j * 50 + GetRandomArbitrary(0, 10), -400 + GetRandomArbitrary(0, 2)
+                j * 50 + GetRandomArbitrary(0, 5),
+                (j - 1) * 4 - 400 + GetRandomArbitrary(0, 2)
             );
             sleeperStartPositions[s_index] = startPos;
             s_index++;
@@ -430,74 +431,77 @@ function superInit() {
         ScrollSocialMedia(sm_mat.map.offset);
     }
 
-    modelLoader.load(basedURL + "models/sm_screen.json", function(geometry, material) {
-        sm_screenGeo = geometry;
+    if(!devMode){
+    	modelLoader.load(basedURL + "models/sm_screen.json", function(geometry, material) {
+	        sm_screenGeo = geometry;
 
-        modelLoader.load(basedURL + "models/glow.json", function(geometryB, material) {
-            glowGeo = geometryB;
-            glowMat1 = new THREE.MeshBasicMaterial({
-                map: sm_glow,
-                transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
-            });
-            glowMat2 = new THREE.MeshBasicMaterial({
-                map: sm_glow,
-                transparent: true,
-                side: THREE.BackSide
-            });
-            var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
-            //glowMesh.scale.multiplyScalar(4);
-            var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
-            //glowMesh2.scale.multiplyScalar(4);
+	        modelLoader.load(basedURL + "models/glow.json", function(geometryB, material) {
+	            glowGeo = geometryB;
+	            glowMat1 = new THREE.MeshBasicMaterial({
+	                map: sm_glow,
+	                transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
+	            });
+	            glowMat2 = new THREE.MeshBasicMaterial({
+	                map: sm_glow,
+	                transparent: true,
+	                side: THREE.BackSide
+	            });
+	            var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
+	            //glowMesh.scale.multiplyScalar(4);
+	            var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
+	            //glowMesh2.scale.multiplyScalar(4);
 
-            // Create Social Medai Wall
-            var screenIndex = 0;
-            // --- Real for indexing (6*3=18 total)
-            for (var j = 0; j < 3; j++) {
-                for (var i = 7; i < 13; i++) {
-                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                    sm_screen.add(glowMesh.clone());
-                    sm_screen.add(glowMesh2.clone());
-                    sm_screen.scale.multiplyScalar(4);
+	            // Create Social Medai Wall
+	            var screenIndex = 1;
+	            // --- Real for indexing (6*3=18 total)
+	            for (var j = 0; j < 3; j++) {
+	                for (var i = 7; i < 13; i++) {
+	                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
+	                    sm_screen.add(glowMesh.clone());
+	                    sm_screen.add(glowMesh2.clone());
+	                    sm_screen.scale.multiplyScalar(4);
 
-                    sm_screen.position.copy(sleeperStartPositions[screenIndex]);
-                    sm_screen.position.z -= 4;
-                    sm_screen.position.y += 10;
+	                    sm_screen.position.copy(sleeperStartPositions[screenIndex]);
+	                    sm_screen.position.z -= 4;
+	                    sm_screen.position.y += 10;
 
-                    socialMediaScreens.push(sm_screen);
+	                    socialMediaScreens.push(sm_screen);
 
-                    scene.add(sm_screen);
-                    screenIndex++;
-                }
-            }
-            // --- Fake
-            for (var j = 0; j < 5; j++) {
-                for (var i = 0; i < 20; i++) {
+	                    scene.add(sm_screen);
+	                    screenIndex++;
+	                }
+	            }
+	            // --- Fake
+	            for (var j = 0; j < 5; j++) {
+	                for (var i = 0; i < 20; i++) {
 
-                    if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
-                        continue;
+	                    if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
+	                        continue;
 
-                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                    sm_screen.add(glowMesh.clone());
-                    sm_screen.add(glowMesh2.clone());
-                    sm_screen.scale.multiplyScalar(4);
+	                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
+	                    sm_screen.add(glowMesh.clone());
+	                    sm_screen.add(glowMesh2.clone());
+	                    sm_screen.scale.multiplyScalar(4);
 
-                    sm_screen.position.set(
-                        (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                        j * 50 + GetRandomArbitrary(0, 10), -400 + GetRandomArbitrary(0, 2)
-                    );
+	                    sm_screen.position.set(
+	                        (i - 10) * 45 + GetRandomArbitrary(0, 15),
+	                        j * 50 + GetRandomArbitrary(0, 5), -400 + GetRandomArbitrary(0, 2)
+	                    );
 
-                    socialMediaScreens.push(sm_screen);
+	                    socialMediaScreens.push(sm_screen);
 
-                    scene.add(sm_screen);
-                    screenIndex++;
-                }
-            }
-        });
-    });
+	                    scene.add(sm_screen);
+	                    screenIndex++;
+	                }
+	            }
+	        });
+	    });
+    }
 
     nestTex = textureLoader.load(basedURL + 'images/nest.jpg');
     nestTex.wrapT = nestTex.wrapS = THREE.RepeatWrapping;
-    nestTex.repeat.set(2, 2);
+    //nestTex.repeat.set(2, 2);
+    nestTex.repeat.set(4, 4);
 
     loadModelWholeNest(
         basedURL + "models/nest2.json", basedURL + "models/stick1.json", basedURL + "models/stick2.json",
@@ -608,10 +612,7 @@ function ScrollSocialMedia(el) {
 function AssignIndex() {
     // console.log("whoIamInLife: " + whoIamInLife);
 
-    if (devMode)
-        myPosition = new THREE.Vector3();
-    else
-        myPosition = sleeperStartPositions[whoIamInLife];
+    myPosition = sleeperStartPositions[whoIamInLife];
 
     myStartX = myPosition.x;
     myStartY = myPosition.y;
@@ -653,8 +654,9 @@ function lateInit() {
     scene.add(controls.getObject());
 
     // update things position based on myPosition
-    nest.position.set(myPosition.x * 20 / 255, myPosition.y * 20 / 255, 0);
+    nest.position.set(myPosition.x * 20 / 255, myPosition.y * 20 / 255, myPosition.z + 400);
     announcement.position.copy(nest.position);
+    optionButtons.position.copy(nest.position);
     // panelGroupt.position.copy(nest.position);
 
     // UpdateRotationWithMe( introRoom );
@@ -696,6 +698,7 @@ function lateInit() {
     if (devMode){
     	expStage = 4;
     	optionButtons.visible = true;
+    	controls.setPosition(nest.position);
         return;
     }
 
