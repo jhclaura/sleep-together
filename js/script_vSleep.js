@@ -1125,7 +1125,7 @@ function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
 function GazeToChoose() {
     for (var i = 0; i < optionLights.length; i++) {
         if (optionLights[i].name == currentOption) {
-            if (optionLights[i].intensity < 1.02)
+            if (optionLights[i].intensity < 1.04)
                 optionLights[i].intensity += 0.02;
 
             if (optionButtons.children[i].children[2].visible == false){
