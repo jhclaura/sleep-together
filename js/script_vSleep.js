@@ -85,7 +85,7 @@ var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
     sm_materials = [];
 var sm_screenGeo, glowGeo, glowMat1, glowMat2, sm_glow;
-var annoucement, annoucementTexture;
+var announcement, announcementTexture;
 var nest, nestTex, nestStickGeos = [],
     nestSticks = []
 var nestSticksPos = [],
@@ -553,17 +553,17 @@ function AfterFontLoaded() {
     optionButtons.visible = false;
 
     // INFO_TEXT_DISPLY
-    annoucement = new THREE.Object3D();
-    annoucementTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
-    annoucementTexture.context.font = "bolder 70px StupidFont";
-    annoucementTexture.clear().drawText("annoucement:", undefined, 96, 'white');
-    annoucementTexture.clear();
-    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true, depthTest: false }); //depthTest: false
-    var annoucementMesh = new THREE.Mesh(new THREE.PlaneGeometry(annoucementTexture.canvas.width, annoucementTexture.canvas.height), annoucementMaterial);
-    annoucementMesh.scale.multiplyScalar(0.01);
-    annoucementMesh.position.z = -20;
-    annoucement.add(annoucementMesh);
-    scene.add(annoucement);
+    announcement = new THREE.Object3D();
+    announcementTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
+    announcementTexture.context.font = "bolder 70px StupidFont";
+    announcementTexture.clear().drawText("announcement:", undefined, 96, 'white');
+    announcementTexture.clear();
+    var announcementMaterial = new THREE.MeshBasicMaterial({ map: announcementTexture.texture, transparent: true, depthTest: false }); //depthTest: false
+    var announcementMesh = new THREE.Mesh(new THREE.PlaneGeometry(announcementTexture.canvas.width, announcementTexture.canvas.height), announcementMaterial);
+    announcementMesh.scale.multiplyScalar(0.01);
+    announcementMesh.position.z = -20;
+    announcement.add(announcementMesh);
+    scene.add(announcement);
 
     // PEOPLE_COUNT
     pplCountTex = new THREEx.DynamicTexture(1024, 1024);
@@ -635,7 +635,7 @@ function lateInit() {
 
     // update things position based on myPosition
     nest.position.set(myPosition.x * 20 / 255, myPosition.y * 20 / 255, 0);
-    annoucement.position.copy(nest.position);
+    announcement.position.copy(nest.position);
     // UpdateRotationWithMe( introRoom );
 
     // start to animate()!
@@ -762,8 +762,11 @@ function startBreathingPractice(_redo) {
     expStage = 1;
 
     // Eye-level info
-    UpdateFrontRotationWithMe(annoucement);
-    annoucementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
+    UpdateFrontRotationWithMe(announcement);
+    announcementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
+
+    UpdateFrontRotationWithMe(pplCount);
+    UpdateFrontRotationWithMe(optionButtons);
 
     //sound_night.fade(0.8, 0.4, 1000);
 
@@ -800,9 +803,12 @@ function startBreathingPractice(_redo) {
         sound_night.fade(0.3, 0.8, 2000);
         sound_options.play('intro');
 
-        UpdateFrontRotationWithMe(annoucement);
-        annoucementTexture.clear().drawText("Look at the sky", undefined, 60, 'white');
-        annoucementTexture.drawText("Gaze upon options to choose next step", undefined, 120, 'white');
+        UpdateFrontRotationWithMe(announcement);
+        announcementTexture.clear().drawText("Look at the sky", undefined, 60, 'white');
+        announcementTexture.drawText("Gaze upon options to choose next step", undefined, 120, 'white');
+
+        UpdateFrontRotationWithMe(pplCount);
+        UpdateFrontRotationWithMe(optionButtons);
 
     }, duration * 1000);
 }
@@ -1126,7 +1132,7 @@ function OptionStartStage(stageIndex) {
     switch (expStage) {
         // Redo breathing exercise
         case 1:
-            annoucementTexture.clear();
+            announcementTexture.clear();
             controls.movingEnabled = false;
             optionButtons.visible = false;
             if(!optionButtons.children[1].visible)
@@ -1142,8 +1148,8 @@ function OptionStartStage(stageIndex) {
 
             // Explore
         case 2:
-            UpdateFrontRotationWithMe(annoucement);
-            annoucementTexture.clear().drawText("Make eye contact to navigate the world", undefined, 96, 'white');
+            UpdateFrontRotationWithMe(announcement);
+            announcementTexture.clear().drawText("Make eye contact to navigate the world", undefined, 96, 'white');
             optionButtons.children[1].visible = false;
 
             sound_options.play('explore');
@@ -1155,8 +1161,8 @@ function OptionStartStage(stageIndex) {
             controls.movingEnabled = false;
             optionButtons.visible = false;
 
-            UpdateFrontRotationWithMe(annoucement);
-            annoucementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
+            UpdateFrontRotationWithMe(announcement);
+            announcementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
 
             // Move up to be out of the nest
             pplCountTex.clear();
