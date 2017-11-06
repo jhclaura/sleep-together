@@ -1,8 +1,9 @@
+var devMode = false;
+var tapIsVisible = true;
+
 ////////////////////////////////////////////////////////////	
 // SET_UP_VARIABLES
 ////////////////////////////////////////////////////////////
-
-var devMode = false;
 
 var scene, camera, container, renderer, effect, stats;
 var vrmanager;
@@ -977,9 +978,18 @@ function update() {
 
     // STAR
     if (starAnimators.length > 0) {
-        for (var i = 0; i < starAnimators.length; i++) {
-            starAnimators[i].updateLaura(300 * dt);
-        }
+    	if(expStage==3)
+    	{
+    		for (var i = 0; i < starAnimators.length; i++) {
+	            starAnimators[i].updateLaura((135+15*i)*dt);
+	        }
+    	}
+    	else
+    	{
+    		for (var i = 0; i < starAnimators.length; i++) {
+	            starAnimators[i].updateLaura(300*dt);
+	        }
+    	}        
     }
 
     // eyeRay!
@@ -1129,7 +1139,7 @@ function GazeToChoose() {
     for (var i = 0; i < optionLights.length; i++) {
         if (optionLights[i].name == currentOption) {
             if (optionLights[i].intensity < 1.04)
-                optionLights[i].intensity += 0.02;
+                optionLights[i].intensity += 0.04;
 
             if (optionButtons.children[i].children[2].visible == false){
                 optionButtons.children[i].children[2].visible = true;
@@ -1193,15 +1203,16 @@ function OptionStartStage(stageIndex) {
             pplCountTex.clear();
             pplCount.visible = false;
             firstGuy.player.visible = false;
-            controls.setMovYAnimation(90, 5, false, false);
+            controls.setMovYAnimation(90, 8, false, false);//8
 
-            sound_night.fade(0.8, 0.3, 2 * 1000);
+            sound_night.fade(0.8, 0.3, 4 * 1000);
 
-            TweenMax.to(hemiLight.groundColor, 2, { r: 0.569, g: 0.506, b: 0.1 });
+            TweenMax.to(hemiLight.groundColor, 4, { r: 0.569, g: 0.506, b: 0.1 });
 
             // play good night audio
             sound_options.play('sleep');
 
+            var starIndex = 0;
             // Populate several Nests around
             for (var i = 0; i < 6; i++) {
                 for (var j = 0; j < 4; j++) {
@@ -1217,13 +1228,17 @@ function OptionStartStage(stageIndex) {
                             (k - 2) * 100 + GetRandomArbitrary(-45, 45),
                         );
                         scene.add(dupNest);
+
+                        stars[starIndex].position.copy(dupNest.position);
+                        stars[starIndex].scale.multiplyScalar(15);
+                        starIndex++;
                     }
                 }
             }
 
             setTimeout(() => {
                 renderCanvas.style.opacity = 0;
-            }, 14000);
+            }, 18000);
 
             setTimeout(() => {
                 isAllOver = true;
@@ -1233,9 +1248,27 @@ function OptionStartStage(stageIndex) {
 
                 // DISPOSE_TO_RELEASE_MEMORY!
                 DoDispose(scene);
-            }, 16500);
+
+                DoEnding();
+
+            }, 20500);
             break;
     }
+}
+
+function DoEnding() {
+	enterVR.requestExit();
+
+	infoBG.style.display = "block";
+	goodbyeMsg.style.display = "block";
+
+	document.getElementById("goodbyeText").innerHTML = "See you another night.. Z z z";
+
+	setTimeout(function () {
+		infoBG.style.opacity = 1;
+		goodbyeMsg.style.opacity = 1;
+		renderCanvas.style.opacity = 0;
+	}, 100);
 }
 
 function GazeToMove() {
@@ -1514,6 +1547,7 @@ vis(function(){
         // before the tab gains focus again, very important!	
 		setTimeout(function(){            
 	            console.log("tab is visible - has focus");
+	            tapIsVisible = true;
 
 	            Howler.mute(false);
 
@@ -1524,6 +1558,7 @@ vis(function(){
     } else {
         // tween pause() code goes here
         console.log("tab is invisible - has blur");
+        tapIsVisible = false;
 
         Howler.mute(true);
 

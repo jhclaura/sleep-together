@@ -155,21 +155,21 @@ input[type=text].focus {
 }
 
 #instructionDetail {
-	-webkit-transition: opacity 1s;
+	/*-webkit-transition: opacity 1s;
 	-moz-transition: opacity 1s;
 	-o-transition: opacity 1s;
 	-ms-transition: opacity 1s;
 	transition: opacity 1s;
-	opacity: 0;
+	opacity: 0;*/
 }
 
 #vrOption {
-	-webkit-transition: opacity 1s;
+	/*-webkit-transition: opacity 1s;
 	-moz-transition: opacity 1s;
 	-o-transition: opacity 1s;
 	-ms-transition: opacity 1s;
 	transition: opacity 1s;
-	opacity: 0;
+	opacity: 0;*/
 }
 
 #aboutPage {
@@ -214,6 +214,10 @@ input[type=text].focus {
 	width: 49%;
 }
 
+#vrImgWrapper {
+	display: flex;
+}
+
 .infoBlock {
 	background-color: #ffffff;
 	z-index: 3000; /* Sit on top */
@@ -226,6 +230,15 @@ input[type=text].focus {
 	overflow: auto;
 	font-size: 1.2em;
 	-webkit-overflow-scrolling: touch;
+}
+
+.trans {
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
+	opacity: 0;
 }
 
 .infoText {
@@ -266,6 +279,14 @@ input[type=text].focus {
 
 html {
     -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
+}
+
+#goodbyeText {
+	position: relative;
+	top: 50%;
+	-ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 /* WebVR-UI */
@@ -329,6 +350,9 @@ html {
 	}
 	.vrImg {
 		width: 100%;
+	}
+	#vrImgWrapper {
+		display: initial;
 	}
 	/*#aboutPageDetail {*/
 		/*max-height: 600px;*/

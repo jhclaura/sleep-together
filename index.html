@@ -322,7 +322,7 @@
             <b>Ricardo Cabello</b> for THREE.js
         </div>
     </div>
-    <div class="infoBlock" id="instructionDetail" style="display:none;">
+    <div class="infoBlock trans" id="instructionDetail" style="display:none;">
     	<div class="infoText">
     		<div style="text-align: center;">
 		    	<b><ins>"An Instruction For Your Phone"</ins></b>
@@ -338,26 +338,44 @@
 			</div>
     	</div>
     </div>
-    <div class="infoBlock" id="vrOption" style="display:none;">
+    <div class="infoBlock trans" id="vrOption" style="display:none;">
     	<div class="infoText">
     		<div style="text-align: center;">
 	    		<b><ins>And, I want to sleep...</ins></b>
 	    		<br>
 	    		<br>
-	    		<div class="vrImg">
-					<img id="yesVR" style="width: 35%;" src="images/instructions/instruction_vr.png" onclick="chooseVRmode();">
-					<br>in VR mode
-				</div>
-				<br>			
-				<div class="vrImg">
-					<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr.png" onclick="chooseNonVRmode();">
-					<br>in nature mode
+	    		<div id="vrImgWrapper">
+		    		<div class="vrImg">
+						<img id="yesVR" style="width: 35%;" src="images/instructions/instruction_vr.png" onclick="chooseVRmode();">
+						<br>in VR mode
+					</div>
+					<div class="vrImg">
+						<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr.png" onclick="chooseNonVRmode();">
+						<br>in nature mode
+					</div>
 				</div>
 				<br>
 			</div>
 			<div style="position: absolute; bottom: 1em; left: 0; right: 0;">
 				<a class="roundButton" id="vrToStart" style="cursor:pointer; background-color:black; color:grey;" onclick="getNameToStart();">START</a>
 			</div>
+    	</div>
+    </div>
+    <div class="infoBlock trans" id="goodbyeMsg" style="display:none; background-color: black; color:white;">
+    	<div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
+    		<!-- <div style="text-align: center;"> -->
+		    	Why wake up from that
+		    	<br>
+		    	sweet sleep mode?
+		    	<br>
+		    	<br>
+		    	Close your eyes,
+		    	<br>
+		    	I'll see you another night.
+		    <!-- </div> -->
+			<!-- <div style="position: absolute; bottom: 1em; left: 0; right: 0;">
+				<a class="roundButton" style="cursor:pointer; background-color: black; color:#0af5e1;" onclick="ToggleVR();">OK</a>
+			</div> -->
     	</div>
     </div>
 
@@ -467,6 +485,7 @@
     var noVR = byId("noVR");
     var vrToStart = byId("vrToStart");
     var chooseVRimg = false, chooseNonVRimg = false;
+    var goodbyeMsg = byId("goodbyeMsg");
 
     // → ← ↑ ↓
     var ToggleAbout = function() {
@@ -481,12 +500,14 @@
             enableStart = false;
         } else {
         	infoBG.style.opacity = 0;
-            aboutDetail.style.display = "none";
-
+        	aboutDetail.style.display = "none";
+            
             setTimeout(function () {
-            	// infoBG.style.height = "0";
-            	infoBG.style.display = "none";
-            	enableStart = true;
+            	if(!showAbout && !isAllOver){
+            		infoBG.style.display = "none";
+            		console.log("infoBG --> none");
+            		enableStart = true;
+            	}
             }, 1000);
         }
     }
@@ -510,8 +531,10 @@
         	infoBG.style.opacity = 0;
             instructDetail.style.opacity = 0;
             setTimeout(function () {
-            	// infoBG.style.height = "0";
-            	infoBG.style.display = "none";
+            	if(!showInstruction && !isAllOver) {
+	            	infoBG.style.display = "none";
+	            	console.log("infoBG --> none");
+            	}
             	instructDetail.style.display = "none";
             }, 1000);
         }
@@ -547,8 +570,10 @@
         	infoBG.style.opacity = 0;
             vrOption.style.opacity = 0;
             setTimeout(function () {
-            	infoBG.style.display = "none";
-            	vrOption.style.display = "none";
+            	if(!showVRoption && !isAllOver){
+	            	infoBG.style.display = "none";
+	            	vrOption.style.display = "none";
+	            }
             }, 1000);
         }
     }
@@ -902,6 +927,52 @@
                 updatePreviousPlayer = true;
             }
         }
+
+        // ws.onerror = function (msg) {
+        // 	console.log(msg);
+        // }
+
+        ws.onclose = function (msg) {
+        	// console.log(msg);
+
+        	// if this happens after the phone lock
+        	if(!tapIsVisible && !isAllOver) {
+        		if(!trulyFullyStart)
+        		{
+        			if (showAbout) ToggleAbout();
+            		if (showInstruction) ToggleInstruction();
+            		if (showVRoption) ToggleVR();
+
+		            // Remove Events
+			        window.removeEventListener('keydown', myFakeEnter, false);
+			        if (!isMobile) {
+			            window.removeEventListener('click', closeInfoDiv, false);
+			        } else {
+			            window.removeEventListener('touchstart', closeInfoDiv, false);
+			        }
+        		}
+        		else if(chooseVRimg)
+        		{
+        			enterVR.requestExit();
+        		}
+
+        		console.log("say goodbye");
+	        	infoBG.style.display = "block";
+	        	goodbyeMsg.style.display = "block";
+	        	aboutPage.style.opacity = 0;
+
+	            setTimeout(function () {
+	            	infoBG.style.opacity = 1;
+	            	goodbyeMsg.style.opacity = 1;
+	            }, 100);
+
+        		renderCanvas.style.opacity = 0;
+        		isAllOver = true;
+                TweenMax.killAll();
+                DoDispose(scene);
+        	}
+        }
+
         socketOpened = true;
     }
 
