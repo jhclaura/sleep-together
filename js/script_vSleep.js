@@ -1,5 +1,4 @@
 var devMode = false;
-var tapIsVisible = true;
 
 ////////////////////////////////////////////////////////////	
 // SET_UP_VARIABLES
@@ -111,8 +110,11 @@ var optionGeo, optionMat, currentOption, optionLights = [],
     optionTags = ["breath", "explore", "sleep"];
 var expStage = 0; // 0: intro, 1: breathing, 2: explore, 3: sleep, 4: choose_option
 var isAllOver = false;
+var doneTalkingAboutExplore = true;
 
 var breathingPracticeLights;
+
+var tapIsVisible = true;
 
 ////////////////////////////////////////////////////////////
 
@@ -289,7 +291,7 @@ function superInit() {
 		})
 		.on("hide", function(){
 			document.getElementById("vr-ui").style.display = "none";
-			
+
 			// On iOS there is no button to close fullscreen mode, so we need to provide one
             // if(enterVR.state == webvrui.State.PRESENTING_FULLSCREEN) document.getElementById("vr-exit").style.display = "initial";
             
@@ -1191,6 +1193,11 @@ function OptionStartStage(stageIndex) {
 
             sound_options.play('explore');
             controls.movingEnabled = true;
+            doneTalkingAboutExplore = false;
+
+            setTimeout(()=>{
+            	doneTalkingAboutExplore = true;
+            }, 9000);
             break;
 
             // Sleep
@@ -1212,7 +1219,14 @@ function OptionStartStage(stageIndex) {
             TweenMax.to(hemiLight.groundColor, 4, { r: 0.569, g: 0.506, b: 0.1 });
 
             // play good night audio
-            sound_options.play('sleep');
+            if(doneTalkingAboutExplore) {
+	            sound_options.play('sleep');
+            } else {
+            	sound_options.fade(1.3, 0, 500);
+            	setTimeout(() => {
+	                sound_options.fade(0, 1.3, 500);
+	            }, 500);
+            }
 
             var starIndex = 0;
             // Populate several Nests around
