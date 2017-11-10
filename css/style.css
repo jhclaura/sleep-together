@@ -337,6 +337,18 @@ html {
 	width: 40px;
 }
 
+#vr-fullscreen-circle {
+	color: white;
+	text-align: center;
+	z-index: 100;
+
+	position: absolute;
+	right: 7px;
+	bottom: 5px;
+
+	width: 40px;
+}
+
 /* For width 500px and smaller: */
 @media only screen and (max-width: 500px) {
 	#splashPage {

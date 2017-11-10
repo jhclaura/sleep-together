@@ -269,10 +269,14 @@ function superInit() {
 
 			onfHeader.style.display = "none";
 
-			if(chooseVRimg)
-			{				
+			if(chooseVRimg) {				
 				vrEnterCircle.style.display = "none";
-			}			
+			}
+			else {
+				if(whichMobile == "android"){
+					vrFullscreenCircle.style.display = "none";
+				}
+			}
 		})
 		.on("exit", function(){
 			console.log("exit VR");
@@ -281,7 +285,12 @@ function superInit() {
 			{
 				//onfHeader.style.display = "";
 				vrEnterCircle.style.display = "";
-			}			
+			}
+			else {
+				if(whichMobile == "android"){
+					vrFullscreenCircle.style.display = "";
+				}
+			}
 		})
 		.on("error", function(error){
 			document.getElementById("vr-learn-more").style.display = "inline";

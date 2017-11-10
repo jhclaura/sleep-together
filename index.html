@@ -392,6 +392,7 @@
     <a href="#" id="vr-exit" onclick="enterVR.requestExit();">x</a>
 
     <img id="vr-enter-circle" style="display: none;" src="images/entervr.png" onclick="enterVR.requestEnterVR();">
+    <img id="vr-fullscreen-circle" style="display: none;" src="images/enterFullS.png" onclick="enterVR.requestEnterFullscreen();">
 
     <script>
     var final_statistic = {};
@@ -414,6 +415,7 @@
     // var finalStat = byId("finalStat");
     var onfHeader = byId("header");
     var vrEnterCircle = byId("vr-enter-circle");
+    var vrFullscreenCircle = byId("vr-fullscreen-circle");
 
     var playerNName = "";
     var readyToStart = false, chooseVRtoStart = false;
