@@ -110,7 +110,7 @@ var optionGeo, optionMat, currentOption, optionLights = [],
     optionTags = ["breath", "explore", "sleep"];
 var expStage = 0; // 0: intro, 1: breathing, 2: explore, 3: sleep, 4: choose_option
 var isAllOver = false;
-var doneTalkingAboutExplore = true;
+var doneTalkingAboutExplore = true, talkingAboutExploreID;
 
 var breathingPracticeLights;
 
@@ -1176,12 +1176,29 @@ function OptionStartStage(stageIndex) {
             if(!optionButtons.children[1].visible)
 	            optionButtons.children[1].visible = true;
 
-            var s_b_id = sound_options.play('breath');
-            var s_b_duration = sound_options.duration(s_b_id);
+            if(doneTalkingAboutExplore)
+            {
+	            var s_b_id = sound_options.play('breath');
+	            var s_b_duration = sound_options.duration(s_b_id);
+	            setTimeout(() => {
+	                startBreathingPractice(true);
+	            }, s_b_duration * 1000);
+            }
+            else {
+            	delayBase = 1100;
+            	sound_options.fade(1.3, 0, 1000, talkingAboutExploreID);
+            	setTimeout(() => {
+            		sound_options.stop(talkingAboutExploreID);
+            		sound_options.volume(1.3, talkingAboutExploreID);
+	                
+	                var s_b_id = sound_options.play('breath');
+		            var s_b_duration = sound_options.duration(s_b_id);
+		            setTimeout(() => {
+		                startBreathingPractice(true);
+		            }, s_b_duration * 1000);
 
-            setTimeout(() => {
-                startBreathingPractice(true);
-            }, s_b_duration * 1000);
+	            }, delayBase);
+            }
             break;
 
             // Explore
@@ -1191,7 +1208,7 @@ function OptionStartStage(stageIndex) {
             announcementTexture.drawText("to navigate the world", undefined, 120, 'white');
             optionButtons.children[1].visible = false;
 
-            sound_options.play('explore');
+            talkingAboutExploreID = sound_options.play('explore');
             controls.movingEnabled = true;
             doneTalkingAboutExplore = false;
 
@@ -1219,13 +1236,17 @@ function OptionStartStage(stageIndex) {
             TweenMax.to(hemiLight.groundColor, 4, { r: 0.569, g: 0.506, b: 0.1 });
 
             // play good night audio
+            var delayBase = 0;
             if(doneTalkingAboutExplore) {
 	            sound_options.play('sleep');
             } else {
-            	sound_options.fade(1.3, 0, 500);
+            	delayBase = 1100;
+            	sound_options.fade(1.3, 0, 1000, talkingAboutExploreID);
             	setTimeout(() => {
-	                sound_options.fade(0, 1.3, 500);
-	            }, 500);
+            		sound_options.stop(talkingAboutExploreID);
+            		sound_options.volume(1.3, talkingAboutExploreID);
+	                sound_options.play('sleep');
+	            }, delayBase);
             }
 
             var starIndex = 0;
@@ -1254,7 +1275,7 @@ function OptionStartStage(stageIndex) {
 
             setTimeout(() => {
                 renderCanvas.style.opacity = 0;
-            }, 18000);
+            }, delayBase + 18000);
 
             setTimeout(() => {
                 isAllOver = true;
@@ -1267,7 +1288,7 @@ function OptionStartStage(stageIndex) {
 
                 DoEnding();
 
-            }, 20500);
+            }, delayBase + 20500);
             break;
     }
 }
