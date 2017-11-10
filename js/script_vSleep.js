@@ -265,9 +265,10 @@ function superInit() {
 		.on("enter", function(){
 			console.log("enter VR");
 
+			onfHeader.style.display = "none";
+
 			if(chooseVRimg)
-			{
-				onfHeader.style.display = "none";
+			{				
 				vrEnterCircle.style.display = "none";
 			}			
 		})
@@ -276,7 +277,7 @@ function superInit() {
 			
 			if(chooseVRimg)
 			{
-				onfHeader.style.display = "";
+				//onfHeader.style.display = "";
 				vrEnterCircle.style.display = "";
 			}			
 		})
@@ -288,8 +289,9 @@ function superInit() {
 		})
 		.on("hide", function(){
 			document.getElementById("vr-ui").style.display = "none";
+			
 			// On iOS there is no button to close fullscreen mode, so we need to provide one
-            if(enterVR.state == webvrui.State.PRESENTING_FULLSCREEN) document.getElementById("vr-exit").style.display = "initial";
+            // if(enterVR.state == webvrui.State.PRESENTING_FULLSCREEN) document.getElementById("vr-exit").style.display = "initial";
             
             console.log("vr hide");
 		})
@@ -1225,7 +1227,7 @@ function OptionStartStage(stageIndex) {
                         dupNest.position.set(
                             (j - 2) * 100 + GetRandomArbitrary(-45, 45),
                             (i - 4) * 60 + GetRandomArbitrary(0, 20),
-                            (k - 2) * 100 + GetRandomArbitrary(-45, 45),
+                            (k - 2) * 100 + GetRandomArbitrary(-45, 45)
                         );
                         scene.add(dupNest);
 
