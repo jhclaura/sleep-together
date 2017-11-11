@@ -23,11 +23,12 @@ app.set('trust proxy', true);
 app.get('*', function(req, res){
 
 	if ( ["/", "/de", "/fr", "/en"].indexOf(req.path) != -1) {
-		var lang = (req.path == "/") ? "" : req.path.substr(1);
+		var lang = (req.path == "/") ? "" : req.path.substr(1)
+		,	apiHost = "http://veryveryshort.nfb.ca/";
 
 		request.post(
 		    {
-		    	url: "http://veryveryshort-dev.nfb.ca/api/all", // dev
+		    	url: apiHost + "api/all", // dev
 		    	form: {
 		    		language: lang,
 		    		folder: "", //temp
@@ -36,12 +37,13 @@ app.get('*', function(req, res){
 		    },
 		    function (error, response, body) {
 		        if (!error && response.statusCode == 200) {
-		           
-		            body = JSON.parse(body);
+		        	body = JSON.parse(body);
 		           
 		           	//change share URL
 				  	var url = req.protocol + '://' + req.get('host') + req.originalUrl;
 			  		body.share[3] = '<meta property="og:url" content="'+url+'" />';
+			  		body.share[6] = body.share[6].replace(apiHost, url);
+			  		body.share[16] = body.share[16].replace(apiHost, url);
 		  	
 		  			res.render("index", {data: body});
 		        }
