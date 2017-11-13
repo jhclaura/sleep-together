@@ -112,11 +112,12 @@
     <script type="text/javascript" src="js/setup_sleep.js"></script>
 
     <div id="splashPage" style="display:block; position:absolute; top:65px;">
+    	<img class="trans" id="bgImage" src="images/sleep_poster_color_V3.gif">
         <h1>Sleep Together</h1>
         <div id="introTextGroup">
-        	<div class="introText" style="display: none; opacity: 0;">
+        	<!-- <div class="introText" style="display: none; opacity: 0;">
 	        	<b><ins>"An Instruction For Your Mind"</ins></b>
-	        </div>
+	        </div> -->
 	        <div class="introText" style="display: none; opacity: 0;">
 	        	Sleep sleep sleep
 	    		<br>
@@ -138,7 +139,7 @@
 	    		(breathe breathe breathe)
 	        </div>
         </div>
-        <div id="inputGroupt">
+        <div class="trans" id="inputGroupt">
         	<input type="text" id="playerName" placeholder="Who is this sleepyhead?" style="width:20em;height:2em"></input>
 	        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
 	        <div id="loadingTxt" style="color:yellow">loading</div>
@@ -147,7 +148,7 @@
         </div>        
     </div>
     <div id="aboutPage" style="display:block; position:absolute;">
-        <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; color:#000000" onclick="ToggleAbout();">About</a>
+        <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; color:#fc81a6" onclick="ToggleAbout();">/// About ///</a>
         <!-- <a class="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleInstruction();">Instruction</a> -->
         <!-- <a class="aboutLink" href="..." target='_blank'>Dev Blog</a> -->
     </div>
@@ -413,6 +414,7 @@
     var splashPage = byId("splashPage");
     // var finalBG = byId("finalBG");
     // var finalStat = byId("finalStat");
+    var bgImage = byId("bgImage");
     var onfHeader = byId("header");
     var vrEnterCircle = byId("vr-enter-circle");
     var vrFullscreenCircle = byId("vr-fullscreen-circle");
@@ -617,6 +619,7 @@
     	}
     }
     //////////////////////////////////////////////////////////////////
+    bgImage.src = "";
     var showIntroTween = new TimelineMax();
     var doIntroAnimation = true;
     showIntroTween.staggerTo(".introText", 1, {
@@ -631,9 +634,21 @@
     	tween.target.style.display = "none";
     }
     function introCompleteAll() {
-    	console.log(showIntroTween);
-    	if(doIntroAnimation)
-	    	showIntroTween.restart();
+    	// console.log(showIntroTween);
+    	// if(doIntroAnimation)
+	    // 	showIntroTween.restart();
+
+	    //V.2
+	    // splashPage.style.background = "url('../images/sleep_poster_color_V3.gif') no-repeat center center fixed";
+	    // splashPage.style.backgroundSize = "cover";
+
+	    //V.3
+	    bgImage.src = "images/sleep_poster_color_V3.gif";
+	    setTimeout(()=>{
+	    	bgImage.style.opacity=1;
+	    },100);
+	    
+	    inputGroupt.style.opacity=1;
     }
     //////////////////////////////////////////////////////////////////
     if (!isMobile) {

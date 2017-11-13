@@ -76,6 +76,13 @@ h1 {
 	margin-top: 0;
 }
 
+#splashPage h1 {
+	z-index: 2;
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
 input[type=text] {
 	text-align: center;
 
@@ -116,15 +123,33 @@ input[type=text].focus {
 	text-align:center;
 
 	font-size:16pt;
-	background: url("../images/sleep_poster_color.gif") no-repeat center center fixed;
+	/*background: url('../images/sleep_poster_color_V3.gif') no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
-	background-size: cover;
+	background-size: cover;*/
+	background-color: black;
 
 	overflow: hidden;
 
 	z-index: 100;
+}
+
+/*#bgImage {
+	height: 100%;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}*/
+
+#introTextGroup {
+	/* Center Vertically */
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	/* Center Horizontal */
+	margin: 0 auto;
+	width: 100%;
 }
 
 #inputGroupt {
@@ -145,6 +170,7 @@ input[type=text].focus {
 	height: 100%;
 	background-color: black;
 	z-index: 110;
+	top: 0;
 
 	-webkit-transition: opacity 1s;
 	-moz-transition: opacity 1s;
@@ -177,7 +203,7 @@ input[type=text].focus {
 	/*padding: 10px;*/
 	padding-top: 5px;
 	padding-bottom: 5px;	
-	/*text-align: center;*/
+	text-align: center;
 	font-size: 16pt;
 	background-color: #ffffff;
 	/*overflow: scroll;*/
@@ -200,10 +226,10 @@ input[type=text].focus {
 	text-align: left;
 	/*padding-bottom: 1em;*/
 	font-size: 1em;
-	-moz-column-count: 5;
-	-moz-columns: 5;
-	-webkit-columns: 5;
-	columns: 5;
+	-moz-column-count: 1;
+	-moz-columns: 1;
+	-webkit-columns: 1;
+	columns: 1;
 }
 
 .insImg {
@@ -350,6 +376,16 @@ html {
 }
 
 /* For width 500px and smaller: */
+@media only screen and (min-width: 1000px) {
+	#aboutPageDetail {
+		-moz-column-count: 5;
+		-moz-columns: 5;
+		-webkit-columns: 5;
+		columns: 5;
+	}
+}
+
+/* For width 500px and smaller: */
 @media only screen and (max-width: 500px) {
 	#splashPage {
 		/*padding: 1em;*/
@@ -379,10 +415,36 @@ html {
 		/*overflow-y: scroll !important;*/
 	/*}*/
 
-	#aboutPageDetail {
+	/*#aboutPageDetail {
 		-moz-column-count: 1;
 		-moz-columns: 1;
 		-webkit-columns: 1;
 		columns: 1;
+	}*/
+}
+
+/* Portrait */
+@media screen and (orientation:portrait) {
+	#bgImage {
+		height: 130%;
+		position: absolute;
+		left: 50%;
+		top: 0;
+		transform: translate(-50%, -10%);
+	}
+}
+
+/* Landscape */
+@media screen and (orientation:landscape) {
+	#bgImage {
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-55%);
+	}
+
+	#splashPage h1 {
+		top: 5px;
 	}
 }
