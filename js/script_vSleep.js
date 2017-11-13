@@ -97,7 +97,7 @@ var nestSticksPos = [],
     };
 var panelGroupt;
 
-var breathingTimeline;
+var breathingTimeline, practiceIntroDuration = 33500;	//v.1 23600, v.2 35500
 
 var worldTotal = 18,
     eaterPerTable = 6,
@@ -165,41 +165,46 @@ function superInit() {
         volume: 0
     });
     sound_hello = new Howl({
-        src: [basedURL + 'audios/voice/V2/sleep_hello.mp3'],
-        volume: 1.3
+        src: [basedURL + 'audios/voice/V3/sleep_hello.webm', basedURL + 'audios/voice/V3/sleep_hello.mp3'],
+        volume: 1
     });
     sound_visitor_alone = new Howl({
-        src: [basedURL + 'audios/voice/V2/sleep_onlyone.mp3'],
-        volume: 1.3
+        src: [basedURL + 'audios/voice/V3/sleep_only.webm', basedURL + 'audios/voice/V3/sleep_only.mp3'],
+        volume: 1
     });
     sound_visitor_others = new Howl({
-        src: [basedURL + 'audios/voice/V2/sleep_other.mp3'],
-        volume: 1.3
+        src: [basedURL + 'audios/voice/V3/sleep_others.webm', basedURL + 'audios/voice/V3/sleep_others.mp3'],
+        volume: 1
     });
     sound_lets = new Howl({
-        src: [basedURL + 'audios/voice/V2/sleep_lets.mp3'],
-        volume: 1.3
+        src: [basedURL + 'audios/voice/V3/sleep_lets.webm', basedURL + 'audios/voice/V3/sleep_lets.mp3'],
+        volume: 1
     });
     sound_practice = new Howl({
-        src: [basedURL + 'audios/voice/V2/sleep_practice.mp3'],
-        volume: 1.3
+        src: [basedURL + 'audios/voice/V3/sleep_practice.webm', basedURL + 'audios/voice/V3/sleep_practice.mp3'],
+        volume: 1
     });
     sound_options = new Howl({
-        src: [basedURL + 'audios/voice/V2/sleep_options.mp3'],
-        volume: 1.3,
+        src: [basedURL + 'audios/voice/V3/sleep_options.webm', basedURL + 'audios/voice/V3/sleep_options.mp3'],
+        volume: 1,
         sprite: {
         	/*
         	//v.1
             intro: [0, 11327],
             breath: [12310, 3290], //12310, 15600
             explore: [16500, 8000], //16500, 24500
-            sleep: [25300, 10250] //25300, 35550
-            */
+            sleep: [25300, 10250] //25300, 35550            
             //v.2
             intro: [0, 8126],
             breath: [8506, 4871], //8506, 13377
             explore: [13683, 9477], //13683, 23160
             sleep: [23620, 12114] //23620, 35743
+			*/
+            //v.3
+            intro: [0, 8268],
+            breath: [8398, 4970], //8398, 13368
+            explore: [13683, 9873], //13872, 23745
+            sleep: [23620, 14601] //24456, 39057
         }
     });
     sound_bamboo = new Howl({
@@ -829,7 +834,7 @@ function startBreathingPractice(_redo) {
     // Start animating the light
     setTimeout(() => {
         firstGuy.startBreathing(_redo);
-    }, 35500);	//v.1 23600
+    }, practiceIntroDuration);	//v.1 23600, v.2 35500
 
     setTimeout(() => {
         // Option time!
@@ -1195,10 +1200,10 @@ function OptionStartStage(stageIndex) {
             }
             else {
             	delayBase = 1100;
-            	sound_options.fade(1.3, 0, 1000, talkingAboutExploreID);
+            	sound_options.fade(1, 0, 1000, talkingAboutExploreID);
             	setTimeout(() => {
             		sound_options.stop(talkingAboutExploreID);
-            		sound_options.volume(1.3, talkingAboutExploreID);
+            		sound_options.volume(1, talkingAboutExploreID);
 	                
 	                var s_b_id = sound_options.play('breath');
 		            var s_b_duration = sound_options.duration(s_b_id);
@@ -1250,10 +1255,10 @@ function OptionStartStage(stageIndex) {
 	            sound_options.play('sleep');
             } else {
             	delayBase = 1100;
-            	sound_options.fade(1.3, 0, 1000, talkingAboutExploreID);
+            	sound_options.fade(1, 0, 1000, talkingAboutExploreID);
             	setTimeout(() => {
             		sound_options.stop(talkingAboutExploreID);
-            		sound_options.volume(1.3, talkingAboutExploreID);
+            		sound_options.volume(1, talkingAboutExploreID);
 	                sound_options.play('sleep');
 	            }, delayBase);
             }

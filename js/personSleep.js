@@ -177,8 +177,8 @@ function PersonSleep(_pos, _color, _id, _name) {
 
     //v.2
     this.breathingSetting = {
-        timeGaps: [0, 3.1, 11.1, 7.5, 4.7, 2.5],     //v.1: timeGaps: [0, 2.3, 8.8, 5.9, 2.9, 1.8],
-        durations: [4.3, 4.7, 4.2, 5.3, 3.8, 4],  //v.2: durations: [3.8, 4.2, 3.3, 4.3, 3.4, 3.9]
+        timeGaps: [0, 3, 10.9, 6.9, 4, 1.8],    //v.1: timeGaps: [0, 2.3, 8.8, 5.9, 2.9, 1.8]; v.2: [0, 3.1, 11.1, 7.5, 4.7, 2.5]
+        durations: [4.3, 4.6, 5.4, 5.1, 4.2, 4.4],    //v.1: durations: [3.8, 4.2, 3.3, 4.3, 3.4, 3.9]; v.2: [4.3, 4.7, 4.2, 5.3, 3.8, 4]
         labels: ['inhale_1', 'exhale_1', 'inhale_2', 'exhale_2', 'inhale_3', 'exhale_3'],
         seq: [0,1,0,1,0,1]
     };
