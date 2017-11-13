@@ -1312,8 +1312,7 @@ function DoEnding() {
 
 	infoBG.style.display = "block";
 	goodbyeMsg.style.display = "block";
-
-	document.getElementById("goodbyeText").innerHTML = "See you another night.. Z z z";
+	//document.getElementById("goodbyeText").innerHTML = "Sleep tight.<br />See you another sleepless night.. Z z z";
 
 	setTimeout(function () {
 		infoBG.style.opacity = 1;

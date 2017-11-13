@@ -415,22 +415,23 @@
     	</div>
     </div>
     <div class="infoBlock trans" id="goodbyeMsg" style="display:none; background-color: black; color:white;">
-    	<div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
-    		<!-- <div style="text-align: center;"> -->
-		    	Why wake up from that
-		    	<br>
-		    	sweet sleep mode?
-		    	<br>
-		    	<br>
-		    	Close your eyes,
-		    	<br>
-		    	I'll see you another night.
-		    <!-- </div> -->
-			<!-- <div style="position: absolute; bottom: 1em; left: 0; right: 0;">
-				<a class="roundButton" style="cursor:pointer; background-color: black; color:#0af5e1;" onclick="ToggleVR();">OK</a>
-			</div> -->
-    	</div>
+    <div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
+        <div id="closeText" style="display: none;">
+            Why wake up from that
+            <br> sweet sleep mode?
+            <br>
+            <br> Close your eyes,
+            <br> I'll see you another night.
+        </div>
+        <div id="byeText">
+            Sleep tight.
+            <br> See you another sleepless night.. Z z z
+        </div>
     </div>
+    <div style="position: absolute; bottom: 0; left: 0; right: 0; text-align: center;">
+    	<a style="cursor:pointer; color:#0af5e1; text-decoration: underline;" onclick="reloadPage();">Actually.. I'm not sleepy!</a>
+    </div>
+</div>
 
     <!-- WebVR UI -->
     <div id="vr-ui">
