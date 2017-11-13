@@ -226,10 +226,11 @@ input[type=text].focus {
 	text-align: left;
 	/*padding-bottom: 1em;*/
 	font-size: 1em;
-	-moz-column-count: 1;
+	/*-moz-column-count: 1;
 	-moz-columns: 1;
 	-webkit-columns: 1;
-	columns: 1;
+	columns: 1;*/
+	/*overflow: auto;*/
 }
 
 .insImg {
@@ -254,6 +255,9 @@ input[type=text].focus {
 	width: 80%;
 	height: 70%;
 	overflow: auto;
+	/*overflow-y: auto;
+	overflow-x: hidden;*/
+
 	font-size: 1.2em;
 	-webkit-overflow-scrolling: touch;
 }
@@ -273,10 +277,10 @@ input[type=text].focus {
 
 #creditText {
 	font-size: 1em;
-	-moz-column-count: 5;
-	-moz-columns: 5;
-	-webkit-columns: 5;
-	columns: 5;
+	-moz-column-count: 1;
+	-moz-columns: 1;
+	-webkit-columns: 1;
+	columns: 1;
 }
 
 /* The Close Button */
@@ -376,7 +380,7 @@ html {
 }
 
 /* For width 500px and smaller: */
-@media only screen and (min-width: 1000px) {
+@media only screen and (min-width: 1200px) {
 	#aboutPageDetail {
 		-moz-column-count: 5;
 		-moz-columns: 5;

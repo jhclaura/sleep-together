@@ -139,7 +139,7 @@
 	    		(breathe breathe breathe)
 	        </div>
         </div>
-        <div class="trans" id="inputGroupt">
+        <div class="trans" id="inputGroupt" style="display: none;">
         	<input type="text" id="playerName" placeholder="Who is this sleepyhead?" style="width:20em;height:2em"></input>
 	        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
 	        <div id="loadingTxt" style="color:yellow">loading</div>
@@ -158,6 +158,9 @@
         	<div class="close" onclick="ToggleAbout();">&times;</div>
         </div>
     	<div class="infoText">
+    		<p style="font-size: 1.3em;">/// VERY VERY SHORT ///</p>
+	        <p>Life is short. Now more than ever. We want it all. We want it now. Right away. Very very short is a collection of 10 interactive projects for smartphones, exploring the theme of mobility through very, very short experiences – all under 60 seconds. A NFB and ARTE coproduction, in collaboration with IDFA DocLab.</p>
+	        <br>
     		<p style="font-size: 1.3em;">/// SLEEP TOGETHER ///</p>
 	        <p>Sleep Together is a virtual reality group experience for people to use before going to sleep. In 60 seconds, visitor (a.k.a. sleeper) will go through a series of ritual for sleep, with other sleepers floating in a comfy nest, breathing together.</p>
 	        <br>
@@ -170,7 +173,7 @@
             Laura Juo-Hsin Chen
             <br>
             <br>
-            <b>Sound recorded by</b>
+            <b>Sound Record and Mental Support</b>
             <br>
             Andy Sigler
             <br>
@@ -195,7 +198,7 @@
             Valérie Darveau
             <br>
             <br>
-            <b>Technology director</b>
+            <b>Technology Director</b>
             <br>
             Martin Viau
             <br>
@@ -254,87 +257,136 @@
             <b><ins>ARTE France</ins></b>
             <br>
             <br>
-            <b>Directeur du développement numérique</b>
+            <b>Digital Development Chief</b>
             <br>
             Gilles Freissinier
             <br>
             <br>
-            <b>Responsable éditorial</b>
+            <b>Editorial Manager</b>
             <br>
             Marianne Levy-Leblon
             <br>
             <br>
-            <b>Chargées de programmes</b>
+            <b>Program Producers</b>
             <br>
             Marie Berthoumieu
             <br>
             Emilie Bessard
             <br>
             <br>
-            <b>Responsable Pôle Projet</b>
+            <b>Head of Project Management</b>
             <br>
             Stéphane Nauroy
             <br>
             <br>
-            <b>Administrateur</b>
+            <b>Community manager</b>
+            <br>
+            Léa Jagut
+            <br>
+            <br>
+            <b>Administrator</b>
             <br>
             Jerôme Vernet
             <br>
             <br>
             <b>ARTE France Développement</b>
             <br>
-            <b>Directrices de Production</b>
+            <b>Production Managers</b>
             <br>
             Claire Aubret
             <br>
             Angèle Le Névé
             <br>
-            <b>Assistées de</b>
+            <b>Assisted by</b>
             <br>
             Juliette Droillard
             <br>
             <br>
-            <b>Responsable ARTE Studio Lab</b>
+            <b>Translation</b>
+            <br>
+            Christian Stonner
+            <br>
+            <br>
+            <b>ARTE Studio Lab Responsibles</b>
             <br>
             Clément Dhamelincourt
             <br>
-            <b>Responsable technique</b>
+            <b>Technical Manager</b>
             <br>
             Vincent Chagny
             <br>
-            <b>Suivi de projet</b>
+            <b>Project Manager</b>
             <br>
             Noé Daudin-Clavaud
             <br>
             <br>
-            <b><ins>Special Thanks</ins></b>
+            <b><ins>IDFA DocLab</ins></b>
             <br>
             <br>
-            <b>Sam Lavigne</b> for DailyLifeVR of Useless Press
+            <b>Call for Projects</b>
+            <br>
+            Caspar Sonnen
+			<br>
+			Wotienke Vermeer
+			<br>
+			Michael Zbieranowski
+			<br>
+            <br>
+            <b><ins>Acknowledgements</ins></b>
             <br>
             <br>
-            <b>Brandon Jones</b> and
-            <br><b>Vladimir Vukicevic</b> for WebVR spec
+			Caspar Sonnen - IDFA DocLab
+			<br>
+			Ziv Schneider - New Media Artist
+			<br>
+			Jouke Vuurmans - Media Monks
+			<br>
+			Julia Kaganskiy - New Museum
+			<br>
+			Myriam Achard - PHI Center
+			<br>
+			Florent Maurin - The Pixel Hunt
+			<br>
+			Jepchumba - Digital Artist and Curator
+			<br>
+			Marie Berthoumieu - ARTE
+			<br>
+			Hugues Sweeney - ONF / NFB / National Film Board of Canada
+			<br>
+			<br>
+			Rafaella Wang
+			<br>
+			Zina Kisch
             <br>
             <br>
-            <b>Boris Smus</b> for WebVR polyfill and boilerplate
+            Sam Lavigne for inspiration on DailyLifeVR of Useless Press
+            <br>
+            Brandon Jones and
+            <br>Vladimir Vukicevic for WebVR spec
+            <br>
+            Boris Smus for WebVR polyfill and boilerplate
+            <br>
+            Ricardo Cabello for THREE.js
             <br>
             <br>
-            <b>Ricardo Cabello</b> for THREE.js
+            <br>
+            © ARTE  FRANCE - ONF 2017
         </div>
     </div>
     <div class="infoBlock trans" id="instructionDetail" style="display:none;">
     	<div class="infoText">
-    		<div style="text-align: center;">
+    		<!-- <div style="text-align: center;">
 		    	<b><ins>"An Instruction For Your Phone"</ins></b>
-		    </div>
-		    <br>
+		    </div> 
+		    <br> -->
 	    	<img class="insImg" src="images/instructions/instruction_sound.jpg">
-	    	<!-- <img class="insImg" src="images/instructions/instruction_click.jpg"> -->
+	    	<img class="insImg" src="images/instructions/instruction_click.jpg">
 			<img class="insImg" src="images/instructions/instruction_move.jpg">
 			<!-- <img class="insImg" src="images/instructions/instruction_view.jpg"> -->
 			<br>
-			<div style="position: absolute; bottom: 1em; left: 0; right: 0;">
+			<!-- <div style="position: absolute; bottom: 1em; left: 0; right: 0;"> -->
+			<br>
+			<div>
 				<a class="roundButton" style="cursor:pointer; background-color: black; color:#0af5e1;" onclick="ToggleVR();">OK</a>
 			</div>
     	</div>
@@ -342,7 +394,7 @@
     <div class="infoBlock trans" id="vrOption" style="display:none;">
     	<div class="infoText">
     		<div style="text-align: center;">
-	    		<b><ins>And, I want to sleep...</ins></b>
+	    		<b><ins>How do you want to sleep?</ins></b>
 	    		<br>
 	    		<br>
 	    		<div id="vrImgWrapper">
@@ -351,7 +403,7 @@
 						<br>in VR mode
 					</div>
 					<div class="vrImg">
-						<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr.png" onclick="chooseNonVRmode();">
+						<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr2.png" onclick="chooseNonVRmode();">
 						<br>in nature mode
 					</div>
 				</div>
@@ -587,7 +639,7 @@
     		yesVR.src = "images/instructions/instruction_vr_select.png";
     		if(chooseNonVRimg){
     			chooseNonVRimg = false;
-    			noVR.src = "images/instructions/instruction_nonvr.png";
+    			noVR.src = "images/instructions/instruction_nonvr2.png";
     		}
     	} else {
     		yesVR.src = "images/instructions/instruction_vr.png";
@@ -597,13 +649,13 @@
     var chooseNonVRmode = function () {
     	chooseNonVRimg = !chooseNonVRimg;
     	if(chooseNonVRimg) {
-    		noVR.src = "images/instructions/instruction_nonvr_select.png";
+    		noVR.src = "images/instructions/instruction_nonvr2_select.png";
     		if(chooseVRimg){
     			chooseVRimg = false;
     			yesVR.src = "images/instructions/instruction_vr.png";
     		}
     	} else {
-    		noVR.src = "images/instructions/instruction_nonvr.png";
+    		noVR.src = "images/instructions/instruction_nonvr2.png";
     	}
     	checkForStart();
     }
@@ -644,11 +696,12 @@
 
 	    //V.3
 	    bgImage.src = "images/sleep_poster_color_V3.gif";
+	    inputGroupt.style.display="";
 	    setTimeout(()=>{
+	    	inputGroupt.style.opacity=1;
 	    	bgImage.style.opacity=1;
-	    },100);
+	    },100);	    
 	    
-	    inputGroupt.style.opacity=1;
     }
     //////////////////////////////////////////////////////////////////
     if (!isMobile) {
