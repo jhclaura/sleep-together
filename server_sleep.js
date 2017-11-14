@@ -39,7 +39,10 @@ app.get('*', function(req, res){
 		    function (error, response, body) {
 		    	if (!error && response.statusCode == 200) {
 		        	body = JSON.parse(body);
-		           	res.render("index", {data: body});
+		          res.render("index", {data: body});
+		        } else {
+		        	console.error ("Error getting NFB Settings", error);
+		        	res.render("index", {data: {}});
 		        }
 		    }
 		);
@@ -50,6 +53,8 @@ app.get('*', function(req, res){
 });
 
 console.log('Server started on port ' + port);
+
+// console.error (new Error(error.message));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

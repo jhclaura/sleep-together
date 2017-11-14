@@ -509,6 +509,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
         this.enabled = true;
 
     var getInput = function() {
+
         switch (expStage) {
             // Explore Mode
             case 2:
@@ -524,6 +525,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
 
     var optionOnInput = function() {
         if (currentOption != '') {
+
             if (optionLightDicts[currentOption].intensity > 1) {
                 console.log('choose option: ' + currentOption);
                 currentOption == '';
@@ -628,7 +630,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
     };
 
     this.setPosition = function(newPositin) {
-        yawObject.position.copy(newPosition);
+        yawObject.position.copy(newPositin);
     };
 
     this.dirF = function() {

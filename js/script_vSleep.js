@@ -1,11 +1,12 @@
+var devMode = false;
+
 ////////////////////////////////////////////////////////////	
 // SET_UP_VARIABLES
 ////////////////////////////////////////////////////////////
 
-var devMode = false;
-
 var scene, camera, container, renderer, effect, stats;
 var vrmanager;
+var enterVR, animationDisplay;
 var hemiLight, controls;
 var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
@@ -33,11 +34,6 @@ var dailyLifePlayerDict = {},
     dailyLifePlayerObject = new THREE.Object3D();
 
 // SOUND
-// var usingWebAudio = true, bufferLoader, convolver, mixer;
-// var source, buffer, audioBuffer, gainNode, convolverGain;
-// var soundLoaded = false;
-// var masterGain, sampleGain;
-// var audioSources = [], gainNodes = [];
 
 // var sound_sweet = {};
 // var sweetSource;
@@ -48,25 +44,20 @@ var dailyLifePlayerDict = {},
 
 // var _iOSEnabled = false;
 
-// window.AudioContext = (window.AudioContext || window.webkitAudioContext || null);
-// if (!AudioContext) {
-//   throw new Error("AudioContext not supported!");
-// } 
-
 // var audioContext = new AudioContext();
 // var sample = new SoundsSample(audioContext);
 
 var sound_digital, sound_opening, sound_practice, sound_night;
-var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets;
-var initSound = false, practiceOver = false;
-
-// var switchSound_1 = false;
+var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets, sound_options, sound_bamboo;
+var initSound = false,
+    practiceOver = false;
 
 // STAR
 var star, starMat, glowTexture, glowTextures = [],
     starAnimator, starAnimators = [],
     stars = [];
-var starFiles = [basedURL + "images/sStar_1.png", basedURL + "images/sStar_2.png",
+var starFiles = [
+    basedURL + "images/sStar_1.png", basedURL + "images/sStar_2.png",
     basedURL + "images/sStar_3.png", basedURL + "images/sStar_4.png"
 ];
 
@@ -94,11 +85,19 @@ var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
     sm_materials = [];
 var sm_screenGeo, glowGeo, glowMat1, glowMat2, sm_glow;
-var annoucement, annoucementTexture;
+var announcement, announcementTexture;
 var nest, nestTex, nestStickGeos = [],
-    nestSticks = [];
+    nestSticks = []
+var nestSticksPos = [],
+    nestStickTween,
+    nestSticksMovement = {
+        x: [0.1, 0.1, -0.1, -0.1, 0.1],
+        y: [0.1, -0.1, 0.1, 0.1, -0.1],
+        z: [-0.1, 0.1, 0.1, -0.1, -0.1]
+    };
+var panelGroupt;
 
-var breathingTimeline;
+var breathingTimeline, practiceIntroDuration = 33500;	//v.1 23600, v.2 35500
 
 var worldTotal = 18,
     eaterPerTable = 6,
@@ -111,6 +110,11 @@ var optionGeo, optionMat, currentOption, optionLights = [],
     optionTags = ["breath", "explore", "sleep"];
 var expStage = 0; // 0: intro, 1: breathing, 2: explore, 3: sleep, 4: choose_option
 var isAllOver = false;
+var doneTalkingAboutExplore = true, talkingAboutExploreID;
+
+var breathingPracticeLights;
+
+var tapIsVisible = true;
 
 ////////////////////////////////////////////////////////////
 
@@ -123,13 +127,14 @@ superInit(); // init automatically
 ///////////////////////////////////////////////////////////
 function superInit() {
 
-    // Determine Sleepers Start Positions
-    var s_index = 0;
+    // Determine Sleepers Start Positions (45, 50)
+    var s_index = 1;
     for (var j = 0; j < 3; j++) {
         for (var i = 7; i < 13; i++) {
             var startPos = new THREE.Vector3(
                 (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                j * 50 + GetRandomArbitrary(0, 10), -400 + GetRandomArbitrary(0, 2)
+                j * 50 + GetRandomArbitrary(0, 5),
+                (j - 1) * 4 - 400 + GetRandomArbitrary(0, 2)
             );
             sleeperStartPositions[s_index] = startPos;
             s_index++;
@@ -137,9 +142,11 @@ function superInit() {
     }
 
     // Use http://freegeoip.net in script_functions.js
-    GetGeoData();
+    if(hasInternet)
+	    GetGeoData();
 
     myColor = new THREE.Color();
+    time = Date.now();
 
     //Prevent scrolling for Mobile
     noScrolling = function(event) {
@@ -153,34 +160,78 @@ function superInit() {
         volume: 0
     });
     sound_digital = new Howl({
-    	src: [basedURL + 'audios/digitaltrech.mp3'],
-    	loop: true,
+        src: [basedURL + 'audios/digitaltrech.mp3'],
+        loop: true,
         volume: 0
     });
     sound_hello = new Howl({
-        src: [basedURL + 'audios/voice/hello.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V3/sleep_hello.webm', basedURL + 'audios/voice/V3/sleep_hello.mp3'],
+        volume: 1
     });
     sound_visitor_alone = new Howl({
-        src: [basedURL + 'audios/voice/onlySleeper.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V3/sleep_only.webm', basedURL + 'audios/voice/V3/sleep_only.mp3'],
+        volume: 1
     });
     sound_visitor_others = new Howl({
-        src: [basedURL + 'audios/voice/lookAround.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V3/sleep_others.webm', basedURL + 'audios/voice/V3/sleep_others.mp3'],
+        volume: 1
     });
     sound_lets = new Howl({
-        src: [basedURL + 'audios/voice/letsPractice.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V3/sleep_lets.webm', basedURL + 'audios/voice/V3/sleep_lets.mp3'],
+        volume: 1
     });
     sound_practice = new Howl({
-        src: [basedURL + 'audios/voice/breathingPractice.mp3'],
-        volume: .5
+        src: [basedURL + 'audios/voice/V3/sleep_practice.webm', basedURL + 'audios/voice/V3/sleep_practice.mp3'],
+        volume: 1
     });
-
-    //sound_night.play();
-
-    time = Date.now();
+    sound_options = new Howl({
+        src: [basedURL + 'audios/voice/V3/sleep_options.webm', basedURL + 'audios/voice/V3/sleep_options.mp3'],
+        volume: 1,
+        sprite: {
+        	/*
+        	//v.1
+            intro: [0, 11327],
+            breath: [12310, 3290], //12310, 15600
+            explore: [16500, 8000], //16500, 24500
+            sleep: [25300, 10250] //25300, 35550            
+            //v.2
+            intro: [0, 8126],
+            breath: [8506, 4871], //8506, 13377
+            explore: [13683, 9477], //13683, 23160
+            sleep: [23620, 12114] //23620, 35743
+			*/
+            //v.3
+            intro: [0, 8268],
+            breath: [8398, 4970], //8398, 13368
+            explore: [13683, 9873], //13872, 23745
+            sleep: [23620, 14601] //24456, 39057
+        }
+    });
+    sound_bamboo = new Howl({
+    	src: [basedURL + 'audios/bamboo.mp3'],
+    	volume: .8,
+    	sprite: {
+    		1: [635, 2000],
+    		2: [3715, 2000],
+    		3: [8433, 2000],
+    		4: [13243, 2000],
+    		5: [19707, 2000],
+    		6: [21936, 2000],
+    		7: [25223, 2000],
+    		8: [28708, 2000],
+    		9: [37356, 2000],
+    		10: [40472, 2000],
+    		11: [1892, 500],
+    		12: [9265, 500],
+    		13: [17172, 500],
+    		14: [20053, 500],
+    		15: [24091, 500],
+    		16: [33718, 500],
+    		17: [34689, 500],
+    		18: [38788, 500],
+    		19: [44000, 500]
+    	}
+    });
 
     // THREE.JS -------------------------------------------
     clock = new THREE.Clock();
@@ -188,7 +239,7 @@ function superInit() {
     // RENDERER
     container = document.getElementById('render-canvas');
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
     renderer.setClearColor(0x34122a, 1); // nighttime
     container.appendChild(renderer.domElement);
 
@@ -196,12 +247,95 @@ function superInit() {
     effect = new THREE.VREffect(renderer);
     effect.setSize(window.innerWidth, window.innerHeight);
 
+    // DEPRECATED(?) - WebVR Manager
+    /*
     // Create a VR manager helper to enter and exit VR mode.
     var params = {
         hideButton: false, // Default: false.
         isUndistorted: false // Default: false.
     };
     vrmanager = new WebVRManager(renderer, effect, params);
+	*/
+
+	// =============== WebVR-UI =================
+	// reference: https://github.com/googlevr/webvr-ui/blob/master/examples/basic.html
+	var vrUIOptions = {
+		color: 'white',
+		background: false,
+		corners: 'square'
+	};
+
+	enterVR = new webvrui.EnterVRButton(renderer.domElement, vrUIOptions)
+		.on("ready", function(){
+			// enterVR.hide();
+		})
+		.on("enter", function(){
+			console.log("enter VR");
+
+			onfHeader.style.display = "none";
+
+			if(chooseVRimg) {				
+				vrEnterCircle.style.display = "none";
+			}
+			else {
+				if(whichMobile == "android"){
+					vrFullscreenCircle.style.display = "none";
+				}
+			}
+		})
+		.on("exit", function(){
+			console.log("exit VR");
+			
+			if(chooseVRimg)
+			{
+				//onfHeader.style.display = "";
+				vrEnterCircle.style.display = "";
+			}
+			else {
+				if(whichMobile == "android"){
+					vrFullscreenCircle.style.display = "";
+				}
+			}
+		})
+		.on("error", function(error){
+			document.getElementById("vr-learn-more").style.display = "inline";
+			console.log("error => no webvr");
+
+			enterVR.hide();
+		})
+		.on("hide", function(){
+			document.getElementById("vr-ui").style.display = "none";
+
+			// On iOS there is no button to close fullscreen mode, so we need to provide one
+            // if(enterVR.state == webvrui.State.PRESENTING_FULLSCREEN) document.getElementById("vr-exit").style.display = "initial";
+            
+            console.log("vr hide");
+		})
+		.on("show", function(){
+			document.getElementById("vr-ui").style.display = "inherit";
+			document.getElementById("vr-exit").style.display = "none";
+
+			console.log("vr show");
+		});
+
+	// Add button to the #button element
+	document.getElementById("vr-button").appendChild(enterVR.domElement);
+
+	window.addEventListener('vrdisplaypresentchange', onWindowResize, true);
+
+	// Get the HMD
+	enterVR.getVRDisplay()
+		.then(function(display){
+			animationDisplay = display;
+			// display.requestAnimationFrame(animate);
+		})
+		.catch(function(){
+			// If there is no display available, fallback to window
+			animationDisplay = window;
+			// window.requestAnimationFrame(animate);
+		});
+
+	// ==========================================
 
     // SCENE
     scene = new THREE.Scene();
@@ -274,13 +408,15 @@ function superInit() {
         sleep_test = new THREE.SkinnedMesh(sleeperGeo_test, new THREE.MeshLambertMaterial({ map: sleeper_test_Texture, skinning: true, side: THREE.DoubleSide }));
     });
 
-    stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.bottom = '5px';
-    stats.domElement.style.zIndex = 100;
-    stats.domElement.children[0].style.background = "transparent";
-    stats.domElement.children[0].children[1].style.display = "none";
-    container.appendChild(stats.domElement);
+    if(devMode){
+	    stats = new Stats();
+	    stats.domElement.style.position = 'absolute';
+	    stats.domElement.style.bottom = '5px';
+	    stats.domElement.style.zIndex = 100;
+	    stats.domElement.children[0].style.background = "transparent";
+	    stats.domElement.children[0].children[1].style.display = "none";
+	    container.appendChild(stats.domElement);
+	}
 
     // EVENTS
     window.addEventListener('resize', onWindowResize, false);
@@ -314,146 +450,78 @@ function superInit() {
         ScrollSocialMedia(sm_mat.map.offset);
     }
 
-    modelLoader.load(basedURL + "models/sm_screen.json", function(geometry, material) {
-        sm_screenGeo = geometry;
+    if(!devMode){
+    	modelLoader.load(basedURL + "models/sm_screen.json", function(geometry, material) {
+	        sm_screenGeo = geometry;
 
-        modelLoader.load(basedURL + "models/glow.json", function(geometryB, material) {
-            glowGeo = geometryB;
-            glowMat1 = new THREE.MeshBasicMaterial({
-                map: sm_glow,
-                transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
-            });
-            glowMat2 = new THREE.MeshBasicMaterial({
-                map: sm_glow,
-                transparent: true,
-                side: THREE.BackSide
-            });
-            var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
-            //glowMesh.scale.multiplyScalar(4);
-            var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
-            //glowMesh2.scale.multiplyScalar(4);
+	        modelLoader.load(basedURL + "models/glow.json", function(geometryB, material) {
+	            glowGeo = geometryB;
+	            glowMat1 = new THREE.MeshBasicMaterial({
+	                map: sm_glow,
+	                transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
+	            });
+	            glowMat2 = new THREE.MeshBasicMaterial({
+	                map: sm_glow,
+	                transparent: true,
+	                side: THREE.BackSide
+	            });
+	            var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
+	            //glowMesh.scale.multiplyScalar(4);
+	            var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
+	            //glowMesh2.scale.multiplyScalar(4);
 
-            // Create Social Medai Wall
-            var screenIndex = 0;
-            // --- Real for indexing (6*3=18 total)
-            for (var j = 0; j < 3; j++) {
-                for (var i = 7; i < 13; i++) {
-                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                    sm_screen.add(glowMesh.clone());
-                    sm_screen.add(glowMesh2.clone());
-                    sm_screen.scale.multiplyScalar(4);
+	            // Create Social Medai Wall
+	            var screenIndex = 1;
+	            // --- Real for indexing (6*3=18 total)
+	            for (var j = 0; j < 3; j++) {
+	                for (var i = 7; i < 13; i++) {
+	                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
+	                    sm_screen.add(glowMesh.clone());
+	                    sm_screen.add(glowMesh2.clone());
+	                    sm_screen.scale.multiplyScalar(4);
 
-                    sm_screen.position.copy(sleeperStartPositions[screenIndex]);
-                    sm_screen.position.z -= 4;
-                    sm_screen.position.y += 10;
+	                    sm_screen.position.copy(sleeperStartPositions[screenIndex]);
+	                    sm_screen.position.z -= 4;
+	                    sm_screen.position.y += 10;
 
-                    socialMediaScreens.push(sm_screen);
+	                    socialMediaScreens.push(sm_screen);
 
-                    scene.add(sm_screen);
-                    screenIndex++;
-                }
-            }
-            // --- Fake
-            for (var j = 0; j < 5; j++) {
-                for (var i = 0; i < 20; i++) {
+	                    scene.add(sm_screen);
+	                    screenIndex++;
+	                }
+	            }
+	            // --- Fake
+	            for (var j = 0; j < 5; j++) {
+	                for (var i = 0; i < 20; i++) {
 
-                    if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
-                        continue;
+	                    if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
+	                        continue;
 
-                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                    sm_screen.add(glowMesh.clone());
-                    sm_screen.add(glowMesh2.clone());
-                    sm_screen.scale.multiplyScalar(4);
+	                    var sm_screen = new THREE.Mesh(sm_screenGeo, sm_materials[GetRandomInt(0, sm_materials.length)]);
+	                    sm_screen.add(glowMesh.clone());
+	                    sm_screen.add(glowMesh2.clone());
+	                    sm_screen.scale.multiplyScalar(4);
 
-                    sm_screen.position.set(
-                        (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                        j * 50 + GetRandomArbitrary(0, 10), -400 + GetRandomArbitrary(0, 2)
-                    );
+	                    sm_screen.position.set(
+	                        (i - 10) * 45 + GetRandomArbitrary(0, 15),
+	                        j * 50 + GetRandomArbitrary(0, 5), -400 + GetRandomArbitrary(0, 2)
+	                    );
 
-                    socialMediaScreens.push(sm_screen);
+	                    socialMediaScreens.push(sm_screen);
 
-                    scene.add(sm_screen);
-                    screenIndex++;
-                }
-            }
-        });
-    });
-
-    /*
-    modelLoader.load(basedURL + "models/glow.json", function(geometry, material) {
-        glowGeo = geometry;
-        glowMat1 = new THREE.MeshBasicMaterial({
-            map: sm_glow,
-            transparent: true // side: THREE.DoubleSide//, color: 0x8ff9f5
-        });
-        glowMat2 = new THREE.MeshBasicMaterial({
-            map: sm_glow,
-            transparent: true,
-            side: THREE.BackSide
-        });
-        var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
-        glowMesh.scale.multiplyScalar(4);
-        var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
-        glowMesh2.scale.multiplyScalar(4);
-
-        // Create Social Medai Wall
-        //var sm_plane = new THREE.PlaneGeometry(16, 28);
-        var sm_plane = new THREE.BoxGeometry(16, 28, 1);
-        var screenIndex = 0;
-        // --- Real for indexing (6*3=18 total)
-        for (var j = 0; j < 3; j++) {
-            for (var i = 7; i < 13; i++) {
-                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                sm_screen.position.copy(sleeperStartPositions[screenIndex]);
-                sm_screen.position.z -= 4;
-                sm_screen.position.y += 10;
-
-                sm_screen.add(glowMesh.clone());
-                sm_screen.add(glowMesh2.clone());
-
-                socialMediaScreens.push(sm_screen);
-
-                scene.add(sm_screen);
-                screenIndex++;
-            }
-        }
-        // --- Fake
-        for (var j = 0; j < 5; j++) {
-            for (var i = 0; i < 20; i++) {
-
-                if ((j >= 0 && j < 3) && (i >= 7 && i < 13))
-                    continue;
-
-                var sm_screen = new THREE.Mesh(sm_plane, sm_materials[GetRandomInt(0, sm_materials.length)]);
-                sm_screen.position.set(
-                    (i - 10) * 45 + GetRandomArbitrary(0, 15),
-                    j * 50 + GetRandomArbitrary(0, 10),
-                    -400 + GetRandomArbitrary(0, 2)
-                );
-
-                sm_screen.add(glowMesh.clone());
-                sm_screen.add(glowMesh2.clone());
-
-                socialMediaScreens.push(sm_screen);
-
-                scene.add(sm_screen);
-                screenIndex++;
-            }
-        }
-    });
-    */
+	                    scene.add(sm_screen);
+	                    screenIndex++;
+	                }
+	            }
+	        });
+	    });
+    }
 
     nestTex = textureLoader.load(basedURL + 'images/nest.jpg');
     nestTex.wrapT = nestTex.wrapS = THREE.RepeatWrapping;
-    nestTex.repeat.set(2, 2);
+    //nestTex.repeat.set(2, 2);
+    nestTex.repeat.set(4, 4);
 
-    // modelLoader.load(basedURL + "models/nest2.json", function(geometry, material) {
-    //     nest = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
-    //         map: nestTex
-    //     }));
-    //     nest.scale.multiplyScalar(2);
-    //     scene.add(nest);
-    // });
     loadModelWholeNest(
         basedURL + "models/nest2.json", basedURL + "models/stick1.json", basedURL + "models/stick2.json",
         basedURL + "models/stick3.json", basedURL + "models/stick4.json",
@@ -461,14 +529,32 @@ function superInit() {
     );
 
     // THINGS_TO_CREATE_AFTER_FONT_LOADED
-    waitForWebfonts(['StupidFont'], ()=>{
-    	AfterFontLoaded();
+    waitForWebfonts(['StupidFont'], () => {
+        AfterFontLoaded();
     });
+
+    // panelGroupt = new THREE.Object3D();
+    // // INVISIBLE_PANEL_FOR_DETECTING_EYE_GAZING
+    // for(var i=0; i<6; i++){
+    // 	var panel = new THREE.Mesh(
+    // 		new THREE.PlaneGeometry(20,12),
+    // 		new THREE.MeshBasicMaterial({side: THREE.DoubleSide, color: 0xff0000})
+    // 	);
+    // 	panel.rotation.set(0, Math.PI*2/6*i, 0);
+    // 	panel.position.set(
+    // 		Math.sin(Math.PI*2/6*i)*18,
+    // 		0,
+    // 		Math.cos(Math.PI*2/6*i)*18
+    // 	);
+    // 	panel.name = "panel";
+    // 	panelGroupt.add(panel);
+    // }
+    // scene.add(panelGroupt);
 }
 
 function AfterFontLoaded() {
-	
-	// OPTIONS_AFTER_BREATHING
+
+    // OPTIONS_AFTER_BREATHING
     optionGeo = new THREE.CylinderGeometry(1, 1, 1, 20);
     for (var i = 0; i < optionTags.length; i++) {
         optionTextures[i] = textureLoader.load(basedURL + 'images/options_' + optionTags[i] + '.jpg');
@@ -485,40 +571,54 @@ function AfterFontLoaded() {
 
         // label
         var optionTextTexture = new THREEx.DynamicTexture(256, 128); //512,512; 1000,128
-	    optionTextTexture.context.font = "bolder 70px StupidFont";
-	    optionTextTexture.clear().drawText(optionTags[i], undefined, 96, 'white');
-	    var optionMaterial = new THREE.MeshBasicMaterial({ map: optionTextTexture.texture, transparent: true, side: THREE.DoubleSide });
-	    var optionTextMesh = new THREE.Mesh(new THREE.PlaneGeometry(optionTextTexture.canvas.width, optionTextTexture.canvas.height), optionMaterial);
-	    optionTextMesh.scale.multiplyScalar(0.02);
-	    optionTextMesh.rotation.x = Math.PI/2;
-	    optionTextMesh.rotation.z = Math.PI/2;
-	    optionTextMesh.position.x = 1.5;
-	    optionTextMesh.visible = false;
+        optionTextTexture.context.font = "bolder 70px StupidFont";
+        optionTextTexture.clear().drawText(optionTags[i], undefined, 96, 'white');
+        var optionMaterial = new THREE.MeshBasicMaterial({ map: optionTextTexture.texture, transparent: true, side: THREE.DoubleSide });
+        var optionTextMesh = new THREE.Mesh(new THREE.PlaneGeometry(optionTextTexture.canvas.width, optionTextTexture.canvas.height), optionMaterial);
+        optionTextMesh.scale.multiplyScalar(0.02);
+        optionTextMesh.rotation.x = Math.PI / 2;
+        optionTextMesh.rotation.z = Math.PI / 2;
+        optionTextMesh.position.x = 1.5;
+        optionTextMesh.visible = false;
 
         dummyButton.add(optionMesh);
         dummyButton.add(optionLight);
         dummyButton.add(optionTextMesh);
-        dummyButton.position.set(0, 30, (i - 1) * 8);
+        dummyButton.position.set((i - 1) * 8, 30, -8); //0, 30, (i - 1) * 8
         dummyButton.name = 'option_' + optionTags[i];
+
+        dummyButton.rotation.y = Math.PI / 2;
 
         optionButtons.add(dummyButton);
     }
     scene.add(optionButtons);
     optionButtons.visible = false;
 
-	// INFO_TEXT_DISPLY
-	annoucement = new THREE.Object3D();
-    annoucementTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
-    annoucementTexture.context.font = "bolder 70px StupidFont";
-    annoucementTexture.clear().drawText("annoucement:", undefined, 96, 'white');
-    // //annoucementTexture.clear();
-    var annoucementMaterial = new THREE.MeshBasicMaterial({ map: annoucementTexture.texture, transparent: true, depthTest: false });
-    var annoucementMesh = new THREE.Mesh(new THREE.PlaneGeometry(annoucementTexture.canvas.width, annoucementTexture.canvas.height), annoucementMaterial);
-    annoucementMesh.scale.multiplyScalar(0.01);
-    annoucementMesh.position.z = -20;
-    annoucement.add(annoucementMesh);
-    //annoucement.rotation.y = -Math.PI/2;
-    scene.add(annoucement);
+    // INFO_TEXT_DISPLY
+    announcement = new THREE.Object3D();
+    announcementTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
+    announcementTexture.context.font = "bolder 70px StupidFont";
+    announcementTexture.clear().drawText("announcement:", undefined, 96, 'white');
+    announcementTexture.clear();
+    var announcementMaterial = new THREE.MeshBasicMaterial({ map: announcementTexture.texture, transparent: true, depthTest: false }); //depthTest: false
+    var announcementMesh = new THREE.Mesh(new THREE.PlaneGeometry(announcementTexture.canvas.width, announcementTexture.canvas.height), announcementMaterial);
+    announcementMesh.scale.multiplyScalar(0.01);
+    announcementMesh.position.z = -20;
+    announcement.add(announcementMesh);
+    scene.add(announcement);
+
+    // PEOPLE_COUNT
+    pplCountTex = new THREEx.DynamicTexture(1024, 1024);
+    pplCountTex.context.font = "bolder 150px StupidFont";
+    pplCountTex.clear();
+    pplCountMat = new THREE.MeshBasicMaterial({ map: pplCountTex.texture, side: THREE.DoubleSide, transparent: true });
+    var pCountMesh = new THREE.Mesh(new THREE.PlaneGeometry(pplCountTex.canvas.width, pplCountTex.canvas.height), pplCountMat);
+    pCountMesh.rotation.x = Math.PI / 2;
+    pplCount = new THREE.Object3D();
+    pplCount.add(pCountMesh);
+    pplCount.scale.set(0.04, 0.04, 0.04);
+    pplCount.position.y = 120;
+    scene.add(pplCount);
 }
 
 function ScrollSocialMedia(el) {
@@ -531,10 +631,7 @@ function ScrollSocialMedia(el) {
 function AssignIndex() {
     // console.log("whoIamInLife: " + whoIamInLife);
 
-    if (devMode)
-        myPosition = new THREE.Vector3();
-    else
-        myPosition = sleeperStartPositions[whoIamInLife];
+    myPosition = sleeperStartPositions[whoIamInLife];
 
     myStartX = myPosition.x;
     myStartY = myPosition.y;
@@ -546,7 +643,19 @@ function AssignIndex() {
 
 // lateInit() happens after click "Start"
 function lateInit() {
-    // console.log("late init!");
+    console.log("late init!");
+
+    // FIREBASE_TOTAL_VISTI
+    if(hasInternet){
+	    visitDataRef.once("value", function(snapshot) {
+	        fireVisit = snapshot.val().visit_count;
+	        fireVisit++;
+	        visitDataRef.set({
+	            visit_count: fireVisit
+	        });
+	    });
+	}
+
     document.body.addEventListener('touchmove', noScrolling, false);
     window.addEventListener('keydown', myKeyPressed, false);
     window.addEventListener('keyup', myKeyUp, false);
@@ -563,12 +672,17 @@ function lateInit() {
     controls = new THREE.DeviceControls(camera, myWorldCenter, true);
     scene.add(controls.getObject());
 
-    // update stuff position based on myPosition
-    nest.position.set(myPosition.x, myPosition.y, 0);
+    // update things position based on myPosition
+    nest.position.set(myPosition.x * 20 / 255, myPosition.y * 20 / 255, myPosition.z + 400);
+    announcement.position.copy(nest.position);
+    optionButtons.position.copy(nest.position);
+    // panelGroupt.position.copy(nest.position);
+
     // UpdateRotationWithMe( introRoom );
 
     // start to animate()!
-    animate(performance ? performance.now() : Date.now());
+    //animate(performance ? performance.now() : Date.now());
+    animationDisplay.requestAnimationFrame(animate);
 
     trulyFullyStart = true;
 
@@ -589,16 +703,27 @@ function lateInit() {
     }
     // --------------------------------------------
 
+    // Hide player body
+    // firstGuy.player.visible = false;
+
+    // WebVR-UI
+    if(animationDisplay != window)
+	    enterVR.show();
+
     // --------------------------------------------
     // EXPERIENCE_START
-    // --------------------------------------------
+    // -------------------------------------------- 
+
+    if (devMode){
+    	expStage = 4;
+    	optionButtons.visible = true;
+    	controls.setPosition(nest.position);
+        return;
+    }
 
     // AUDIOS
     sound_digital.play();
-    sound_digital.fade(0,0.1,2000);
-
-    if (devMode)
-        return;
+    sound_digital.fade(0, 0.5, 2000);
 
     // 1. Moving to NEST
     //var nestPos = controls.position().clone();
@@ -606,84 +731,128 @@ function lateInit() {
     var nestPos = nest.position.clone();
     nestPos.z = GetRandomArbitrary(-5, 5);
 
+    var waitingTimeBeforeStart = 5000;
+    // In VR mode, give extra 5 sec to buffer time for setup viewer
+    if(chooseVRimg)
+    	waitingTimeBeforeStart = 10000;
+
     setTimeout(() => {
         controls.createTweenForMove(nestPos, 25, true);
 
-        sound_digital.fade(0.1, 0, 10 * 1000);
-        sound_digital.once('fade', function(){
-        	console.log('digital finishes fading');
+        sound_digital.fade(0.5, 0, 10 * 1000);
+        sound_digital.once('fade', function() {
+            console.log('digital finishes fading');
         });
 
         sound_night.play();
-        sound_night.fade(0, 0.3, 10 * 1000);
+        sound_night.fade(0, 0.8, 10 * 1000);
+
+        nestStickTween = TweenMax.to(nestSticksPos, 3, {
+            x: nestSticksMovement.x,
+            y: nestSticksMovement.y,
+            z: nestSticksMovement.z,
+            ease: Power1.easeInOut,
+            yoyo: true,
+            repeat: -1
+        });
 
         setTimeout(() => {
+            UpdatePplCount(Object.keys(dailyLifePlayerDict).length, totalPplInWorldsCount, totalVisitCount);
+
             TweenMax.to(nest.rotation, 3, {
                 y: -Math.PI / 2,
                 ease: Back.easeInOut.config(1),
                 onComplete: () => {
 
                     disposeSocialMedia();
-                    //sound_digital.unload();
+
+                    sound_night.fade(0.8, 0.3, 1000);
+
+                    sound_digital.unload();
+                    sound_digital = undefined;
 
                     sound_hello.play();
                     console.log('play sound');
-                    sound_hello.once('end', ()=>{
-                    	var size = Object.keys(dailyLifePlayerDict).length;
-                    	if(size>1){
-                    		sound_visitor_others.play();
-                    		sound_visitor_others.once('end', ()=>{
-                    			playLetsAudio();
-                    		});
-                    	}
-                    	else{
-                    		sound_visitor_alone.play();
-                    		sound_visitor_alone.once('end', ()=>{
-                    			playLetsAudio();
-                    		});
-                    	}
+
+                    sound_hello.once('end', () => {
+                        var size = Object.keys(dailyLifePlayerDict).length;
+                        if (size > 1) {
+                            sound_visitor_others.play();
+                            sound_visitor_others.once('end', () => {
+                                playLetsAudio();
+                            });
+                        } else {
+                            sound_visitor_alone.play();
+                            sound_visitor_alone.once('end', () => {
+                                playLetsAudio();
+                            });
+                        }
                     });
                 }
             });
         }, 26000);
-
-    }, 5000);
+    }, waitingTimeBeforeStart);
 }
 
-function playLetsAudio()
-{
-	sound_lets.play();
-	sound_lets.once('end', ()=>{
-		startBreathingPractice();
-	});
+function playLetsAudio() {
+    sound_lets.play();
+    sound_lets.once('end', () => {
+        startBreathingPractice(false);
+    });
 }
 
-function startBreathingPractice()
-{
-	sound_practice.play();
-
-	var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
-    firstGuy.startBreathing(false);
-
+function startBreathingPractice(_redo) {
     expStage = 1;
+
+    // Eye-level info
+    UpdateFrontRotationWithMe(announcement);
+    announcementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
+
+    UpdateFrontRotationWithMe(pplCount);
+    UpdateFrontRotationWithMe(optionButtons);
+
+    //sound_night.fade(0.8, 0.4, 1000);
+
+    sound_practice.play();
+    var duration = sound_practice.duration() + 0.5;
+    console.log(duration);
+
+    firstGuy.prepForBreathing();
 
     // ------ SEND_TO_SERVER => START_BREATHING ------
     var msg = {
         'type': 'startBreathing',
         'index': whoIamInLife,
         'worldId': meInWorld,
-        'redo': false
+        'redo': _redo
     };
     if (ws) {
         sendMessage(JSON.stringify(msg));
     }
     // --------------------------------------------
 
+    // Start animating the light
+    setTimeout(() => {
+        firstGuy.startBreathing(_redo);
+    }, practiceIntroDuration);	//v.1 23600, v.2 35500
+
     setTimeout(() => {
         // Option time!
+        console.log('Option time!');
         nestPos = undefined;
         expStage = 4;
         optionButtons.visible = true;
+
+        sound_night.fade(0.3, 0.8, 2000);
+        sound_options.play('intro');
+
+        UpdateFrontRotationWithMe(announcement);
+        announcementTexture.clear().drawText("Look at the sky", undefined, 60, 'white');
+        announcementTexture.drawText("Gaze upon options to choose next step", undefined, 120, 'white');
+
+        UpdateFrontRotationWithMe(pplCount);
+        UpdateFrontRotationWithMe(optionButtons);
+
     }, duration * 1000);
 }
 
@@ -782,39 +951,6 @@ function myKeyPressed(event) {
     switch (event.keyCode) {
 
         case 49: //1
-            // firstGuy.chew();
-            break;
-
-        case 50: //2
-            // secGuy.chew();
-            break;
-
-        case 51: //3
-            // thirdGuy.chew();
-            break;
-
-        case 52: //4
-            // fourthGuy.chew();
-            break;
-
-        case 53: //5 --> day time
-            // daytimeChange( 1 );
-            break;
-
-        case 54: //6 --> night time
-            // daytimeChange( 0 );
-            break;
-
-        case 55: //7 --> mouth close
-            // CloseMouth();
-            break;
-
-        case 56: //8 --> mouth open
-            // OpenMouth();
-            break;
-
-        case 57: //9 --> mouth wide open
-            // OpenMouthWide();
             break;
     }
 }
@@ -826,7 +962,6 @@ function myKeyUp(event) {
 // v.2
 // Request animation frame loop function
 var lastRender = 0;
-
 function animate(timestamp) {
     if (!isAllOver) {
         var delta = Math.min(timestamp - lastRender, 500);
@@ -834,11 +969,21 @@ function animate(timestamp) {
 
         update();
 
-        // Render the scene through the manager.
-        vrmanager.render(scene, camera, timestamp);
-        stats.update();
+        // v.1 - WebVR-Manager: Render the scene through the manager.
+        // vrmanager.render(scene, camera, timestamp);
+
+        // v.2 - WebVR-UI
+        if(enterVR.isPresenting()){
+        	renderer.render(scene, camera);
+        	effect.render(scene, camera);
+        }else{
+        	renderer.render(scene, camera);
+        }
+    
+        if(devMode)
+	        stats.update();
     }
-    requestAnimationFrame(animate);
+    animationDisplay.requestAnimationFrame(animate);
 }
 
 
@@ -851,9 +996,18 @@ function update() {
 
     // STAR
     if (starAnimators.length > 0) {
-        for (var i = 0; i < starAnimators.length; i++) {
-            starAnimators[i].updateLaura(300 * dt);
-        }
+    	if(expStage==3)
+    	{
+    		for (var i = 0; i < starAnimators.length; i++) {
+	            starAnimators[i].updateLaura((135+15*i)*dt);
+	        }
+    	}
+    	else
+    	{
+    		for (var i = 0; i < starAnimators.length; i++) {
+	            starAnimators[i].updateLaura(300*dt);
+	        }
+    	}        
     }
 
     // eyeRay!
@@ -1002,17 +1156,25 @@ function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
 function GazeToChoose() {
     for (var i = 0; i < optionLights.length; i++) {
         if (optionLights[i].name == currentOption) {
-            if (optionLights[i].intensity < 1.02)
-                optionLights[i].intensity += 0.02;
+            if (optionLights[i].intensity < 1.04)
+                optionLights[i].intensity += 0.04;
 
-            if(optionButtons.children[i].children[2].visible == false)
-	            optionButtons.children[i].children[2].visible = true;
+            if (optionButtons.children[i].children[2].visible == false){
+                optionButtons.children[i].children[2].visible = true;
+                sound_bamboo.play(GetRandomInt(11,20)+"");
+            }
 
         } else if (optionLights[i].intensity >= 0.04) {
             optionLights[i].intensity -= 0.04;
 
-            if(optionButtons.children[i].children[2].visible == true)
-	            optionButtons.children[i].children[2].visible = false;
+            if (optionButtons.children[i].children[2].visible == true)
+                optionButtons.children[i].children[2].visible = false;
+
+        } else if (optionLights[i].intensity < 0.04) {
+            optionLights[i].intensity = 0;
+
+            if (optionButtons.children[i].children[2].visible == true)
+                optionButtons.children[i].children[2].visible = false;
         }
     }
 }
@@ -1022,48 +1184,141 @@ function OptionStartStage(stageIndex) {
     switch (expStage) {
         // Redo breathing exercise
         case 1:
+            announcementTexture.clear();
+            controls.movingEnabled = false;
+            optionButtons.visible = false;
+            if(!optionButtons.children[1].visible)
+	            optionButtons.children[1].visible = true;
+
+            if(doneTalkingAboutExplore)
+            {
+	            var s_b_id = sound_options.play('breath');
+	            var s_b_duration = sound_options.duration(s_b_id);
+	            setTimeout(() => {
+	                startBreathingPractice(true);
+	            }, s_b_duration * 1000);
+            }
+            else {
+            	delayBase = 1100;
+            	sound_options.fade(1, 0, 1000, talkingAboutExploreID);
+            	setTimeout(() => {
+            		sound_options.stop(talkingAboutExploreID);
+            		sound_options.volume(1, talkingAboutExploreID);
+	                
+	                var s_b_id = sound_options.play('breath');
+		            var s_b_duration = sound_options.duration(s_b_id);
+		            setTimeout(() => {
+		                startBreathingPractice(true);
+		            }, s_b_duration * 1000);
+
+	            }, delayBase);
+            }
+            break;
+
+            // Explore
+        case 2:
+            UpdateFrontRotationWithMe(announcement);
+            announcementTexture.clear().drawText("Make eye contact", undefined, 60, 'white');
+            announcementTexture.drawText("to navigate the world", undefined, 120, 'white');
+            optionButtons.children[1].visible = false;
+
+            talkingAboutExploreID = sound_options.play('explore');
+            controls.movingEnabled = true;
+            doneTalkingAboutExplore = false;
+
+            setTimeout(()=>{
+            	doneTalkingAboutExplore = true;
+            }, 9000);
+            break;
+
+            // Sleep
+        case 3:
             controls.movingEnabled = false;
             optionButtons.visible = false;
 
-            var duration = firstGuy.breathingTimeline.totalDuration() + 0.5;
-            firstGuy.startBreathing(true);
+            UpdateFrontRotationWithMe(announcement);
+            announcementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
 
-            // ------ SEND_TO_SERVER => START_BREATHING ------
-            var msg = {
-                'type': 'startBreathing',
-                'index': whoIamInLife,
-                'worldId': meInWorld,
-                'redo': true
-            };
-            if (ws) {
-                sendMessage(JSON.stringify(msg));
+            // Move up to be out of the nest
+            pplCountTex.clear();
+            pplCount.visible = false;
+            firstGuy.player.visible = false;
+            controls.setMovYAnimation(90, 8, false, false);//8
+
+            sound_night.fade(0.8, 0.3, 4 * 1000);
+
+            TweenMax.to(hemiLight.groundColor, 4, { r: 0.569, g: 0.506, b: 0.1 });
+
+            // play good night audio
+            var delayBase = 0;
+            if(doneTalkingAboutExplore) {
+	            sound_options.play('sleep');
+            } else {
+            	delayBase = 1100;
+            	sound_options.fade(1, 0, 1000, talkingAboutExploreID);
+            	setTimeout(() => {
+            		sound_options.stop(talkingAboutExploreID);
+            		sound_options.volume(1, talkingAboutExploreID);
+	                sound_options.play('sleep');
+	            }, delayBase);
             }
-            // --------------------------------------------
+
+            var starIndex = 0;
+            // Populate several Nests around
+            for (var i = 0; i < 6; i++) {
+                for (var j = 0; j < 4; j++) {
+                    for (var k = 0; k < 4; k++) {
+
+                        if (i == 4 || j == 2 || k == 2)
+                            continue;
+
+                        var dupNest = nest.clone();
+                        dupNest.position.set(
+                            (j - 2) * 100 + GetRandomArbitrary(-45, 45),
+                            (i - 4) * 60 + GetRandomArbitrary(0, 20),
+                            (k - 2) * 100 + GetRandomArbitrary(-45, 45)
+                        );
+                        scene.add(dupNest);
+
+                        stars[starIndex].position.copy(dupNest.position);
+                        stars[starIndex].scale.multiplyScalar(15);
+                        starIndex++;
+                    }
+                }
+            }
 
             setTimeout(() => {
-                // make new choise / option
-                expStage = 4;
-                optionButtons.visible = true;
-            }, duration * 1000);
-            break;
+                renderCanvas.style.opacity = 0;
+            }, delayBase + 18000);
 
-        // Explore
-        case 2:
-            controls.movingEnabled = true;
-            break;
-
-        // Sleep
-        case 3:
-            controls.movingEnabled = false;
-            // play good night audio
-            renderCanvas.style.opacity = 0;
             setTimeout(() => {
                 isAllOver = true;
+
+                //nestStickTween.kill();
+                TweenMax.killAll();
+
                 // DISPOSE_TO_RELEASE_MEMORY!
                 DoDispose(scene);
-            }, 2500);
+
+                DoEnding();
+
+            }, delayBase + 20500);
             break;
     }
+}
+
+function DoEnding() {
+	enterVR.requestExit();
+
+	infoBG.style.display = "block";
+	goodbyeMsg.style.display = "block";
+	//document.getElementById("goodbyeText").innerHTML = "Sleep tight.<br />See you another sleepless night.. Z z z";
+
+	setTimeout(function () {
+		infoBG.style.opacity = 1;
+		goodbyeMsg.style.opacity = 1;
+		renderCanvas.style.opacity = 0;
+	}, 100);
 }
 
 function GazeToMove() {
@@ -1271,12 +1526,21 @@ function CreateNest() {
     var stickMat = new THREE.MeshLambertMaterial({ map: nestTex });
     for (var i = 0; i < nestStickGeos.length; i++) {
         var n_stick = new THREE.Mesh(nestStickGeos[i], stickMat);
-        //n_stick.scale.multiplyScalar(2);
-        //scene.add(n_stick);
         nest.add(n_stick);
         nestSticks.push(n_stick);
+        nestSticksPos.push(n_stick.position);
     }
     scene.add(nest);
+}
+
+function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
+    if (expStage == 3) return;
+
+    pplCountTex.clear().drawText("Sleeper", undefined, 100, 'white');
+    pplCountTex.drawText("Counter", undefined, 250, 'white');
+    pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
+    pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
+    pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
 }
 
 function fullscreen() {
@@ -1291,7 +1555,7 @@ function fullscreen() {
     }
 }
 
-function onWindowResize() {
+function onWindowResize(e) {
     effect.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -1300,3 +1564,55 @@ function onWindowResize() {
 function isTouchDevice() {
     return 'ontouchstart' in window || !!(navigator.msMaxTouchPoints);
 }
+
+// Page Visibility API
+// use visibility API to check if current tab is active or not
+// reference: https://greensock.com/forums/topic/9887-tween-paused-when-switch-to-other-tabs/
+var vis = (function(){
+    var stateKey, 
+        eventKey, 
+        keys = {
+                hidden: "visibilitychange",
+                webkitHidden: "webkitvisibilitychange",
+                mozHidden: "mozvisibilitychange",
+                msHidden: "msvisibilitychange"
+    };
+    for (stateKey in keys) {
+        if (stateKey in document) {
+            eventKey = keys[stateKey];
+            break;
+        }
+    }
+    return function(c) {
+        if (c) document.addEventListener(eventKey, c);
+        return !document[stateKey];
+    }
+})();
+
+// check if current tab is active or not
+vis(function(){
+    if(vis()){
+        // tween resume() code goes here
+        // the setTimeout() is used due to a delay 
+        // before the tab gains focus again, very important!	
+		setTimeout(function(){            
+	            console.log("tab is visible - has focus");
+	            tapIsVisible = true;
+
+	            Howler.mute(false);
+
+	            if(expStage==1)
+	        		sound_practice.play();
+
+	        },300);		
+    } else {
+        // tween pause() code goes here
+        console.log("tab is invisible - has blur");
+        tapIsVisible = false;
+
+        Howler.mute(true);
+
+        if(expStage==1)
+	        sound_practice.pause();
+    }
+});

@@ -100,8 +100,8 @@ function PersonSleep(_pos, _color, _id, _name) {
     // DEMO_not_real
     /*
     TweenMax.to(this.breathSprite.scale, 7.5, {
-    	x:3, y: 3, z: 3,
-    	ease: Power1.easeInOut, yoyo: true, repeat: -1, repeatDelay: 1});
+        x:3, y: 3, z: 3,
+        ease: Power1.easeInOut, yoyo: true, repeat: -1, repeatDelay: 1});
     */
     this.playerBody.skeleton.bones[0].add(this.breathLight);
 
@@ -143,6 +143,8 @@ function PersonSleep(_pos, _color, _id, _name) {
     }
 
     // Setup breathing
+    //v.1
+    /*
     this.breathingTimeline = new TimelineMax({
         repeat: 3,
         repeatDelay: 2,
@@ -171,6 +173,16 @@ function PersonSleep(_pos, _color, _id, _name) {
             z: .05,
             ease: Power1.easeInOut
         }, "exhale");
+    */
+
+    //v.2
+    this.breathingSetting = {
+        timeGaps: [0, 3, 10.9, 6.9, 4, 1.8],    //v.1: timeGaps: [0, 2.3, 8.8, 5.9, 2.9, 1.8]; v.2: [0, 3.1, 11.1, 7.5, 4.7, 2.5]
+        durations: [4.3, 4.6, 5.4, 5.1, 4.2, 4.4],    //v.1: durations: [3.8, 4.2, 3.3, 4.3, 3.4, 3.9]; v.2: [4.3, 4.7, 4.2, 5.3, 3.8, 4]
+        labels: ['inhale_1', 'exhale_1', 'inhale_2', 'exhale_2', 'inhale_3', 'exhale_3'],
+        seq: [0,1,0,1,0,1]
+    };
+    this.setupBreathing();
 }
 
 PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _playerRotY, _playerQ) {
@@ -179,11 +191,11 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
 
     // head
     // if(this.player.children[1]) {
-    // 	this.player.children[1].quaternion.copy(_playerQ);
+    //  this.player.children[1].quaternion.copy(_playerQ);
     // }
 
     // body
-    this.tmpPlayerQ.copy (_playerQ);
+    this.tmpPlayerQ.copy(_playerQ);
     this.tmpPlayerQ._x = 0;
     this.tmpPlayerQ._z = 0;
     this.tmpPlayerQ.normalize();
@@ -195,8 +207,7 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
     this.realRotation = _playerQ;
 
     // gazeDot
-    if (this.gazeDotTargetLength > 0)
-    {
+    if (this.gazeDotTargetLength > 0) {
         this.gazeDots.scale.lerp(new THREE.Vector3(1, 1, this.gazeDotTargetLength), 0.008);
         this.gazeDots.children[0].material.map.repeat.lerp(new THREE.Vector2(1, this.gazeDotTargetLength), 0.008);
         this.gazeDots.children[0].material.map.offset.y -= 0.01;
@@ -221,15 +232,15 @@ PersonSleep.prototype.transUpdate = function() {
     /*
     // head
     if(this.player.children[1]) {
-    	this.player.children[1].quaternion.slerp( this.realRotation, 0.2 );
-    }	
+        this.player.children[1].quaternion.slerp( this.realRotation, 0.2 );
+    }   
     // body
     if(this.player.children[0]){
-    	this.player.children[0].quaternion.slerp( this.realBillboardRotation, 0.2 );
+        this.player.children[0].quaternion.slerp( this.realBillboardRotation, 0.2 );
     }
     */
 
-    // v.2 - Bones	
+    // v.2 - Bones  
     if (this.playerBody) {
         // head
         this.playerBody.skeleton.bones[1].quaternion.slerp(this.realRotation, 0.2);
@@ -248,7 +259,7 @@ PersonSleep.prototype.transUpdate = function() {
 PersonSleep.prototype.openEye = function() {
     //this.eye.visible = true;
     //TweenMax.to(this.eye.scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeOut.config(2) });
-    this.eye.scale.set(1,1,1);
+    this.eye.scale.set(1, 1, 1);
 }
 
 PersonSleep.prototype.closeEye = function() {
@@ -261,27 +272,29 @@ PersonSleep.prototype.closeEye = function() {
     //         this.eye.visible = false;
     //     }
     // });
-    this.eye.scale.set(0.01,0.01,0.01);
+    this.eye.scale.set(0.01, 0.01, 0.01);
 }
 
 PersonSleep.prototype.updateTimetag = function(_time) {
-    this.dataTexture.clear().drawText(_time + " from " + this.sleeperOrigin, undefined, 50, 'grey');
+    this.dataTexture.clear().drawText(_time + ", " + this.sleeperOrigin, undefined, 50, 'grey');
+}
+
+PersonSleep.prototype.prepForBreathing = function() {
+    this.breathSprite.visible = true;
+    TweenMax.to(this.breathLight, 1, { intensity: 0.2 });
 }
 
 PersonSleep.prototype.startBreathing = function(_redo) {
-    this.breathSprite.visible = true;
-    TweenMax.to(this.breathLight, 1, { intensity: 0.2 });
-
-    if(_redo)
-    	this.breathingTimeline.restart();
+    if (_redo)
+        this.breathingTimeline.restart();
     else
-	    this.breathingTimeline.play();
+        this.breathingTimeline.play();
 }
 
 PersonSleep.prototype.setGazeDotsRotation = function(targetVector) {
-    this.tmpTargetVector.copy( targetVector );
-    this.player.worldToLocal( this.tmpTargetVector );
-    this.gazeDots.lookAt( this.tmpTargetVector );
+    this.tmpTargetVector.copy(targetVector);
+    this.player.worldToLocal(this.tmpTargetVector);
+    this.gazeDots.lookAt(this.tmpTargetVector);
     this.gazeDots.visible = true;
 }
 
@@ -291,4 +304,47 @@ PersonSleep.prototype.resetGazeDots = function() {
     this.gazeDots.children[0].material.map.repeat.y = 1;
     this.gazeDots.children[0].material.map.offset.y = 0;
     this.gazeDots.visible = false;
+}
+
+PersonSleep.prototype.setupBreathing = function() {
+
+    this.breathingTimeline = new TimelineMax({
+        paused: true,
+        onComplete: () => {
+            TweenMax.to(this.breathLight, 0.5, {
+                intensity: 0,
+                onComplete: () => {
+                    this.breathSprite.visible = false;
+                }
+            });
+        }
+    });
+
+    for (var i = 0; i < this.breathingSetting.labels.length; i++) {
+        var tweenLabelTime = "+=" + this.breathingSetting.timeGaps[i];
+        this.breathingTimeline.add( this.breathingSetting.labels[i], tweenLabelTime );
+
+        var tweenToBeAdded = this.selectBreathAnimation(this.breathingSetting.seq[i], this.breathingSetting.durations[i]);
+        this.breathingTimeline.add( tweenToBeAdded, this.breathingSetting.labels[i] );
+    }
+}
+
+PersonSleep.prototype.selectBreathAnimation = function(aniIndex, duration) {
+    switch (aniIndex) {
+        case 0:
+            return this.breathInhale(duration);
+            break;
+
+        case 1:
+            return this.breathExhale(duration);
+            break;
+    }
+}
+
+PersonSleep.prototype.breathInhale = function(duration) {
+    return TweenMax.to(this.breathSprite.scale, duration, { x: 3, y: 3, z: 3, ease: Power1.easeInOut });
+}
+
+PersonSleep.prototype.breathExhale = function(duration) {
+    return TweenMax.to(this.breathSprite.scale, duration, { x: .05, y: .05, z: .05, ease: Power1.easeInOut });
 }

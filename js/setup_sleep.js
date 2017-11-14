@@ -1,12 +1,12 @@
 
 WebVRConfig = {
-	ROTATE_INSTRUCTIONS_DISABLED: true,
+	// ROTATE_INSTRUCTIONS_DISABLED: true,
 	MOUSE_KEYBOARD_CONTROLS_DISABLED: true, // Default: false.
 	TOUCH_PANNER_DISABLED: true,
 	
 	BUFFER_SCALE: 0.5, // Default: 0.5.
 	// PREVENT_DISTORTION: true,
-
+	predistorted: true,
 	// Allow VRDisplay.submitFrame to change gl bindings, which is more
 	// efficient if the application code will re-bind its resources on the
 	// next frame anyway.
