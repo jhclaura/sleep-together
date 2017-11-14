@@ -57,7 +57,7 @@ app.get('*', function(req, res){
 
 console.log('Server started on port ' + port);
 
-console.error (new Error(error.message));
+//console.error (new Error(error.message));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
