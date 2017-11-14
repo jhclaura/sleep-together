@@ -48,6 +48,7 @@ app.get('*', function(req, res){
 		  			res.render("index", {data: body});
 		        } else {
 		        	console.error ("Error getting NFB Settings", error);
+		        	res.render("index", {data: {}});
 		        }
 		    }
 		);
