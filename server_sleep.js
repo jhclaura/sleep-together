@@ -33,19 +33,13 @@ app.get('*', function(req, res){
 		    		language: lang,
 		    		folder: "", //temp
 		    		ip: req.ip,
-		    		settings: req.protocol + '://' + req.get('host') + "/settings.json" },
+		    		settings: req.protocol + '://' + req.get('host') + "/settings.json",
+		    		host: req.protocol + '://' + req.get('host')}
 		    },
 		    function (error, response, body) {
-		        if (!error && response.statusCode == 200) {
+		    	if (!error && response.statusCode == 200) {
 		        	body = JSON.parse(body);
-		           
-		           	//change share URL
-				  	var url = req.protocol + '://' + req.get('host') + req.originalUrl;
-			  		body.share[3] = '<meta property="og:url" content="'+url+'" />';
-			  		body.share[6] = body.share[6].replace(apiHost, url);
-			  		body.share[16] = body.share[16].replace(apiHost, url);
-		  	
-		  			res.render("index", {data: body});
+		          res.render("index", {data: body});
 		        } else {
 		        	console.error ("Error getting NFB Settings", error);
 		        	res.render("index", {data: {}});

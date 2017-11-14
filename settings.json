@@ -8,7 +8,7 @@
     "mobile_only": false,
     "share": {
         "en": {
-            "title": "Sleep Together EN",
+            "title": "SLEEP TOGETHER",
             "description": "My Description EN",
             "tweet": "tweet description avec #hashtag and @onf EN",
             "image": "/img/default.png",
@@ -19,12 +19,12 @@
             "video_height": "100"
         },
         "fr": {
-            "title": "Sleep Together FR",
+            "title": "CODODO",
             "description": "My Description FR",
             "tweet": "tweet description avec #hashtag and @onf Fr",
             "image": "/img/default.png",
-            "video_url": "Video URL FR",
-            "video_secure_url": "video secure URL FR",
+            "video_url": "",
+            "video_secure_url": "",
             "video_type": "text/html",
             "video_width": "200",
             "video_height": "100"
@@ -33,9 +33,9 @@
             "title": "Sleep Together DE",
             "description": "My Description DE",
             "tweet": "tweet description avec #hashtag and @onf DE",
-            "image": "\/img/default.png",
-            "video_url": "Video URL DE",
-            "video_secure_url": "video secure URL DE",
+            "image": "/img/default.png",
+            "video_url": "",
+            "video_secure_url": "",
             "video_type": "text/html",
             "video_width": "200",
             "video_height": "100"
