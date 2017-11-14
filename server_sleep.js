@@ -46,6 +46,8 @@ app.get('*', function(req, res){
 			  		body.share[16] = body.share[16].replace(apiHost, url);
 		  	
 		  			res.render("index", {data: body});
+		        } else {
+		        	console.error ("Error getting NFB Settings", error);
 		        }
 		    }
 		);
@@ -57,7 +59,7 @@ app.get('*', function(req, res){
 
 console.log('Server started on port ' + port);
 
-//console.error (new Error(error.message));
+// console.error (new Error(error.message));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
