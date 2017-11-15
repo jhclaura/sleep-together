@@ -24,7 +24,7 @@ app.get('*', function(req, res){
 
 	if ( ["/", "/de", "/fr", "/en"].indexOf(req.path) != -1) {
 		var lang = (req.path == "/") ? "" : req.path.substr(1)
-		,	apiHost = "http://veryveryshort.nfb.ca/";
+		,	apiHost = "https://veryveryshort.nfb.ca/";
 
 		request.post(
 		    {
