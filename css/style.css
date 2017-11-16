@@ -133,6 +133,12 @@ input[type=text].focus {
 	overflow: hidden;
 
 	z-index: 100;
+
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
 }
 
 /*#bgImage {

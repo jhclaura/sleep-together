@@ -111,7 +111,7 @@
 
     <script type="text/javascript" src="js/setup_sleep.js"></script>
 
-    <div id="splashPage" style="display:block; position:absolute; top:65px;">
+    <div id="splashPage" style="display:block; position:absolute; top:65px; opacity: 0;">
     	<img class="trans" id="bgImage" src="images/sleep_poster_color_V3.gif">
         <h1>Sleep Together</h1>
         <div id="introTextGroup">
@@ -147,7 +147,7 @@
 	        <a id="startLink" style="display:none; color:#0af5e1; cursor:pointer;" onclick="startToShowInstruction();">Enter</a>
         </div>        
     </div>
-    <div id="aboutPage" style="display:block; position:absolute;">
+    <div id="aboutPage" style="display:block; position:absolute; opacity: 0;">
         <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; color:#fc81a6" onclick="ToggleAbout();">/// About ///</a>
         <!-- <a class="aboutLink" id="instructionTitle" style="cursor:pointer; text-decoration: underline; color:#000000" onclick="ToggleInstruction();">Instruction</a> -->
         <!-- <a class="aboutLink" href="..." target='_blank'>Dev Blog</a> -->
@@ -1099,9 +1099,15 @@
     <script>
     var frameworkJS;
     if(hasInternet && '{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}' != ''){
-    	frameworkJS = new Framework('{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}');
+    	frameworkJS = new Framework('{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}', monCallback);
     	// frameworkJS.track("test_de_statistique"); //exemple de tag
-    }    
+    }
+    function monCallback()
+    {
+    	console.log("ok, now can start");
+    	splashPage.style.opacity = 1;
+    	aboutPage.style.opacity = 1;
+    }
     </script>
 </body>
 
