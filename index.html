@@ -40,14 +40,15 @@
     var hasInternet = true;
 
     // FIREBASE
-    var fireVisit = 0;
+    var fireVisit = 0, fbDatabase, visitDataRef, fbDatabaseRef;
     if(hasInternet){
 	    var fbConfig = {
 	        databaseURL: "https://sleep-together.firebaseio.com/"
 	    };
 	    firebase.initializeApp(fbConfig);
-	    var fbDatabase = firebase.database();
-	    var visitDataRef = fbDatabase.ref("totalVisit");
+	    fbDatabase = firebase.database();
+	    fbDatabaseRef = fbDatabase.ref();
+	    visitDataRef = fbDatabase.ref("totalVisit");
 	    visitDataRef.on("value", function(snapshot) {
 	        fireVisit = snapshot.val().visit_count;
 	        console.log("firevisit: " + fireVisit);
@@ -446,13 +447,12 @@
 
     <script>
     var final_statistic = {};
-    final_statistic.eaterCount = 0;
+    final_statistic.sleeperCount = 0;
     final_statistic.totalVisit = 0;
-    final_statistic.totalChew = 0;
-    final_statistic.totalHeart = 0;
-    final_statistic.youChew = 0;
-    final_statistic.meToOthers = {};
-    final_statistic.othersToMe = {};
+    final_statistic.totalEyeContact = 0;
+    final_statistic.lookAtOthers = {};
+    final_statistic.othersLookAtMe = {};
+    final_statistic.practiceCount = 0;
     var heartFromMeCount = 0;
 
     var loadingImg = byId("loadingImg");
@@ -465,6 +465,7 @@
     // var finalStat = byId("finalStat");
     var bgImage = byId("bgImage");
     var onfHeader = byId("header");
+    var arteHeader = byId("arte-header");
     var vrEnterCircle = byId("vr-enter-circle");
     var vrFullscreenCircle = byId("vr-fullscreen-circle");
 
@@ -806,8 +807,8 @@
                     totalPplInWorldsCount = data.totalCount;
                     totalVisitCount = fireVisit;
 
-                    // final_statistic.pooperCount ++;
-                    // final_statistic.totalVisit = totalVisitCount;
+                    final_statistic.sleeperCount ++;
+                    final_statistic.totalVisit = totalVisitCount;
                 }
             }
 
@@ -927,6 +928,13 @@
                             // setTimeout(function(){
                             // 	firstGuy.wordTexture.clear();
                             // },5000);
+
+                            //
+							if( final_statistic.othersLookAtMe[ h_f_n ] == undefined ){
+								final_statistic.othersLookAtMe[ h_f_n ] = 1;
+							} else {
+								final_statistic.othersLookAtMe[ h_f_n ] ++;
+							}
                         }
                     }
                 }
@@ -992,6 +1000,9 @@
                 UpdatePplCount(Object.keys(dailyLifePlayerDict).length, totalPplInWorldsCount, fireVisit);
                 totalVisitCount = fireVisit;
                 updatePreviousPlayer = true;
+
+                final_statistic.sleeperCount = totalPplInWorldsCount;
+				final_statistic.totalVisit = fireVisit;
             }
         }
 

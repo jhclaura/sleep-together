@@ -273,6 +273,7 @@ function superInit() {
 			console.log("enter VR");
 
 			onfHeader.style.display = "none";
+			arteHeader.style.display = "none";
 
 			if(chooseVRimg) {				
 				vrEnterCircle.style.display = "none";
@@ -803,6 +804,7 @@ function playLetsAudio() {
 
 function startBreathingPractice(_redo) {
     expStage = 1;
+    final_statistic.practiceCount ++;
 
     // Eye-level info
     UpdateFrontRotationWithMe(announcement);
@@ -1303,8 +1305,16 @@ function OptionStartStage(stageIndex) {
                 DoEnding();
 
             }, delayBase + 20500);
+
+            // Save Data
+            saveStatistics();
+
             break;
     }
+}
+
+function saveStatistics() {
+	fbDatabaseRef.push(final_statistic);
 }
 
 function DoEnding() {
@@ -1415,6 +1425,13 @@ function GazeToMove() {
                     notifyGazeMax = true;
                 }
                 console.log("ME_MAX_EYE");
+
+                var h_f_n = dailyLifePlayerDict[ lookingAtSomeone ].nname;
+				if( final_statistic.lookAtOthers[ h_f_n ] == undefined ){
+					final_statistic.lookAtOthers[ h_f_n ] = 1;
+				} else {
+					final_statistic.lookAtOthers[ h_f_n ] ++;
+				}
             }
 
             if (lookingAtSomeone == someoneLookingAtMe) {
@@ -1434,6 +1451,8 @@ function GazeToMove() {
                         controls.createTweenForMove(myTarget, dist_T, false);
                         isGazeMoving = true;
                         console.log("GAZE_TO_MOVE! time: " + dist_T);
+
+                        final_statistic.totalEyeContact ++;
 
                         firstGuy.wordTexture.clear();
                         firstGuy.wordBubble.visible = false;
