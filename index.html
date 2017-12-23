@@ -1109,8 +1109,12 @@
     {%- endfor %} {% for str in data.tag -%} {% autoescape false %}{{ str }}{% endautoescape %} {%- endfor %}
     <script>
     var frameworkJS;
-    if(hasInternet && '{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}' != ''){
-    	frameworkJS = new Framework('{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}', monCallback);
+    if(hasInternet && '{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}' != '')
+    {
+    	frameworkJS = new Framework(
+    		'{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}',
+    		monCallback
+    	);
     	// frameworkJS.track("test_de_statistique"); //exemple de tag
     }
     function monCallback()
