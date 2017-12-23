@@ -1107,8 +1107,8 @@
     {% for str in data.footer -%}
     <!-- {% autoescape false %}{{ str }}{% endautoescape %} -->
     {%- endfor %} {% for str in data.tag -%} {% autoescape false %}{{ str }}{% endautoescape %} {%- endfor %}
-    {{ data.geoloc.language }}
     <script>
+   	{{ data.geoloc.language }}
     var frameworkJS;
     if(hasInternet && '{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}' != '')
     {
