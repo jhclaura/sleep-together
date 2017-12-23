@@ -1111,6 +1111,7 @@
     var frameworkJS;
     if(hasInternet && '{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}' != '')
     {
+    	{{ data.geoloc.language }}
     	frameworkJS = new Framework(
     		'{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}',
     		monCallback
