@@ -1139,8 +1139,13 @@
     function monCallback()
     {
     	console.log("ok, now can start");
-    	document.getElementsByClassName("en_text").style.display = "none";
-    	document.getElementsByClassName("gr_text").style.display = "none";
+    	var enTexts = document.getElementsByClassName("en_text");//.style.display = "none";
+    	var grTexts = document.getElementsByClassName("gr_text");//.style.display = "none";
+    	for(var i=0; i<enTexts.length; i++)
+    	{
+    		enTexts[i].style.display = "none";
+    		grTexts[i].style.display = "none";
+    	}
     	splashPage.style.opacity = 1;
     	aboutPage.style.opacity = 1;
     }
