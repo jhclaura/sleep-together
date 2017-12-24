@@ -47,6 +47,8 @@ var dailyLifePlayerDict = {},
 // var audioContext = new AudioContext();
 // var sample = new SoundsSample(audioContext);
 
+var sleepLang='';
+
 var sound_digital, sound_opening, sound_practice, sound_night;
 var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets, sound_options, sound_bamboo;
 var initSound = false,
@@ -1582,6 +1584,17 @@ function onWindowResize(e) {
 
 function isTouchDevice() {
     return 'ontouchstart' in window || !!(navigator.msMaxTouchPoints);
+}
+
+function updateLang() {
+	switch(sleepLang) {
+		case 'en':
+		break;
+		case 'fr':
+		break;
+		case 'ge':
+		break;
+	}
 }
 
 // Page Visibility API
