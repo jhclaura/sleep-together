@@ -114,30 +114,47 @@
 
     <div id="splashPage" style="display:block; position:absolute; top:65px; opacity: 0;">
     	<img class="trans" id="bgImage" src="images/sleep_poster_color_V3.gif">
-        <h1>Sleep Together</h1>
+        <h1>
+        	<span class="en_text">Sleep Together</span>
+        	<span class="fr_text">Cododo</span>
+        	<span class="ge_text">Ab In Die Kiste</span>
+        </h1>
         <div id="introTextGroup">
-        	<!-- <div class="introText" style="display: none; opacity: 0;">
-	        	<b><ins>"An Instruction For Your Mind"</ins></b>
-	        </div> -->
 	        <div class="introText" style="display: none; opacity: 0;">
-	        	Sleep sleep sleep
+	        	<span class="en_text">Sleep sleep sleep</span>
+	        	<span class="fr_text">Dors dors dors</span>
+	        	<span class="ge_text">Schlaf schlaf schlaf</span>
 	    		<br>
-	    		Everyone needs some sleep
+	    		<span class="en_text">Everyone needs some sleep</span>
+	    		<span class="fr_text">Tout le monde a besoin de dormir</span>
+	        	<span class="ge_text">Jeder Mensch braucht Schlaf</span>
 	        </div>
 	        <div class="introText" style="display: none; opacity: 0;">
-	        	If I don't want to sleep alone
+	        	<span class="en_text">If I don't want to sleep alone</span>
+	        	<span class="fr_text">Si je ne veux pas dormir tout seul</span>
+	        	<span class="ge_text">Wenn ich nicht allein schlafen will</span>
 	    		<br>
-	    		Where can I go to sleep?
+	    		<span class="en_text">Where can I go to sleep?</span>
+	    		<span class="fr_text">Où est-ce que je pourrais aller dormir?</span>
+	        	<span class="ge_text">Wo kann ich dann schlafen gehen?</span>
 	        </div>
 	        <div class="introText" style="display: none; opacity: 0;">
-	        	If I don't want to breathe alone
+	        	<span class="en_text">If I don't want to breathe alone</span>
+	        	<span class="fr_text">Si je ne veux pas respirer tout seul</span>
+	        	<span class="ge_text">Wenn ich nicht allein atmen will</span>
 	    		<br>
-	    		Are you willing to breathe with me?
+	    		<span class="en_text">Are you willing to breathe with me?</span>
+	    		<span class="fr_text">Voulez-vous respirer avec moi?</span>
+	        	<span class="ge_text">Bist du bereit mit mir zu atmen?</span>
 	        </div>
 	        <div class="introText" style="display: none; opacity: 0;">
-	        	Sleep sleep sleep
-	    		<br>
-	    		(breathe breathe breathe)
+	        	<span class="en_text">Sleep sleep sleep</span>
+	        	<span class="fr_text">Dors dors dors</span>
+	        	<span class="ge_text">Schlaf schlaf schlaf</span>
+	    		<br>	    		
+	    		<span class="en_text">(breathe breathe breathe)</span>
+	        	<span class="fr_text">(respire respire respire)</span>
+	        	<span class="ge_text">(atmen atmen atmen)</span>
 	        </div>
         </div>
         <div class="trans" id="inputGroupt" style="display: none;">
@@ -146,7 +163,7 @@
 	        <div id="loadingTxt" style="color:yellow">loading</div>
 	        <p></p>
 	        <a id="startLink" style="display:none; color:#0af5e1; cursor:pointer;" onclick="startToShowInstruction();">Enter</a>
-        </div>        
+        </div>
     </div>
     <div id="aboutPage" style="display:block; position:absolute; opacity: 0;">
         <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; color:#fc81a6" onclick="ToggleAbout();">/// About ///</a>
@@ -698,8 +715,7 @@
 	    setTimeout(()=>{
 	    	inputGroupt.style.opacity=1;
 	    	bgImage.style.opacity=1;
-	    },100);	    
-	    
+	    },100);
     }
     //////////////////////////////////////////////////////////////////
     if (!isMobile) {
@@ -1111,7 +1127,9 @@
     var frameworkJS;
     if(hasInternet && '{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}' != '')
     {
-    	{{ data.geoloc.language }}
+    	sleepLang = '{{ data.geoloc.language }}';
+    	updateLang();
+
     	frameworkJS = new Framework(
     		'{% autoescape false %}{{ data.export_to_js }}{% endautoescape %}',
     		monCallback
@@ -1121,6 +1139,8 @@
     function monCallback()
     {
     	console.log("ok, now can start");
+    	document.getElementsByClassName("en_text").style.display = "none";
+    	document.getElementsByClassName("gr_text").style.display = "none";
     	splashPage.style.opacity = 1;
     	aboutPage.style.opacity = 1;
     }
