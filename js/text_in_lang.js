@@ -5,10 +5,10 @@ var langSwap = {
 		"de": "<p style='font-size: 1.3em;'>/// SEHR SEHR KURZ ///</p>\
 		        <p>Das Leben ist kurz. Mehr als je zuvor. Wir wollen alles. Und wir wollen es jetzt. Sehr Sehr Kurz ist eine Serie aus 10 interaktiven Projekten, bei denen das Thema Mobilität jeweils in 60 Sekunden behandelt wird. Eine Koproduktion von National Film Board of Canada und ARTE, in Zusammenarbeit mit IDFA DocLab.</p>\
 		        <br>\
-	    		<p style="font-size: 1.3em;">/// AB IN DIE KISTE ///</p>\
+	    		<p style='font-size: 1.3em;'>/// AB IN DIE KISTE ///</p>\
 		        <p>Ab in die Kiste, eine WebVR-Mehrbenutzer-Erlebnis für Menschen, die einschlafen möchten. Gestaltet von Laura Juo-Hsin Chen, koproduziert von NFB und ARTE.</p>\
 		        <br>\
-		        <p style="font-size: 1.3em;">/// KREDITE ///</p>\
+		        <p style='font-size: 1.3em;'>/// KREDITE ///</p>\
 		        <b><ins>SCHAFFUNG</ins></b>\
 	            <br>\
 	            <br>\
