@@ -176,7 +176,7 @@
         	<div class="close" onclick="ToggleAbout();">&times;</div>
         </div>
     	<div class="infoText">
-    		<span class="en_text">
+    		<span id="credit_text">
 	    		<p style="font-size: 1.3em;">/// VERY VERY SHORT ///</p>
 		        <p>Life is short. Now more than ever. We want it all. We want it now. Right away. Very very short is a collection of 10 interactive projects for smartphones, exploring the theme of mobility through very, very short experiences – all under 60 seconds. A NFB and ARTE coproduction, in collaboration with IDFA DocLab.</p>
 		        <br>
@@ -599,7 +599,7 @@
 	            <br>
 	            © ARTE  FRANCE - ONF 2017
             </span>
-            <span class="de_text" style="display: none;">
+            <span id="credit_text" style="display: none;">
             	<p style="font-size: 1.3em;">/// SEHR SEHR KURZ ///</p>
 		        <p>Das Leben ist kurz. Mehr als je zuvor. Wir wollen alles. Und wir wollen es jetzt. Sehr Sehr Kurz ist eine Serie aus 10 interaktiven Projekten, bei denen das Thema Mobilität jeweils in 60 Sekunden behandelt wird. Eine Koproduktion von National Film Board of Canada und ARTE, in Zusammenarbeit mit IDFA DocLab.</p>
 		        <br>
@@ -1557,13 +1557,15 @@
     	var deTexts = document.getElementsByClassName("de_text");//.style.display = "none";
     	var frTexts = document.getElementsByClassName("fr_text");
     	// console.log(enTexts);
-    	console.log(deTexts);
+    	//console.log(deTexts);
+
+    	document.getElementById("credit_text").innerHTML = langSwap.credit.de;
 
     	for(var i=0; i<enTexts.length; i++)
     	{
     		enTexts[i].style.display = "none";
     		frTexts[i].style.display = "none";
-    		deTexts[i].style.display = "block";
+    		//deTexts[i].style.display = "block";
     	}
     	splashPage.style.opacity = 1;
     	aboutPage.style.opacity = 1;
