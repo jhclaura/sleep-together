@@ -1600,10 +1600,11 @@ function updateLang() {
             for(var i=0; i<enTexts.length; i++)
             {
                 enTexts[i].style.display = "none";
+                frTexts[i].style.display = "inline";
                 deTexts[i].style.display = "none";
             }
             document.getElementById("credit_text").innerHTML = langSwap.credit.fr;
-            
+
     		break;
 
 		case 'ge':
@@ -1611,6 +1612,7 @@ function updateLang() {
             {
                 enTexts[i].style.display = "none";
                 frTexts[i].style.display = "none";
+                deTexts[i].style.display = "inline";
             }
             document.getElementById("credit_text").innerHTML = langSwap.credit.de;
 

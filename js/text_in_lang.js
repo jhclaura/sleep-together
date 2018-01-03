@@ -206,13 +206,13 @@ var langSwap = {
 	            <br>\
 	            <br>\
 	            © ARTE  FRANCE - ONF 2018",
-		"fr": "<p style='font-size: 1.3em;'>/// TRÈS TRÈS COURT ///</p>\
-		        <p>La vie, c’est court. Maintenant plus que jamais. On veut tout. Tout de suite. Et maintenant. Très très court  est une collection de 10 projets interactifs qui explorent le thème de la mobilité en 60 secondes. Une production de l’ONF et ARTE, en partenariat avec IDFA DocLab.</p>\
+		"de": "<p style='font-size: 1.3em;'>/// SEHR SEHR KURZ ///</p>\
+		        <p>Das Leben ist kurz. Mehr als je zuvor. Wir wollen alles. Und wir wollen es jetzt. Sehr Sehr Kurz ist eine Serie aus 10 interaktiven Projekten, bei denen das Thema Mobilität jeweils in 60 Sekunden behandelt wird. Eine Koproduktion von National Film Board of Canada und ARTE, in Zusammenarbeit mit IDFA DocLab.</p>\
 		        <br>\
-	    		<p style='font-size: 1.3em;'>/// CODODO ///</p>\
-		        <p>Cododo est une expérience collective en réalité virtuelle destinée à être utilisée avant le dodo. En 60 secondes, les visiteurs (alias endormis) participeront à un rituel de sommeil où ils flotteront dans un nid douillet en respirant profondément en compagnie d'autres endormis.</p>\
+	    		<p style='font-size: 1.3em;'>/// AB IN DIE KISTE ///</p>\
+		        <p>Ab in die Kiste ist ein gemeinsames Erlebnis in virtueller Realität für Menschen, die einschlafen möchten. Innerhalb von 60 Sekunden vollziehen die Besucher (auch Schlafmützen genannt) zusammen mit anderen Schlafmützen ein Einschlafritual, bei dem sie es sich in ihrem Bett bequem machen und gemeinsam atmen.</p>\
 		        <br>\
-		        <p style='font-size: 1.3em;'>/// CRÈDITS ///</p>\
+		        <p style='font-size: 1.3em;'>/// KREDITE ///</p>\
 		        <b><ins>SCHAFFUNG</ins></b>\
 	            <br>\
 	            <br>\
@@ -400,25 +400,25 @@ var langSwap = {
 				Zina Kisch\
 	            <br>\
 	            <br>\
-	            Sam Lavigne pour l'inspiration, venue de Useless Press: Daily Life VR\
+	            Sam Lavigne für die Idee aus Useless Press: Daily Life VR\
 	            <br>\
-	            Brandon Jones et\
-	            <br>Vladimir Vukicevic pour WebVR spec\
+	            Brandon Jones und\
+	            <br>Vladimir Vukicevic für den Entwurf der WebVR\
 	            <br>\
-	            Boris Smus pour WebVR polyfill et boilerplate\
+	            Boris Smus für die Polyfills und den Boilerplate-Code der WebVR\
 	            <br>\
-	            Ricardo Cabello pour THREE.js\
+	            Ricardo Cabello für THREE.js\
 	            <br>\
 	            <br>\
 	            <br>\
 	            © ARTE  FRANCE - ONF 2018",
-		"de": "<p style='font-size: 1.3em;'>/// SEHR SEHR KURZ ///</p>\
-		        <p>Das Leben ist kurz. Mehr als je zuvor. Wir wollen alles. Und wir wollen es jetzt. Sehr Sehr Kurz ist eine Serie aus 10 interaktiven Projekten, bei denen das Thema Mobilität jeweils in 60 Sekunden behandelt wird. Eine Koproduktion von National Film Board of Canada und ARTE, in Zusammenarbeit mit IDFA DocLab.</p>\
+		"fr": "<p style='font-size: 1.3em;'>/// TRÈS TRÈS COURT ///</p>\
+		        <p>La vie, c’est court. Maintenant plus que jamais. On veut tout. Tout de suite. Et maintenant. Très très court  est une collection de 10 projets interactifs qui explorent le thème de la mobilité en 60 secondes. Une production de l’ONF et ARTE, en partenariat avec IDFA DocLab.</p>\
 		        <br>\
-	    		<p style='font-size: 1.3em;'>/// AB IN DIE KISTE ///</p>\
-		        <p>Ab in die Kiste ist ein gemeinsames Erlebnis in virtueller Realität für Menschen, die einschlafen möchten. Innerhalb von 60 Sekunden vollziehen die Besucher (auch Schlafmützen genannt) zusammen mit anderen Schlafmützen ein Einschlafritual, bei dem sie es sich in ihrem Bett bequem machen und gemeinsam atmen.</p>\
+	    		<p style='font-size: 1.3em;'>/// CODODO ///</p>\
+		        <p>Cododo est une expérience collective en réalité virtuelle destinée à être utilisée avant le dodo. En 60 secondes, les visiteurs (alias endormis) participeront à un rituel de sommeil où ils flotteront dans un nid douillet en respirant profondément en compagnie d'autres endormis.</p>\
 		        <br>\
-		        <p style='font-size: 1.3em;'>/// KREDITE ///</p>\
+		        <p style='font-size: 1.3em;'>/// CRÈDITS ///</p>\
 		        <b><ins>CRÉATION</ins></b>\
 	            <br>\
 	            <br>\
@@ -606,14 +606,14 @@ var langSwap = {
 				Zina Kisch\
 	            <br>\
 	            <br>\
-	            Sam Lavigne für die Idee aus Useless Press: Daily Life VR\
+	            Sam Lavigne pour l'inspiration, venue de Useless Press: Daily Life VR\
 	            <br>\
-	            Brandon Jones und\
-	            <br>Vladimir Vukicevic für den Entwurf der WebVR\
+	            Brandon Jones et\
+	            <br>Vladimir Vukicevic pour WebVR spec\
 	            <br>\
-	            Boris Smus für die Polyfills und den Boilerplate-Code der WebVR\
+	            Boris Smus pour WebVR polyfill et boilerplate\
 	            <br>\
-	            Ricardo Cabello für THREE.js\
+	            Ricardo Cabello pour THREE.js\
 	            <br>\
 	            <br>\
 	            <br>\
