@@ -25,6 +25,7 @@ app.get('*', function(req, res){
 	if ( ["/", "/de", "/fr", "/en"].indexOf(req.path) != -1) {
 		var lang = (req.path == "/") ? "" : req.path.substr(1)
 		,	apiHost = "https://veryveryshort.nfb.ca/";
+		// ,	apiHost = "http://localhost:8888/";
 
 		request.post(
 		    {
@@ -39,6 +40,7 @@ app.get('*', function(req, res){
 		    function (error, response, body) {
 		    	if (!error && response.statusCode == 200) {
 		        	body = JSON.parse(body);
+		        	//console.log(body);
 		          res.render("index", {data: body});
 		        } else {
 		        	console.error ("Error getting NFB Settings", error);
@@ -49,7 +51,6 @@ app.get('*', function(req, res){
 		);
 		return;
 	}
-
 	res.sendFile(__dirname + req.url);
 });
 

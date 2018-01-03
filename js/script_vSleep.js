@@ -1587,13 +1587,34 @@ function isTouchDevice() {
 }
 
 function updateLang() {
+    var enTexts = document.getElementsByClassName("en_text");//.style.display = "none";
+    var deTexts = document.getElementsByClassName("de_text");//.style.display = "none";
+    var frTexts = document.getElementsByClassName("fr_text");    
+
 	switch(sleepLang) {
 		case 'en':
-		break;
+            //do nothing!
+    		break;
+
 		case 'fr':
-		break;
+            for(var i=0; i<enTexts.length; i++)
+            {
+                enTexts[i].style.display = "none";
+                deTexts[i].style.display = "none";
+            }
+            document.getElementById("credit_text").innerHTML = langSwap.credit.fr;
+            
+    		break;
+
 		case 'ge':
-		break;
+            for(var i=0; i<enTexts.length; i++)
+            {
+                enTexts[i].style.display = "none";
+                frTexts[i].style.display = "none";
+            }
+            document.getElementById("credit_text").innerHTML = langSwap.credit.de;
+
+    		break;
 	}
 }
 

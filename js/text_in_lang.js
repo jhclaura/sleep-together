@@ -1,14 +1,218 @@
 var langSwap = {
 	"credit": {
-		"en": "",
-		"fr": "",
-		"de": "<p style='font-size: 1.3em;'>/// SEHR SEHR KURZ ///</p>\
-		        <p>Das Leben ist kurz. Mehr als je zuvor. Wir wollen alles. Und wir wollen es jetzt. Sehr Sehr Kurz ist eine Serie aus 10 interaktiven Projekten, bei denen das Thema Mobilität jeweils in 60 Sekunden behandelt wird. Eine Koproduktion von National Film Board of Canada und ARTE, in Zusammenarbeit mit IDFA DocLab.</p>\
+		"en": "<p style='font-size: 1.3em;'>/// VERY VERY SHORT ///</p>\
+		        <p>Life is short. Now more than ever. We want it all. We want it now. Right away. Very very short is a collection of 10 interactive projects for smartphones, exploring the theme of mobility through very, very short experiences – all under 60 seconds. A NFB and ARTE coproduction, in collaboration with IDFA DocLab.</p>\
 		        <br>\
-	    		<p style='font-size: 1.3em;'>/// AB IN DIE KISTE ///</p>\
-		        <p>Ab in die Kiste, eine WebVR-Mehrbenutzer-Erlebnis für Menschen, die einschlafen möchten. Gestaltet von Laura Juo-Hsin Chen, koproduziert von NFB und ARTE.</p>\
+	    		<p style='font-size: 1.3em;'>/// SLEEP TOGETHER ///</p>\
+		        <p>Sleep Together is a collective virtual reality experience for people to use before going to sleep. In 60 seconds, visitors (a.k.a. sleepyheads) embark on a sleep ritual with other sleepyheads where they float in a cozy nest and breathe together.</p>\
 		        <br>\
-		        <p style='font-size: 1.3em;'>/// KREDITE ///</p>\
+		        <p style='font-size: 1.3em;'>/// CREDITS ///</p>\
+		        <b><ins>CREATION</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Creator</b>\
+	            <br>\
+	            Laura Juo-Hsin Chen\
+	            <br>\
+	            <br>\
+	            <b>Sound Record and Mental Support</b>\
+	            <br>\
+	            Andy Sigler\
+	            <br>\
+	            <br>\
+	            <b><ins>ONF / NFB</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Executive Producer</b>\
+	            <br>\
+	            Hugues Sweeney\
+	            <br>\
+	            <br>\
+	            <b>Production Managers</b>\
+	            <br>\
+	            Marie-Pier Gauthier\
+	            <br>\
+	            Nathalie Bédard Morin\
+	            <br>\
+	            <br>\
+	            <b>Editorial Manager</b>\
+	            <br>\
+	            Valérie Darveau\
+	            <br>\
+	            <br>\
+	            <b>Technology Director</b>\
+	            <br>\
+	            Martin Viau\
+	            <br>\
+	            <br>\
+	            <b>Production Coordinators</b>\
+	            <br>\
+	            Caroline Fournier\
+	            <br>\
+	            Claudia Boutin\
+	            <br>\
+	            Dominique Brunet\
+	            <br>\
+	            <br>\
+	            <b>Administrator</b>\
+	            <br>\
+	            Marie-Andrée Bonneau\
+	            <br>\
+	            <br>\
+	            <b>Marketing Manager</b>\
+	            <br>\
+	            Tammy Peddle\
+	            <br>\
+	            <br>\
+	            <b>Marketing Coordinator</b>\
+	            <br>\
+	            Florent Prevelle\
+	            <br>\
+	            <br>\
+	            <b>Social Media Strategist</b>\
+	            <br>\
+	            Kate Ruscito\
+	            <br>\
+	            <br>\
+	            <b>Web Content Project Manager</b>\
+	            <br>\
+	            Félix-Antoine Viens\
+	            <br>\
+	            <br>\
+	            <b>Press Relations</b>\
+	            <br>\
+	            Marie-Claude Lamoureux\
+	            <br>\
+	            Pat Dillon\
+	            <br>\
+	            <br>\
+	            <b>Information Technologies</b>\
+	            <br>\
+	            Sergiu Suciu\
+	            <br>\
+	            <br>\
+	            <b>Legal Services</b>\
+	            <br>\
+	            Peter Kallianiotis\
+	            <br>\
+	            <br>\
+	            <b><ins>ARTE France</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Digital Development Chief</b>\
+	            <br>\
+	            Gilles Freissinier\
+	            <br>\
+	            <br>\
+	            <b>Editorial Manager</b>\
+	            <br>\
+	            Marianne Levy-Leblon\
+	            <br>\
+	            <br>\
+	            <b>Program Producers</b>\
+	            <br>\
+	            Marie Berthoumieu\
+	            <br>\
+	            Emilie Bessard\
+	            <br>\
+	            <br>\
+	            <b>Head of Project Management</b>\
+	            <br>\
+	            Stéphane Nauroy\
+	            <br>\
+	            <br>\
+	            <b>Community manager</b>\
+	            <br>\
+	            Léa Jagut\
+	            <br>\
+	            <br>\
+	            <b>Administrator</b>\
+	            <br>\
+	            Jerôme Vernet\
+	            <br>\
+	            <br>\
+	            <b>ARTE France Développement</b>\
+	            <br>\
+	            <b>Production Managers</b>\
+	            <br>\
+	            Claire Aubret\
+	            <br>\
+	            Angèle Le Névé\
+	            <br>\
+	            <b>Assisted by</b>\
+	            <br>\
+	            Juliette Droillard\
+	            <br>\
+	            <br>\
+	            <b>Translation</b>\
+	            <br>\
+	            Christian Stonner\
+	            <br>\
+	            <br>\
+	            <b>ARTE Studio Lab Responsibles</b>\
+	            <br>\
+	            Clément Dhamelincourt\
+	            <br>\
+	            <b>Technical Manager</b>\
+	            <br>\
+	            Vincent Chagny\
+	            <br>\
+	            <b>Project Manager</b>\
+	            <br>\
+	            Noé Daudin-Clavaud\
+	            <br>\
+	            <br>\
+	            <b><ins>IDFA DocLab</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Call for Projects</b>\
+	            <br>\
+	            Caspar Sonnen\
+				<br>\
+				Wotienke Vermeer\
+				<br>\
+				Michael Zbieranowski\
+				<br>\
+	            <br>\
+	            <b><ins>Acknowledgements</ins></b>\
+	            <br>\
+	            <br>\
+				Ziv Schneider - New Media Artist\
+				<br>\
+				Jouke Vuurmans - Media Monks\
+				<br>\
+				Julia Kaganskiy - New Museum\
+				<br>\
+				Myriam Achard - PHI Center\
+				<br>\
+				Florent Maurin - The Pixel Hunt\
+				<br>\
+				Jepchumba - Digital Artist and Curator\
+				<br>\
+				Rafaella Wang\
+				<br>\
+				Zina Kisch\
+	            <br>\
+	            <br>\
+	            Sam Lavigne for the inspiration sparked by Useless Press: Daily Life VR\
+	            <br>\
+	            Brandon Jones and\
+	            <br>Vladimir Vukicevic for WebVR spec\
+	            <br>\
+	            Boris Smus for WebVR polyfill and boilerplate\
+	            <br>\
+	            Ricardo Cabello for THREE.js\
+	            <br>\
+	            <br>\
+	            <br>\
+	            © ARTE  FRANCE - ONF 2018",
+		"fr": "<p style='font-size: 1.3em;'>/// TRÈS TRÈS COURT ///</p>\
+		        <p>La vie, c’est court. Maintenant plus que jamais. On veut tout. Tout de suite. Et maintenant. Très très court  est une collection de 10 projets interactifs qui explorent le thème de la mobilité en 60 secondes. Une production de l’ONF et ARTE, en partenariat avec IDFA DocLab.</p>\
+		        <br>\
+	    		<p style='font-size: 1.3em;'>/// CODODO ///</p>\
+		        <p>Cododo est une expérience collective en réalité virtuelle destinée à être utilisée avant le dodo. En 60 secondes, les visiteurs (alias endormis) participeront à un rituel de sommeil où ils flotteront dans un nid douillet en respirant profondément en compagnie d'autres endormis.</p>\
+		        <br>\
+		        <p style='font-size: 1.3em;'>/// CRÈDITS ///</p>\
 		        <b><ins>SCHAFFUNG</ins></b>\
 	            <br>\
 	            <br>\
@@ -196,6 +400,212 @@ var langSwap = {
 				Zina Kisch\
 	            <br>\
 	            <br>\
+	            Sam Lavigne pour l'inspiration, venue de Useless Press: Daily Life VR\
+	            <br>\
+	            Brandon Jones et\
+	            <br>Vladimir Vukicevic pour WebVR spec\
+	            <br>\
+	            Boris Smus pour WebVR polyfill et boilerplate\
+	            <br>\
+	            Ricardo Cabello pour THREE.js\
+	            <br>\
+	            <br>\
+	            <br>\
+	            © ARTE  FRANCE - ONF 2018",
+		"de": "<p style='font-size: 1.3em;'>/// SEHR SEHR KURZ ///</p>\
+		        <p>Das Leben ist kurz. Mehr als je zuvor. Wir wollen alles. Und wir wollen es jetzt. Sehr Sehr Kurz ist eine Serie aus 10 interaktiven Projekten, bei denen das Thema Mobilität jeweils in 60 Sekunden behandelt wird. Eine Koproduktion von National Film Board of Canada und ARTE, in Zusammenarbeit mit IDFA DocLab.</p>\
+		        <br>\
+	    		<p style='font-size: 1.3em;'>/// AB IN DIE KISTE ///</p>\
+		        <p>Ab in die Kiste ist ein gemeinsames Erlebnis in virtueller Realität für Menschen, die einschlafen möchten. Innerhalb von 60 Sekunden vollziehen die Besucher (auch Schlafmützen genannt) zusammen mit anderen Schlafmützen ein Einschlafritual, bei dem sie es sich in ihrem Bett bequem machen und gemeinsam atmen.</p>\
+		        <br>\
+		        <p style='font-size: 1.3em;'>/// KREDITE ///</p>\
+		        <b><ins>CRÉATION</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Créatrice</b>\
+	            <br>\
+	            Laura Juo-Hsin Chen\
+	            <br>\
+	            <br>\
+	            <b>Enregistrement sonore par</b>\
+	            <br>\
+	            Andy Sigler\
+	            <br>\
+	            <br>\
+	            <b><ins>ONF / NFB</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Producteur exécutif</b>\
+	            <br>\
+	            Hugues Sweeney\
+	            <br>\
+	            <br>\
+	            <b>Chargées de production</b>\
+	            <br>\
+	            Marie-Pier Gauthier\
+	            <br>\
+	            Nathalie Bédard Morin\
+	            <br>\
+	            <br>\
+	            <b>Chargée d’édition</b>\
+	            <br>\
+	            Valérie Darveau\
+	            <br>\
+	            <br>\
+	            <b>Directeur des technologies</b>\
+	            <br>\
+	            Martin Viau\
+	            <br>\
+	            <br>\
+	            <b>Coordonnatrices de production</b>\
+	            <br>\
+	            Caroline Fournier\
+	            <br>\
+	            Claudia Boutin\
+	            <br>\
+	            Dominique Brunet\
+	            <br>\
+	            <br>\
+	            <b>Administratrice</b>\
+	            <br>\
+	            Marie-Andrée Bonneau\
+	            <br>\
+	            <br>\
+	            <b>Agente de mise en marché</b>\
+	            <br>\
+	            Tammy Peddle\
+	            <br>\
+	            <br>\
+	            <b>Coordonnateur marketing</b>\
+	            <br>\
+	            Florent Prevelle\
+	            <br>\
+	            <br>\
+	            <b>Stratège médias sociaux</b>\
+	            <br>\
+	            Kate Ruscito\
+	            <br>\
+	            <br>\
+	            <b>Chargé de projet contenu web</b>\
+	            <br>\
+	            Félix-Antoine Viens\
+	            <br>\
+	            <br>\
+	            <b>Relations de presse</b>\
+	            <br>\
+	            Marie-Claude Lamoureux\
+	            <br>\
+	            Pat Dillon\
+	            <br>\
+	            <br>\
+	            <b>Technologies de l’information</b>\
+	            <br>\
+	            Sergiu Suciu\
+	            <br>\
+	            <br>\
+	            <b>Services juridiques</b>\
+	            <br>\
+	            Peter Kallianiotis\
+	            <br>\
+	            <br>\
+	            <b><ins>ARTE France</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Directeur du développement numérique</b>\
+	            <br>\
+	            Gilles Freissinier\
+	            <br>\
+	            <br>\
+	            <b>Responsable éditorial</b>\
+	            <br>\
+	            Marianne Levy-Leblon\
+	            <br>\
+	            <br>\
+	            <b>Chargées de programmes</b>\
+	            <br>\
+	            Marie Berthoumieu\
+	            <br>\
+	            Emilie Bessard\
+	            <br>\
+	            <br>\
+	            <b>Responsable Pôle Projet</b>\
+	            <br>\
+	            Stéphane Nauroy\
+	            <br>\
+	            <br>\
+	            <b>Chargée des réseaux sociaux</b>\
+	            <br>\
+	            Léa Jagut\
+	            <br>\
+	            <br>\
+	            <b>Administrateur</b>\
+	            <br>\
+	            Jerôme Vernet\
+	            <br>\
+	            <br>\
+	            <b>ARTE France Développement</b>\
+	            <br>\
+	            <b>Directrices de Production</b>\
+	            <br>\
+	            Claire Aubret\
+	            <br>\
+	            Angèle Le Névé\
+	            <br>\
+	            <b>Assistées de</b>\
+	            <br>\
+	            Juliette Droillard\
+	            <br>\
+	            <br>\
+	            <b>Traduction</b>\
+	            <br>\
+	            Christian Stonner\
+	            <br>\
+	            <br>\
+	            <b>Responsable ARTE Studio Lab</b>\
+	            <br>\
+	            Clément Dhamelincourt\
+	            <br>\
+	            <b>Responsable technique</b>\
+	            <br>\
+	            Vincent Chagny\
+	            <br>\
+	            <b>Suivi de projet</b>\
+	            <br>\
+	            Noé Daudin-Clavaud\
+	            <br>\
+	            <br>\
+	            <b><ins>IDFA DocLab</ins></b>\
+	            <br>\
+	            <br>\
+	            <b>Appel à projets</b>\
+	            <br>\
+	            Caspar Sonnen\
+				<br>\
+				Wotienke Vermeer\
+				<br>\
+				Michael Zbieranowski\
+				<br>\
+	            <br>\
+	            <b><ins>Remerciements</ins></b>\
+	            <br>\
+	            <br>\
+				Ziv Schneider - Artiste nouveaux médias\
+				<br>\
+				Jouke Vuurmans - Media Monks\
+				<br>\
+				Julia Kaganskiy - New Museum\
+				<br>\
+				Myriam Achard - PHI Center\
+				<br>\
+				Florent Maurin - The Pixel Hunt\
+				<br>\
+				Jepchumba - Artiste numérique et curateur\
+				<br>\
+				Rafaella Wang\
+				<br>\
+				Zina Kisch\
+	            <br>\
+	            <br>\
 	            Sam Lavigne für die Idee aus Useless Press: Daily Life VR\
 	            <br>\
 	            Brandon Jones und\
@@ -207,6 +617,6 @@ var langSwap = {
 	            <br>\
 	            <br>\
 	            <br>\
-	            © ARTE  FRANCE - ONF 2017"
+	            © ARTE  FRANCE - ONF 2018"
 	}
 };
