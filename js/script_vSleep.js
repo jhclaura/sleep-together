@@ -1607,7 +1607,7 @@ function updateLang() {
 
     		break;
 
-		case 'ge':
+		case 'de':
             for(var i=0; i<enTexts.length; i++)
             {
                 enTexts[i].style.display = "none";
