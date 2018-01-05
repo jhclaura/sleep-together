@@ -386,11 +386,11 @@
     </div>
     <div class="infoBlock trans" id="instructionDetail" style="display:none;">
     	<div class="infoText">
-	    	<img class="insImg" src="images/instructions/instruction_sound_tap.jpg">
-			<img class="insImg" src="images/instructions/instruction_move.jpg">
+	    	<img class="insImg" id="insTap" src="images/instructions/instruction_sound_tap.jpg">
+			<img class="insImg" id="insMov" src="images/instructions/instruction_move.jpg">
 			<br>
 			<div style="position: absolute; bottom: 1em; left: 0; right: 0;">
-				<a class="roundButton" style="cursor:pointer; background-color: black; color:#0af5e1;" onclick="ToggleVR();">OK</a>
+				<a class="roundButton" id="okButton" style="cursor:pointer; background-color: black; color:#0af5e1;" onclick="ToggleVR();">OK</a>
 			</div>
     	</div>
     </div>
@@ -1124,6 +1124,12 @@
     		monCallback
     	);
     	// frameworkJS.track("test_de_statistique"); //exemple de tag
+    }
+    else
+    {
+    	sleepLang = "en";
+    	updateLang();
+    	monCallback();
     }
     function monCallback()
     {

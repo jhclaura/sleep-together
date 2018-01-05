@@ -1603,8 +1603,12 @@ function updateLang() {
                 frTexts[i].style.display = "inline";
                 deTexts[i].style.display = "none";
             }
-            document.getElementById("credit_text").innerHTML = langSwap.credit.fr;
-
+            byId("credit_text").innerHTML = langSwap.credit.fr;
+            byId("playerName").placeholder = langSwap.home.input.fr;
+            byId("startLink").text = langSwap.home.button.fr;
+            byId("aboutPageTitle").text = langSwap.home.aboutPage.fr;
+            byId("insTap").src = langSwap.home.insTap.fr;
+            byId("insMov").src = langSwap.home.insMov.fr;
     		break;
 
 		case 'de':
@@ -1614,8 +1618,12 @@ function updateLang() {
                 frTexts[i].style.display = "none";
                 deTexts[i].style.display = "inline";
             }
-            document.getElementById("credit_text").innerHTML = langSwap.credit.de;
-
+            byId("credit_text").innerHTML = langSwap.credit.de;
+            byId("playerName").placeholder = langSwap.home.input.de;
+            byId("startLink").text = langSwap.home.button.de;
+            byId("aboutPageTitle").text = langSwap.home.aboutPage.de;
+            byId("insTap").src = langSwap.home.insTap.de;
+            byId("insMov").src = langSwap.home.insMov.de;
     		break;
 	}
 }

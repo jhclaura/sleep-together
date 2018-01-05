@@ -1,4 +1,31 @@
 var langSwap = {
+	"home": {
+		"button": {
+			"en": "Enter",
+			"fr": "Entrer",
+			"de": "Beginnen"
+		},
+		"input": {
+			"en": "Who is this sleepyhead?",
+			"fr": "Mais qui est cet endormi?",
+			"de": "Wer ist denn diese Schlafmütze?"
+		},
+		"aboutPage": {
+			"en": "/// About ///",
+			"fr": "/// SUR ///",
+			"de": "/// ÜBER ///"
+		},
+		"insTap": {
+			"en": "images/instructions/instruction_sound_tap.jpg",
+			"fr": "images/instructions/instruction_sound_tap_fr.jpg",
+			"de": "images/instructions/instruction_sound_tap_de.jpg"
+		},
+		"insMov": {
+			"en": "images/instructions/instruction_move.jpg",
+			"fr": "images/instructions/instruction_move_fr.jpg",
+			"de": "images/instructions/instruction_move_de.jpg"
+		}
+	},
 	"credit": {
 		"en": "<p style='font-size: 1.3em;'>/// VERY VERY SHORT ///</p>\
 		        <p>Life is short. Now more than ever. We want it all. We want it now. Right away. Very very short is a collection of 10 interactive projects for smartphones, exploring the theme of mobility through very, very short experiences – all under 60 seconds. A NFB and ARTE coproduction, in collaboration with IDFA DocLab.</p>\
