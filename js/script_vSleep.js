@@ -1609,7 +1609,7 @@ function updateLang() {
             byId("aboutPageTitle").text = langSwap.home.aboutPage.fr;
             byId("insTap").src = langSwap.home.insTap.fr;
             byId("insMov").src = langSwap.home.insMov.fr;
-            byId("vrToStart").src = langSwap.home.reallyStart.fr;
+            byId("vrToStart").text = langSwap.home.reallyStart.fr;
     		break;
 
 		case 'de':
@@ -1625,7 +1625,7 @@ function updateLang() {
             byId("aboutPageTitle").text = langSwap.home.aboutPage.de;
             byId("insTap").src = langSwap.home.insTap.de;
             byId("insMov").src = langSwap.home.insMov.de;
-            byId("vrToStart").src = langSwap.home.reallyStart.fr;
+            byId("vrToStart").text = langSwap.home.reallyStart.fr;
     		break;
 	}
 }
