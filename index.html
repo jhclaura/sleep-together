@@ -397,17 +397,25 @@
     <div class="infoBlock trans" id="vrOption" style="display:none;">
     	<div class="infoText">
     		<div style="text-align: center;">
-	    		<b><ins>How do you want to sleep?</ins></b>
+	    		<b><ins>
+	    			<span class="en_text">How do you want to sleep?</span>
+	    			<span class="fr_text" style="display: none;">Comment voulez-vous dormir?</span>
+	    			<span class="de_text" style="display: none;">Wie möchten Sie schlafen?</span>
+	    		</ins></b>
 	    		<br>
 	    		<br>
 	    		<div id="vrImgWrapper">
 		    		<div class="vrImg">
 						<img id="yesVR" style="width: 35%;" src="images/instructions/instruction_vr.png" onclick="chooseVRmode();">
-						<br>in VR mode
+						<br><span class="en_text">in VR mode</span>
+							<span class="fr_text" style="display: none;">en mode VR</span>
+	    					<span class="de_text" style="display: none;">im VR-Modus</span>
 					</div>
 					<div class="vrImg">
 						<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr2.png" onclick="chooseNonVRmode();">
-						<br>in nature mode
+						<br><span class="en_text">in nature mode</span>
+							<span class="fr_text" style="display: none;">en mode nature</span>
+	    					<span class="de_text" style="display: none;">im natürlichen Modus</span>
 					</div>
 				</div>
 				<br>
@@ -418,23 +426,27 @@
     	</div>
     </div>
     <div class="infoBlock trans" id="goodbyeMsg" style="display:none; background-color: black; color:white;">
-    <div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
-        <div id="closeText" style="display: none;">
-            Why wake up from that
-            <br> sweet sleep mode?
-            <br>
-            <br> Close your eyes,
-            <br> I'll see you another night.
-        </div>
-        <div id="byeText">
-            Sleep tight.
-            <br> See you another sleepless night.. Z z z
-        </div>
-    </div>
-    <div style="position: absolute; bottom: 0; left: 0; right: 0; text-align: center;">
-    	<a style="cursor:pointer; color:#0af5e1; text-decoration: underline;" onclick="reloadPage();">Actually.. I'm not sleepy!</a>
-    </div>
-</div>
+	    <div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
+	        <div id="closeText" style="display: none;">
+	            Why wake up from that
+	            <br> sweet sleep mode?
+	            <br>
+	            <br> Close your eyes,
+	            <br> I'll see you another night.
+	        </div>
+	        <div id="byeText">
+	            <span class="en_text">Sleep tight.
+	            	<br>See you another sleepless night.. Z z z</span>
+	            <span class="fr_text" style="display: none;">Dormez bien.
+	            	<br>À la prochaine insomnie.. Z z z</span>
+	            <span class="de_text" style="display: none;">Schlafen Sie gut.
+	            	<br>Bis zu einer nächsten schlaflosen Nacht.. Z z z</span>
+	        </div>
+	    </div>
+	    <div style="position: absolute; bottom: 0; left: 0; right: 0; text-align: center;">
+	    	<a id="restartLink" style="cursor:pointer; color:#0af5e1; text-decoration: underline;" onclick="reloadPage();">Actually.. I'm not sleepy!</a>
+	    </div>
+	</div>
 
     <!-- WebVR UI -->
     <div id="vr-ui">

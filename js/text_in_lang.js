@@ -24,6 +24,18 @@ var langSwap = {
 			"en": "images/instructions/instruction_move.jpg",
 			"fr": "images/instructions/instruction_move_fr.jpg",
 			"de": "images/instructions/instruction_move_de.jpg"
+		},
+		"reallyStart": {
+			"en": "Start",
+			"fr": "Commence",
+			"de": "Starten"
+		}
+	},
+	"exp": {
+		"restartLink": {
+			"en": "Actually... I'm not sleepy!",
+			"fr": "Je ne m'endors plus!",
+			"de": "Ich kann doch noch nicht schlafen."
 		}
 	},
 	"credit": {
