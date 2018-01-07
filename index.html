@@ -64,6 +64,9 @@
     }
     console.log("isMobile: " + isMobile);
 
+    var iosTexts = document.getElementsByClassName("ios_text");//.style.display = "none";
+    var androidTexts = document.getElementsByClassName("android_text");
+
     // tell android or iOS
     if (/Android/i.test(navigator.userAgent)) {
         console.log("I'm android!");
@@ -92,7 +95,13 @@
         clickDiv.appendChild(ins);
     }
 
-    // DETECT
+    // DETECT FB IN APP BROWSER
+    var cameFromFB = false;
+    if (navigator.userAgent.match (/(iPod | iPhone | iPad)/) && navigator.userAgent.match (/FBAV/i)) {
+    	cameFromFB = true;
+ 	}
+
+    // DETECT WEBGL
     if (!Detector.webgl) Detector.addGetWebGLMessage();
 
     //
@@ -167,6 +176,63 @@
     </div>
     <div id="aboutPage" style="display:block; position:absolute; opacity: 0;">
         <a class="aboutLink" id="aboutPageTitle" style="cursor:pointer; color:#fc81a6" onclick="ToggleAbout();">/// About ///</a>
+    </div>
+    <div id="fromFBPage" style="display: block; position: absolute; top: 65px; opacity: 0;">
+    	<img class="fromFBimg" src="images/fromFB/fromFB_1.jpg">
+    	<div class="fromFBpost">
+    		<img class="fromFBimg" src="images/fromFB/fromFB_2.gif">
+    		<div class="fromFBtext">
+    			<span class="en_text">Oh hey, glad you're here.</span>
+	        	<span class="fr_text" style="display: none;">Oh, hé, content de vous voir.</span>
+	        	<span class="de_text" style="display: none;">Hallo! Schön, dass Sie da sind!</span>
+    		</div>
+    	</div>
+    	<div class="fromFBpost">
+    		<img class="fromFBimg" src="images/fromFB/fromFB_3.jpg">    		
+    		<div class="fromFBtext">
+    			<span class="en_text">Scrolling in bed is wonderful.</span>
+	        	<span class="fr_text" style="display: none;">Flâner au lit, c'est génial.</span>
+	        	<span class="de_text" style="display: none;">Im Bett liegen und scrollen, das ist cool.</span>
+    		</div>
+    	</div>
+    	<img class="fromFBimg" src="images/fromFB/fromFB_4.gif">
+    	<div class="fromFBpost">
+    		<img class="fromFBimg" src="images/fromFB/fromFB_5.jpg">
+    		<div class="fromFBtext">
+    			<span class="en_text">And~</span>
+	        	<span class="fr_text" style="display: none;">Et~</span>
+	        	<span class="de_text" style="display: none;">Und~</span>
+    		</div>
+    	</div>
+    	<div class="fromFBpost">
+    		<img class="fromFBimg" src="images/fromFB/fromFB_6.jpg">
+    		<div class="fromFBtext">
+    			<span class="en_text">Sleeping is also wonderful. Want to do that?</span>
+	        	<span class="fr_text" style="display: none;">Dormir aussi, c'est génial. Ça vous dit?</span>
+	        	<span class="de_text" style="display: none;">Schlafen ist auch cool. Wie wär's damit?</span>
+    		</div>
+    	</div>
+    	<img class="fromFBimg" src="images/fromFB/fromFB_7.jpg">
+    	<div class="fromFBpost">
+    		<img class="fromFBimg" src="images/fromFB/fromFB_8.jpg">
+    		<div class="fromFBtext">
+    			<span class="en_text">Why don’t you follow me, and we can all get some sleep together?</span>
+	        	<span class="fr_text" style="display: none;">Pourquoi ne me suivez-vous pas, qu'on aille dormir ensemble?</span>
+	        	<span class="de_text" style="display: none;">Machen Sie doch einfach mit, dann schlafen wir alle gemeinsam ein.</span>
+    		</div>
+    	</div>
+    	<div class="fromFBpost">
+    		<img class="fromFBimg" src="images/fromFB/fromFB_9.jpg">
+    		<div class="fromFBtext">
+    			<span class="en_text ios_text">There is a dotted icon at the corner of the screen. Tap on it and choose <b>Open in Safari</b>.</span>
+	        	<span class="fr_text ios_text" style="display: none;">Il y a une icône pointillée dans le coin de l'écran. Touchez-la et choisissez <b>Ouvrir dans Safari</b>.</span>
+	        	<span class="de_text ios_text" style="display: none;">Tippen Sie auf das gepunktete Symbol in der Ecke des Bildschirms und wählen <b>Sie In Safari öffnen</b>.</span>
+	        	<span class="en_text android_text">There is a dotted icon at the corner of the screen. Tap on it and choose <b>Open in Chrome</b>.</span>
+	        	<span class="fr_text android_text" style="display: none;">Il y a une icône pointillée dans le coin de l'écran. Touchez-la et choisissez <b>Ouvrir dans Chrome</b>.</span>
+	        	<span class="de_text android_text" style="display: none;">Tippen Sie auf das gepunktete Symbol in der Ecke des Bildschirms und wählen <b>Sie In Chrome öffnen</b>.</span>
+    		</div>
+    	</div>
+    	<img class="fromFBimg" src="images/fromFB/fromFB_10.gif">
     </div>
     <div id="infoBG" style="display:none;"></div>
     <div class="infoBlock" id="aboutPageDetail" style="display:none;">
@@ -726,7 +792,7 @@
     }
 
     function closeInfoDiv(event) {
-    	console.log(event.target);
+    	//console.log(event.target);
         if (event.target == infoBG) {
             // console.log("click splashPage");
             if (showAbout) ToggleAbout();
@@ -1146,9 +1212,18 @@
     function monCallback()
     {
     	console.log("ok, now can start");
-    	
-    	splashPage.style.opacity = 1;
-    	aboutPage.style.opacity = 1;
+    	if(cameFromFB)
+    	{
+    		fromFBPage.style.opacity = 1;
+    		splashPage.style.display = "none";
+    		aboutPage.style.display = "none";
+    	}
+    	else
+    	{
+    		fromFBPage.style.display = "none";
+    		splashPage.style.opacity = 1;
+    		aboutPage.style.opacity = 1;
+    	}
     }
     </script>
 </body>

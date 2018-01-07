@@ -1628,6 +1628,26 @@ function updateLang() {
             byId("vrToStart").text = langSwap.home.reallyStart.fr;
     		break;
 	}
+
+    switch(whichMobile) {
+        case 'iOS_mobile':
+            for(var i=0; i<androidTexts.length; i++) {
+                androidTexts[i].style.display = "none";
+            }
+        break;
+
+        case '':
+            for(var i=0; i<androidTexts.length; i++) {
+                androidTexts[i].style.display = "none";
+            }
+        break;
+
+        case 'android':
+            for(var i=0; i<iosTexts.length; i++) {
+                iosTexts[i].style.display = "none";
+            }
+        break;
+    }    
 }
 
 // Page Visibility API

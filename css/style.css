@@ -385,7 +385,33 @@ html {
 	width: 40px;
 }
 
-/* For width 500px and smaller: */
+#fromFBPage {
+	z-index: 3100;
+	overflow-y: auto;
+	height: calc(100% - 65px);
+	height: -moz-calc(100% - 65px);
+	height: -webkit-calc(100% - 65px);
+
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	-ms-transition: opacity 1s;
+	transition: opacity 1s;
+}
+
+.fromFBimg {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	display: block;
+}
+
+.fromFBpost {
+	position: relative;
+	width: 100%;
+}
+
+/* For laptop: */
 @media only screen and (min-width: 1200px) {
 	#aboutPageDetail {
 		-moz-column-count: 5;
@@ -442,6 +468,13 @@ html {
 		top: 0;
 		transform: translate(-50%, -10%);
 	}
+
+	.fromFBtext {
+		position: absolute;
+		top: 2.4em;
+		left: 0.3em;
+		font-size: 1.6em;
+	}
 }
 
 /* Landscape */
@@ -456,5 +489,12 @@ html {
 
 	#splashPage h1 {
 		top: 5px;
+	}
+
+	.fromFBtext {
+		position: absolute;
+		top: 2.7em;
+		left: 0.4em;
+		font-size: 2.4em;
 	}
 }
