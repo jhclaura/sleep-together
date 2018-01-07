@@ -387,10 +387,11 @@ html {
 
 #fromFBPage {
 	z-index: 3100;
-	overflow-y: auto;
-	height: calc(100% - 65px);
-	height: -moz-calc(100% - 65px);
-	height: -webkit-calc(100% - 65px);
+	overflow: auto;
+	height: calc(100% - 41px);
+	height: -moz-calc(100% - 41px);
+	height: -webkit-calc(100% - 41px);
+	-webkit-overflow-scrolling: touch;
 
 	-webkit-transition: opacity 1s;
 	-moz-transition: opacity 1s;
