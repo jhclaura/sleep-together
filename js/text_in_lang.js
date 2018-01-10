@@ -657,5 +657,30 @@ var langSwap = {
 	            <br>\
 	            <br>\
 	            © ARTE  FRANCE - ONF 2018"
+	},
+	"optionTags": {
+		"en": ["breath", "explore", "sleep"],
+		"fr": ["respirer", "explorer", "dormir"],
+		"de": ["atmen", "erkunden", "xchlafen"]
+	},
+	"startPractice": {
+		"en": ["Listen to the voice, and", "follow the light as you breathe"],
+		"fr": ["Écoutez le son de la voix,", "et suivez la lumière tout en respirant"],
+		"de": ["Lauschen Sie dem Klang der Stimme, und", "folgen Sie dem Licht, während Sie atmen"]
+	},
+	"nextStep": {
+		"en": ["", "Look at the sky, and", "gaze upon options to choose next step"],
+		"fr": ["", "Admirez le ciel, et parcourez les options", "pour choisir la prochaine étape"],
+		"de": ["In den Himmel blicken", "und sich die Möglichkeiten anschauen,", "was als Nächstes zu tun wäre"]
+	},
+	"makeEye": {
+		"en": ["", "Make eye contact with other sleepyheads", "to navigate the world"],
+		"fr": ["", "Établissez un contact visuel avec les", "autres endormis en explorant notre univers"],
+		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen her", "während Sie durch die Welt surfen"]
+	},
+	"goodNight": {
+		"en": "Good night :)",
+		"fr": "Bonne nuit :)",
+		"de": "Gute nacht :)"
 	}
 };

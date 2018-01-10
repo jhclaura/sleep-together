@@ -47,7 +47,7 @@ var dailyLifePlayerDict = {},
 // var audioContext = new AudioContext();
 // var sample = new SoundsSample(audioContext);
 
-var sleepLang='';
+var sleepLang='', fontLoaded = false, textCreated = false;
 
 var sound_digital, sound_opening, sound_practice, sound_night;
 var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets, sound_options, sound_bamboo;
@@ -109,7 +109,8 @@ var optionGeo, optionMat, currentOption, optionLights = [],
     optionLightDicts = {},
     optionButtons = new THREE.Object3D(),
     optionTextures = {},
-    optionTags = ["breath", "explore", "sleep"];
+    optionTags = ["breath", "explore", "sleep"],
+    optionTagTexts = ["breath", "explore", "sleep"];
 var expStage = 0; // 0: intro, 1: breathing, 2: explore, 3: sleep, 4: choose_option
 var isAllOver = false;
 var doneTalkingAboutExplore = true, talkingAboutExploreID;
@@ -533,6 +534,7 @@ function superInit() {
 
     // THINGS_TO_CREATE_AFTER_FONT_LOADED
     waitForWebfonts(['StupidFont'], () => {
+        fontLoaded = true;
         AfterFontLoaded();
     });
 
@@ -557,6 +559,24 @@ function superInit() {
 
 function AfterFontLoaded() {
 
+    // if doesn't know the lang yet, wait
+    if(sleepLang=='')
+        return;
+
+    switch(sleepLang) {
+        case 'en':
+            //do nothing!
+            break;
+
+        case 'fr':
+            optionTagTexts = langSwap.optionTags.fr;
+            break;
+
+        case 'de':
+            optionTagTexts = langSwap.optionTags.de;
+            break;
+    }
+
     // OPTIONS_AFTER_BREATHING
     optionGeo = new THREE.CylinderGeometry(1, 1, 1, 20);
     for (var i = 0; i < optionTags.length; i++) {
@@ -575,7 +595,7 @@ function AfterFontLoaded() {
         // label
         var optionTextTexture = new THREEx.DynamicTexture(256, 128); //512,512; 1000,128
         optionTextTexture.context.font = "bolder 70px StupidFont";
-        optionTextTexture.clear().drawText(optionTags[i], undefined, 96, 'white');
+        optionTextTexture.clear().drawText(optionTagTexts[i], undefined, 96, 'white');
         var optionMaterial = new THREE.MeshBasicMaterial({ map: optionTextTexture.texture, transparent: true, side: THREE.DoubleSide });
         var optionTextMesh = new THREE.Mesh(new THREE.PlaneGeometry(optionTextTexture.canvas.width, optionTextTexture.canvas.height), optionMaterial);
         optionTextMesh.scale.multiplyScalar(0.02);
@@ -599,9 +619,9 @@ function AfterFontLoaded() {
 
     // INFO_TEXT_DISPLY
     announcement = new THREE.Object3D();
-    announcementTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
+    announcementTexture = new THREEx.DynamicTexture(1024, 512); //512,512; 1000,128
     announcementTexture.context.font = "bolder 70px StupidFont";
-    announcementTexture.clear().drawText("announcement:", undefined, 96, 'white');
+    announcementTexture.clear().drawText(":", undefined, 96, 'white');
     announcementTexture.clear();
     var announcementMaterial = new THREE.MeshBasicMaterial({ map: announcementTexture.texture, transparent: true, depthTest: false }); //depthTest: false
     var announcementMesh = new THREE.Mesh(new THREE.PlaneGeometry(announcementTexture.canvas.width, announcementTexture.canvas.height), announcementMaterial);
@@ -622,6 +642,8 @@ function AfterFontLoaded() {
     pplCount.scale.set(0.04, 0.04, 0.04);
     pplCount.position.y = 120;
     scene.add(pplCount);
+
+    textCreated = true;
 }
 
 function ScrollSocialMedia(el) {
@@ -810,7 +832,9 @@ function startBreathingPractice(_redo) {
 
     // Eye-level info
     UpdateFrontRotationWithMe(announcement);
-    announcementTexture.clear().drawText("Follow the voice and light to breath.", undefined, 96, 'white');
+
+    announcementTexture.clear().drawText(langSwap.startPractice[sleepLang][0], undefined, 200, 'white');
+    announcementTexture.drawText(langSwap.startPractice[sleepLang][1], undefined, 290, 'white');
 
     UpdateFrontRotationWithMe(pplCount);
     UpdateFrontRotationWithMe(optionButtons);
@@ -851,9 +875,11 @@ function startBreathingPractice(_redo) {
         sound_options.play('intro');
 
         UpdateFrontRotationWithMe(announcement);
-        announcementTexture.clear().drawText("Look at the sky", undefined, 60, 'white');
-        announcementTexture.drawText("Gaze upon options to choose next step", undefined, 120, 'white');
 
+        announcementTexture.clear().drawText(langSwap.nextStep[sleepLang][0], undefined, 130, 'white');
+        announcementTexture.drawText(langSwap.nextStep[sleepLang][1], undefined, 220, 'white');
+        announcementTexture.drawText(langSwap.nextStep[sleepLang][2], undefined, 310, 'white');
+        
         UpdateFrontRotationWithMe(pplCount);
         UpdateFrontRotationWithMe(optionButtons);
 
@@ -1147,16 +1173,6 @@ function removePlayer(playerID) {
     }
 }
 
-function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
-    if (bathroom.visible) return;
-
-    pplCountTex.clear().drawText("Sleepers", undefined, 100, 'white');
-    pplCountTex.drawText("Counter", undefined, 250, 'white');
-    pplCountTex.drawText("this world: " + thisWorldCount, undefined, 400, 'white');
-    pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
-    pplCountTex.drawText("total slept: " + totalVisit, undefined, 700, 'white');
-}
-
 function GazeToChoose() {
     for (var i = 0; i < optionLights.length; i++) {
         if (optionLights[i].name == currentOption) {
@@ -1222,8 +1238,11 @@ function OptionStartStage(stageIndex) {
             // Explore
         case 2:
             UpdateFrontRotationWithMe(announcement);
-            announcementTexture.clear().drawText("Make eye contact", undefined, 60, 'white');
-            announcementTexture.drawText("to navigate the world", undefined, 120, 'white');
+
+            announcementTexture.clear().drawText(langSwap.makeEye[sleepLang][0], undefined, 130, 'white');
+            announcementTexture.drawText(langSwap.makeEye[sleepLang][1], undefined, 220, 'white');
+            announcementTexture.drawText(langSwap.makeEye[sleepLang][2], undefined, 310, 'white');
+
             optionButtons.children[1].visible = false;
 
             talkingAboutExploreID = sound_options.play('explore');
@@ -1241,7 +1260,9 @@ function OptionStartStage(stageIndex) {
             optionButtons.visible = false;
 
             UpdateFrontRotationWithMe(announcement);
-            announcementTexture.clear().drawText("Good night :)", undefined, 96, 'white');
+
+            announcementTexture.clear().drawText(langSwap.goodNight[sleepLang][0], undefined, 200, 'white');
+            announcementTexture.drawText(langSwap.goodNight[sleepLang][1], undefined, 290, 'white');
 
             // Move up to be out of the nest
             pplCountTex.clear();
@@ -1557,11 +1578,31 @@ function CreateNest() {
 function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
     if (expStage == 3) return;
 
-    pplCountTex.clear().drawText("Sleeper", undefined, 100, 'white');
-    pplCountTex.drawText("Counter", undefined, 250, 'white');
-    pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
-    pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
-    pplCountTex.drawText("visited: " + totalVisit, undefined, 700, 'white');
+    switch(sleepLang) {
+        case 'en':
+            pplCountTex.clear().drawText("Sleepyhead", undefined, 100, 'white');
+            pplCountTex.drawText("Counter", undefined, 250, 'white');
+            pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
+            pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
+            pplCountTex.drawText("total visit: " + totalVisit, undefined, 700, 'white');
+            break;
+
+        case 'fr':
+            pplCountTex.clear().drawText("Compteur", undefined, 100, 'white');
+            pplCountTex.drawText("D'endormis", undefined, 250, 'white');
+            pplCountTex.drawText("ce nid: " + thisWorldCount, undefined, 400, 'white');
+            pplCountTex.drawText("actuellement: " + totalCount, undefined, 550, 'white');
+            pplCountTex.drawText("visite totale: " + totalVisit, undefined, 700, 'white');
+            break;
+
+        case 'de':
+            pplCountTex.clear().drawText("Zahl der", undefined, 100, 'white');
+            pplCountTex.drawText("Schlafmützen", undefined, 250, 'white');
+            pplCountTex.drawText("in diesem nest: " + thisWorldCount, undefined, 400, 'white');
+            pplCountTex.drawText("zurzeit: " + totalCount, undefined, 550, 'white');
+            pplCountTex.drawText("gesamtbesucher: " + totalVisit, undefined, 700, 'white');
+            break;
+    }    
 }
 
 function fullscreen() {
@@ -1610,6 +1651,7 @@ function updateLang() {
             byId("insTap").src = langSwap.home.insTap.fr;
             byId("insMov").src = langSwap.home.insMov.fr;
             byId("vrToStart").text = langSwap.home.reallyStart.fr;
+            byId("restartLink").text = langSwap.exp.restartLink.fr;
     		break;
 
 		case 'de':
@@ -1625,7 +1667,8 @@ function updateLang() {
             byId("aboutPageTitle").text = langSwap.home.aboutPage.de;
             byId("insTap").src = langSwap.home.insTap.de;
             byId("insMov").src = langSwap.home.insMov.de;
-            byId("vrToStart").text = langSwap.home.reallyStart.fr;
+            byId("vrToStart").text = langSwap.home.reallyStart.de;
+            byId("restartLink").text = langSwap.exp.restartLink.de;
     		break;
 	}
 
@@ -1647,7 +1690,11 @@ function updateLang() {
                 iosTexts[i].style.display = "none";
             }
         break;
-    }    
+    }
+
+    // if font is loaded, but haven't created the texts with font yet, created it
+    if(fontLoaded && !textCreated)
+        AfterFontLoaded();
 }
 
 // Page Visibility API
