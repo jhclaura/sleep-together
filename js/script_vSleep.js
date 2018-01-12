@@ -156,7 +156,7 @@ function superInit() {
         event.preventDefault();
     };
 
-    // HOWLER
+    // HOWLER ==> move VOs to updateLang()
     sound_night = new Howl({
         src: [basedURL + 'audios/night_lower.mp3'],
         loop: true,
@@ -167,73 +167,30 @@ function superInit() {
         loop: true,
         volume: 0
     });
-    sound_hello = new Howl({
-        src: [basedURL + 'audios/voice/V3/sleep_hello.webm', basedURL + 'audios/voice/V3/sleep_hello.mp3'],
-        volume: 1
-    });
-    sound_visitor_alone = new Howl({
-        src: [basedURL + 'audios/voice/V3/sleep_only.webm', basedURL + 'audios/voice/V3/sleep_only.mp3'],
-        volume: 1
-    });
-    sound_visitor_others = new Howl({
-        src: [basedURL + 'audios/voice/V3/sleep_others.webm', basedURL + 'audios/voice/V3/sleep_others.mp3'],
-        volume: 1
-    });
-    sound_lets = new Howl({
-        src: [basedURL + 'audios/voice/V3/sleep_lets.webm', basedURL + 'audios/voice/V3/sleep_lets.mp3'],
-        volume: 1
-    });
-    sound_practice = new Howl({
-        src: [basedURL + 'audios/voice/V3/sleep_practice.webm', basedURL + 'audios/voice/V3/sleep_practice.mp3'],
-        volume: 1
-    });
-    sound_options = new Howl({
-        src: [basedURL + 'audios/voice/V3/sleep_options.webm', basedURL + 'audios/voice/V3/sleep_options.mp3'],
-        volume: 1,
-        sprite: {
-        	/*
-        	//v.1
-            intro: [0, 11327],
-            breath: [12310, 3290], //12310, 15600
-            explore: [16500, 8000], //16500, 24500
-            sleep: [25300, 10250] //25300, 35550            
-            //v.2
-            intro: [0, 8126],
-            breath: [8506, 4871], //8506, 13377
-            explore: [13683, 9477], //13683, 23160
-            sleep: [23620, 12114] //23620, 35743
-			*/
-            //v.3
-            intro: [0, 8268],
-            breath: [8398, 4970], //8398, 13368
-            explore: [13683, 9873], //13872, 23745
-            sleep: [23620, 14601] //24456, 39057
-        }
-    });
     sound_bamboo = new Howl({
-    	src: [basedURL + 'audios/bamboo.mp3'],
-    	volume: .8,
-    	sprite: {
-    		1: [635, 2000],
-    		2: [3715, 2000],
-    		3: [8433, 2000],
-    		4: [13243, 2000],
-    		5: [19707, 2000],
-    		6: [21936, 2000],
-    		7: [25223, 2000],
-    		8: [28708, 2000],
-    		9: [37356, 2000],
-    		10: [40472, 2000],
-    		11: [1892, 500],
-    		12: [9265, 500],
-    		13: [17172, 500],
-    		14: [20053, 500],
-    		15: [24091, 500],
-    		16: [33718, 500],
-    		17: [34689, 500],
-    		18: [38788, 500],
-    		19: [44000, 500]
-    	}
+        src: [basedURL + 'audios/bamboo.mp3'],
+        volume: .8,
+        sprite: {
+            1: [635, 2000],
+            2: [3715, 2000],
+            3: [8433, 2000],
+            4: [13243, 2000],
+            5: [19707, 2000],
+            6: [21936, 2000],
+            7: [25223, 2000],
+            8: [28708, 2000],
+            9: [37356, 2000],
+            10: [40472, 2000],
+            11: [1892, 500],
+            12: [9265, 500],
+            13: [17172, 500],
+            14: [20053, 500],
+            15: [24091, 500],
+            16: [33718, 500],
+            17: [34689, 500],
+            18: [38788, 500],
+            19: [44000, 500]
+        }
     });
 
     // THREE.JS -------------------------------------------
@@ -1652,6 +1609,8 @@ function updateLang() {
             byId("insMov").src = langSwap.home.insMov.fr;
             byId("vrToStart").text = langSwap.home.reallyStart.fr;
             byId("restartLink").text = langSwap.exp.restartLink.fr;
+
+            practiceIntroDuration = 37668;
     		break;
 
 		case 'de':
@@ -1669,6 +1628,8 @@ function updateLang() {
             byId("insMov").src = langSwap.home.insMov.de;
             byId("vrToStart").text = langSwap.home.reallyStart.de;
             byId("restartLink").text = langSwap.exp.restartLink.de;
+
+            practiceIntroDuration = 40779;
     		break;
 	}
 
@@ -1691,6 +1652,55 @@ function updateLang() {
             }
         break;
     }
+
+    // Load sound files accordingly    
+    sound_hello = new Howl({
+        src: [basedURL + 'audios/voice/' + sleepLang + '/sleep_hello.webm', basedURL + 'audios/voice/' + sleepLang + '/sleep_hello.mp3'],
+        volume: 1
+    });
+    sound_visitor_alone = new Howl({
+        src: [basedURL + 'audios/voice/' + sleepLang + '/sleep_only.webm', basedURL + 'audios/voice/' + sleepLang + '/sleep_only.mp3'],
+        volume: 1
+    });
+    sound_visitor_others = new Howl({
+        src: [basedURL + 'audios/voice/' + sleepLang + '/sleep_others.webm', basedURL + 'audios/voice/' + sleepLang + '/sleep_others.mp3'],
+        volume: 1
+    });
+    sound_lets = new Howl({
+        src: [basedURL + 'audios/voice/' + sleepLang + '/sleep_lets.webm', basedURL + 'audios/voice/' + sleepLang + '/sleep_lets.mp3'],
+        volume: 1
+    });
+    sound_practice = new Howl({
+        src: [basedURL + 'audios/voice/' + sleepLang + '/sleep_practice.webm', basedURL + 'audios/voice/' + sleepLang + '/sleep_practice.mp3'],
+        volume: 1
+    });
+    sound_options = new Howl({
+        src: [basedURL + 'audios/voice/' + sleepLang + '/sleep_options.webm', basedURL + 'audios/voice/' + sleepLang + '/sleep_options.mp3'],
+        volume: 1,
+        sprite: {
+            /*
+            //v.1
+            intro: [0, 11327],
+            breath: [12310, 3290], //12310, 15600
+            explore: [16500, 8000], //16500, 24500
+            sleep: [25300, 10250] //25300, 35550            
+            //v.2
+            intro: [0, 8126],
+            breath: [8506, 4871], //8506, 13377
+            explore: [13683, 9477], //13683, 23160
+            sleep: [23620, 12114] //23620, 35743            
+            //v.3
+            intro: [0, 8268],
+            breath: [8398, 4970], //8398, 13368
+            explore: [13683, 9873], //13872, 23745
+            sleep: [23620, 14601] //24456, 39057
+            */
+            intro: langSwap.soundOptionSprite[sleepLang].intro,
+            breath: langSwap.soundOptionSprite[sleepLang].breath,
+            explore: langSwap.soundOptionSprite[sleepLang].explore,
+            sleep: langSwap.soundOptionSprite[sleepLang].sleep
+        }
+    });
 
     // if font is loaded, but haven't created the texts with font yet, created it
     if(fontLoaded && !textCreated)
