@@ -40,7 +40,7 @@ function PersonSleep(_pos, _color, _id, _name) {
 
         // 1-1: message!
         scope.wordTexture = new THREEx.DynamicTexture(1024, 128); //512,512; 1000,128
-        scope.wordTexture.context.font = "bolder 70px StupidFont";
+        scope.wordTexture.context.font = "bolder 60px StupidFont";
         // scope.wordTexture.clear('#dc5e64').drawText("You got a poop heart from --- <3", undefined, 96, 'white');
         scope.wordTexture.clear();
         scope.wordMaterial = new THREE.MeshBasicMaterial({ map: this.wordTexture.texture, side: THREE.DoubleSide, transparent: true, depthTest: false });
@@ -56,7 +56,7 @@ function PersonSleep(_pos, _color, _id, _name) {
 
     // 2-2: message_name!
     this.nameTexture = new THREEx.DynamicTexture(512, 64); //512,128
-    this.nameTexture.context.font = "bolder 70px StupidFont"; //100px
+    this.nameTexture.context.font = "bolder 60px StupidFont"; //100px
     this.nameTexture.clear('#31393c').drawText(this.nname, undefined, 50, 'grey'); //96
     this.nameMaterial = new THREE.MeshBasicMaterial({ map: this.nameTexture.texture, side: THREE.DoubleSide });
     this.nameMaterial.transparent = false;

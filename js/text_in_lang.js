@@ -27,7 +27,7 @@ var langSwap = {
 		},
 		"reallyStart": {
 			"en": "Start",
-			"fr": "Commence",
+			"fr": "Ouvrir",
 			"de": "Starten"
 		}
 	},
@@ -716,5 +716,10 @@ var langSwap = {
 			"timeGaps": [0, 4.5, 14.2, 9.9, 6.5, 2.8],
             "durations": [4.3, 4.6, 5.4, 5.1, 4.2, 4.4]
 		}
+	},
+	"gazeNote": {
+		"en": [" is gazing at you <3"],
+		"fr": [" vous regarde <3"],
+		"de": [" sieht Sie an <3"]
 	}
 };

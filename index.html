@@ -167,7 +167,7 @@
 	        </div>
         </div>
         <div class="trans" id="inputGroupt" style="display: none;">
-        	<input type="text" id="playerName" placeholder="Who is this sleepyhead?" style="width:20em;height:2em"></input>
+        	<input type="text" id="playerName" placeholder="Who is this sleepyhead?" maxlength="16" style="width:20em;height:2em"></input>
 	        <img id="loadingImg" src="images/loadingbox.gif" width="60" height="60" style="margin:0 auto; display:block;">
 	        <div id="loadingTxt" style="color:yellow">loading</div>
 	        <p></p>
@@ -1004,7 +1004,7 @@
                         if (data.toWhom == whoIamInLife) {
                             var h_f_n = dailyLifePlayerDict[data.index].nname;
                             firstGuy.wordBubble.visible = true;
-                            firstGuy.wordTexture.clear('#dc5e64').drawText(h_f_n + " is gazing at you <3", undefined, 96, 'white');
+                            firstGuy.wordTexture.clear('#dc5e64').drawText(h_f_n + langSwap.gazeNote[sleepLang], undefined, 96, 'white');
 
                             someoneLookingAtMe = data.index;
 

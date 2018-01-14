@@ -484,9 +484,9 @@ function superInit() {
     nestTex.repeat.set(4, 4);
 
     loadModelWholeNest(
-        basedURL + "models/nest2.json", basedURL + "models/stick1.json", basedURL + "models/stick2.json",
+        basedURL + "models/nest2.json", basedURL + "models/stick1.json", basedURL + "models/stick2_v2.json",
         basedURL + "models/stick3.json", basedURL + "models/stick4.json",
-        basedURL + "models/stick5.json"
+        basedURL + "models/stick5_v2.json"
     );
 
     // THINGS_TO_CREATE_AFTER_FONT_LOADED
@@ -580,7 +580,7 @@ function AfterFontLoaded() {
     announcementTexture.context.font = "bolder 70px StupidFont";
     announcementTexture.clear().drawText(":", undefined, 96, 'white');
     announcementTexture.clear();
-    var announcementMaterial = new THREE.MeshBasicMaterial({ map: announcementTexture.texture, transparent: true, depthTest: false }); //depthTest: false
+    var announcementMaterial = new THREE.MeshBasicMaterial({ map: announcementTexture.texture, transparent: true}); //depthTest: false
     var announcementMesh = new THREE.Mesh(new THREE.PlaneGeometry(announcementTexture.canvas.width, announcementTexture.canvas.height), announcementMaterial);
     announcementMesh.scale.multiplyScalar(0.01);
     announcementMesh.position.z = -20;
@@ -1326,7 +1326,7 @@ function GazeToMove() {
     // 3) If target looks back, extend GazeDot
     // 3) if both GazeDot reach scale, start moving toward the center point
     // 4) once moved, keep moving eventhough look away, play audio (local)
-    // 5) sync breathing cycle once (local)
+    // 5) do/sync breathing cycle as long as keep min distance & gazing (local)
 
     if (lookingAtSomeone != -1 && lookingAtSomeone != whoIamInLife) {
         // First gaze!
