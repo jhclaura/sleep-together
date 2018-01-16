@@ -1031,7 +1031,7 @@
                 }
             }
 
-            // BREATHING, TODO: what if in the middle of breathing in history player?
+            // BREATHING; TODO: what if in the middle of breathing in history player?
             if (data.type == 'startBreathing' && data.index != whoIamInLife) {
                 if (data.worldId == meInWorld && dailyLifePlayerDict[data.index]) {
                     dailyLifePlayerDict[data.index].prepForBreathing();

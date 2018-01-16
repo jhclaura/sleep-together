@@ -12,7 +12,7 @@ var langSwap = {
 		},
 		"aboutPage": {
 			"en": "/// About ///",
-			"fr": "/// SUR ///",
+			"fr": "/// À PROPOS ///",
 			"de": "/// ÜBER ///"
 		},
 		"insTap": {
