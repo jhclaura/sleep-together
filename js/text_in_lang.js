@@ -26,9 +26,9 @@ var langSwap = {
 			"de": "images/instructions/instruction_move_de.jpg"
 		},
 		"reallyStart": {
-			"en": "Start",
-			"fr": "Ouvrir",
-			"de": "Starten"
+			"en": "Ok",
+			"fr": "Ok",
+			"de": "Ok"
 		}
 	},
 	"exp": {
