@@ -1541,25 +1541,25 @@ function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
         case 'en':
             pplCountTex.clear().drawText("Sleepyhead Counter", undefined, 100, 'white');
             pplCountTex.drawText("", undefined, 250, 'white');
-            pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
-            pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
-            pplCountTex.drawText("total visit: " + totalVisit, undefined, 700, 'white');
+            pplCountTex.drawText("This nest: " + thisWorldCount, undefined, 400, 'white');
+            pplCountTex.drawText("Current: " + totalCount, undefined, 550, 'white');
+            pplCountTex.drawText("Total visit: " + totalVisit, undefined, 700, 'white');
             break;
 
         case 'fr':
             pplCountTex.clear().drawText("Compteur d'endormis", undefined, 100, 'white');
             pplCountTex.drawText("", undefined, 250, 'white');
-            pplCountTex.drawText("ce nid: " + thisWorldCount, undefined, 400, 'white');
-            pplCountTex.drawText("actuellement: " + totalCount, undefined, 550, 'white');
-            pplCountTex.drawText("visite totale: " + totalVisit, undefined, 700, 'white');
+            pplCountTex.drawText("Dans ce nid: " + thisWorldCount, undefined, 400, 'white');
+            pplCountTex.drawText("En ligne: " + totalCount, undefined, 550, 'white');
+            pplCountTex.drawText("Total: " + totalVisit, undefined, 700, 'white');
             break;
 
         case 'de':
             pplCountTex.clear().drawText("Zahl der Schlafmützen", undefined, 100, 'white');
             pplCountTex.drawText("", undefined, 250, 'white');
-            pplCountTex.drawText("in diesem nest: " + thisWorldCount, undefined, 400, 'white');
-            pplCountTex.drawText("zurzeit: " + totalCount, undefined, 550, 'white');
-            pplCountTex.drawText("gesamtbesucher: " + totalVisit, undefined, 700, 'white');
+            pplCountTex.drawText("In diesem nest: " + thisWorldCount, undefined, 400, 'white');
+            pplCountTex.drawText("Zurzeit: " + totalCount, undefined, 550, 'white');
+            pplCountTex.drawText("Gesamt Besuch: " + totalVisit, undefined, 700, 'white');
             break;
     }    
 }
