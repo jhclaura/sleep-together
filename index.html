@@ -478,7 +478,7 @@
 	    					<span class="de_text" style="display: none;">im VR-Modus</span>
 					</div>
 					<div class="vrImg">
-						<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr2.png" onclick="chooseNonVRmode();">
+						<img id="noVR" style="width: 35%;" src="images/instructions/instruction_nonvr.png" onclick="chooseNonVRmode();">
 						<br><span class="en_text">in nature mode</span>
 							<span class="fr_text" style="display: none;">en mode nature</span>
 	    					<span class="de_text" style="display: none;">im natürlichen Modus</span>
@@ -487,7 +487,7 @@
 				<br>
 			</div>
 			<div style="position: absolute; bottom: 1em; left: 0; right: 0;">
-				<a class="roundButton" id="vrToStart" style="cursor:pointer; background-color:black; color:grey;" onclick="getNameToStart();">START</a>
+				<a class="roundButton" id="vrToStart" style="display:none; cursor:pointer; background-color:black; color:white;" onclick="getNameToStart();">Ok</a>
 			</div>
     	</div>
     </div>
@@ -715,42 +715,67 @@
             }, 1000);
         }
     }
+    // var chooseVRmode = function () {
+    // 	chooseVRimg = !chooseVRimg;
+    // 	if(chooseVRimg) {
+    // 		yesVR.src = "images/instructions/instruction_vr_select.png";
+    // 		if(chooseNonVRimg){
+    // 			chooseNonVRimg = false;
+    // 			noVR.src = "images/instructions/instruction_nonvr.png";
+    // 		}
+    // 	} else {
+    // 		yesVR.src = "images/instructions/instruction_vr.png";
+    // 	}
+    // 	checkForStart();
+    // }
+    // var chooseNonVRmode = function () {
+    // 	chooseNonVRimg = !chooseNonVRimg;
+    // 	if(chooseNonVRimg) {
+    // 		noVR.src = "images/instructions/instruction_nonvr_select.png";
+    // 		if(chooseVRimg){
+    // 			chooseVRimg = false;
+    // 			yesVR.src = "images/instructions/instruction_vr.png";
+    // 		}
+    // 	} else {
+    // 		noVR.src = "images/instructions/instruction_nonvr.png";
+    // 	}
+    // 	checkForStart();
+    // }
     var chooseVRmode = function () {
-    	chooseVRimg = !chooseVRimg;
-    	if(chooseVRimg) {
-    		yesVR.src = "images/instructions/instruction_vr_select.png";
-    		if(chooseNonVRimg){
-    			chooseNonVRimg = false;
-    			noVR.src = "images/instructions/instruction_nonvr2.png";
-    		}
-    	} else {
-    		yesVR.src = "images/instructions/instruction_vr.png";
+    	if(!chooseVRimg) {
+			yesVR.src = "images/instructions/instruction_vr_select.png";
+			if(chooseNonVRimg) {
+				chooseNonVRimg = false;
+				noVR.src = "images/instructions/instruction_nonvr.png";
+			}
+			chooseVRimg = true;
     	}
+    	
     	checkForStart();
     }
     var chooseNonVRmode = function () {
-    	chooseNonVRimg = !chooseNonVRimg;
-    	if(chooseNonVRimg) {
-    		noVR.src = "images/instructions/instruction_nonvr2_select.png";
-    		if(chooseVRimg){
+    	if(!chooseNonVRimg) {
+    		noVR.src = "images/instructions/instruction_nonvr_select.png";
+    		if(chooseVRimg) {
     			chooseVRimg = false;
     			yesVR.src = "images/instructions/instruction_vr.png";
     		}
-    	} else {
-    		noVR.src = "images/instructions/instruction_nonvr2.png";
+    		chooseNonVRimg = true;
     	}
+
     	checkForStart();
     }
     var checkForStart = function () {
     	if(chooseNonVRimg || chooseVRimg){
     		chooseVRtoStart = true;
-    		vrToStart.style.color = "white";
+    		//vrToStart.style.color = "white";
+    		vrToStart.style.display = "inline";
     	}
-    	else
-    	{
-    		chooseVRtoStart = false;
-    		vrToStart.style.color = "grey";
-    	}
+    	// else
+    	// {
+    	// 	chooseVRtoStart = false;
+    	// 	vrToStart.style.color = "grey";
+    	// }
     }
     //////////////////////////////////////////////////////////////////
     bgImage.src = "";
