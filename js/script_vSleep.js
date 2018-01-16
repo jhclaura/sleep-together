@@ -589,7 +589,7 @@ function AfterFontLoaded() {
 
     // PEOPLE_COUNT
     pplCountTex = new THREEx.DynamicTexture(1024, 1024);
-    pplCountTex.context.font = "bolder 150px StupidFont";
+    pplCountTex.context.font = "bolder 140px StupidFont";
     pplCountTex.clear();
     pplCountMat = new THREE.MeshBasicMaterial({ map: pplCountTex.texture, side: THREE.DoubleSide, transparent: true });
     var pCountMesh = new THREE.Mesh(new THREE.PlaneGeometry(pplCountTex.canvas.width, pplCountTex.canvas.height), pplCountMat);
