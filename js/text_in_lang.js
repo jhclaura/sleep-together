@@ -675,13 +675,13 @@ var langSwap = {
 	},
 	"makeEye": {
 		"en": ["", "Make eye contact with other sleepyheads", "to navigate the world"],
-		"fr": ["", "Établissez un contact visuel avec les", "autres endormis en explorant notre univers"],
-		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen her", "während Sie durch die Welt surfen"]
+		"fr": ["Établissez un contact visuel", "avec les autres endormis", "en explorant notre univers"],
+		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen", "her während Sie durch die Welt surfen"]
 	},
 	"goodNight": {
-		"en": "Good night :)",
-		"fr": "Bonne nuit :)",
-		"de": "Gute nacht :)"
+		"en": "Good night",
+		"fr": "Bonne nuit",
+		"de": "Gute nacht"
 	},
 	"soundOptionSprite": {
 		"en": {

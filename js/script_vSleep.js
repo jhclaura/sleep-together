@@ -1239,8 +1239,8 @@ function OptionStartStage(stageIndex) {
 
             UpdateFrontRotationWithMe(announcement);
 
-            announcementTexture.clear().drawText(langSwap.goodNight[sleepLang][0], undefined, 200, 'white');
-            announcementTexture.drawText(langSwap.goodNight[sleepLang][1], undefined, 290, 'white');
+            announcementTexture.clear().drawText(langSwap.goodNight[sleepLang], undefined, 200, 'white');
+            announcementTexture.drawText(":)", undefined, 290, 'white');
 
             // Move up to be out of the nest
             pplCountTex.clear();
