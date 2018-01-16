@@ -589,7 +589,7 @@ function AfterFontLoaded() {
 
     // PEOPLE_COUNT
     pplCountTex = new THREEx.DynamicTexture(1024, 1024);
-    pplCountTex.context.font = "bolder 140px StupidFont";
+    pplCountTex.context.font = "bolder 120px StupidFont";
     pplCountTex.clear();
     pplCountMat = new THREE.MeshBasicMaterial({ map: pplCountTex.texture, side: THREE.DoubleSide, transparent: true });
     var pCountMesh = new THREE.Mesh(new THREE.PlaneGeometry(pplCountTex.canvas.width, pplCountTex.canvas.height), pplCountMat);
@@ -597,7 +597,7 @@ function AfterFontLoaded() {
     pplCount = new THREE.Object3D();
     pplCount.add(pCountMesh);
     pplCount.scale.set(0.04, 0.04, 0.04);
-    pplCount.position.y = 120;
+    pplCount.position.y = 110;
     scene.add(pplCount);
 
     textCreated = true;
