@@ -1537,24 +1537,24 @@ function UpdatePplCount(thisWorldCount, totalCount, totalVisit) {
 
     switch(sleepLang) {
         case 'en':
-            pplCountTex.clear().drawText("Sleepyhead", undefined, 100, 'white');
-            pplCountTex.drawText("Counter", undefined, 250, 'white');
+            pplCountTex.clear().drawText("Sleepyhead Counter", undefined, 100, 'white');
+            pplCountTex.drawText("", undefined, 250, 'white');
             pplCountTex.drawText("this nest: " + thisWorldCount, undefined, 400, 'white');
             pplCountTex.drawText("current: " + totalCount, undefined, 550, 'white');
             pplCountTex.drawText("total visit: " + totalVisit, undefined, 700, 'white');
             break;
 
         case 'fr':
-            pplCountTex.clear().drawText("Compteur", undefined, 100, 'white');
-            pplCountTex.drawText("D'endormis", undefined, 250, 'white');
+            pplCountTex.clear().drawText("Compteur d'endormis", undefined, 100, 'white');
+            pplCountTex.drawText("", undefined, 250, 'white');
             pplCountTex.drawText("ce nid: " + thisWorldCount, undefined, 400, 'white');
             pplCountTex.drawText("actuellement: " + totalCount, undefined, 550, 'white');
             pplCountTex.drawText("visite totale: " + totalVisit, undefined, 700, 'white');
             break;
 
         case 'de':
-            pplCountTex.clear().drawText("Zahl der", undefined, 100, 'white');
-            pplCountTex.drawText("Schlafmützen", undefined, 250, 'white');
+            pplCountTex.clear().drawText("Zahl der Schlafmützen", undefined, 100, 'white');
+            pplCountTex.drawText("", undefined, 250, 'white');
             pplCountTex.drawText("in diesem nest: " + thisWorldCount, undefined, 400, 'white');
             pplCountTex.drawText("zurzeit: " + totalCount, undefined, 550, 'white');
             pplCountTex.drawText("gesamtbesucher: " + totalVisit, undefined, 700, 'white');
