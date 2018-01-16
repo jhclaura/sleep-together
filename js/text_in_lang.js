@@ -670,7 +670,7 @@ var langSwap = {
 	},
 	"nextStep": {
 		"en": ["", "Look at the sky, and", "gaze upon options to choose next step"],
-		"fr": ["", "Admirez le ciel, et parcourez les options", "pour choisir la prochaine étape"],
+		"fr": ["Admirez le ciel,", "et parcourez les options", "pour choisir la prochaine étape"],
 		"de": ["In den Himmel blicken", "und sich die Möglichkeiten anschauen,", "was als Nächstes zu tun wäre"]
 	},
 	"makeEye": {
