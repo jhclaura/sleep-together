@@ -232,12 +232,10 @@ function superInit() {
 		.on("enter", function(){
 			console.log("enter VR");
 
-			onfHeader.style.display = "none";
-			arteHeader.style.display = "none";
-
 			if(chooseVRimg) {				
 				vrEnterCircle.style.display = "none";
 			}
+            // for Android, if could be NonVR & fullScreen
 			else {
 				if(whichMobile == "android"){
 					vrFullscreenCircle.style.display = "none";
@@ -252,6 +250,7 @@ function superInit() {
 				//onfHeader.style.display = "";
 				vrEnterCircle.style.display = "";
 			}
+            // for Android, if could be NonVR & exitFullScreen
 			else {
 				if(whichMobile == "android"){
 					vrFullscreenCircle.style.display = "";
@@ -513,6 +512,23 @@ function superInit() {
     // }
     // scene.add(panelGroupt);
 }
+
+// function requestEnterVRfromIcon() {
+//     chooseVRimg = true;
+//     enterVR.requestEnterVR();
+// }
+
+// function requestFullscreenFromIcon() {
+//     // Still is NonVR mode, just fullscreen;
+//     fullscreen();
+// }
+
+// function requestExitFromIcon() {
+//     // 100% exit VR
+//     console.log("requestExitFromIcon");
+//     chooseVRimg = false;
+//     enterVR.requestExit();
+// }
 
 function AfterFontLoaded() {
 
