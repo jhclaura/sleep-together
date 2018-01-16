@@ -231,7 +231,10 @@ function superInit() {
 		})
 		.on("enter", function(){
 			console.log("enter VR");
-
+            if(onfHeader)
+                onfHeader.style.display = "none";
+            if(arteHeader)
+                arteHeader.style.display = "none";
 			if(chooseVRimg) {				
 				vrEnterCircle.style.display = "none";
 			}
