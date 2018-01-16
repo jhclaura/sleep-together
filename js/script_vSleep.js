@@ -658,6 +658,8 @@ function lateInit() {
     nest.position.set(myPosition.x * 20 / 255, myPosition.y * 20 / 255, myPosition.z + 400);
     announcement.position.copy(nest.position);
     optionButtons.position.copy(nest.position);
+    pplCount.position.copy(nest.position);
+    pplCount.position.y = 110;
     // panelGroupt.position.copy(nest.position);
 
     // UpdateRotationWithMe( introRoom );
