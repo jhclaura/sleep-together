@@ -34,7 +34,7 @@ var langSwap = {
 	"exp": {
 		"restartLink": {
 			"en": "Actually... I'm not sleepy!",
-			"fr": "Je ne m'endors plus!",
+			"fr": "Je ne m'endors plus.",
 			"de": "Ich kann doch noch nicht schlafen."
 		}
 	},
@@ -57,6 +57,13 @@ var langSwap = {
 	            <b>Sound Record and Mental Support</b>\
 	            <br>\
 	            Andy Sigler\
+	            <br>\
+	            <br>\
+	            <b>Voice-over</b>\
+	            <br>\
+	            Vanessa Latchoumane\
+	            <br>\
+	            Veronika Beiweis\
 	            <br>\
 	            <br>\
 	            <b><ins>ONF / NFB</ins></b>\
@@ -265,6 +272,13 @@ var langSwap = {
 	            Andy Sigler\
 	            <br>\
 	            <br>\
+	            <b>Stimme</b>\
+	            <br>\
+	            Vanessa Latchoumane\
+	            <br>\
+	            Veronika Beiweis\
+	            <br>\
+	            <br>\
 	            <b><ins>ONF / NFB</ins></b>\
 	            <br>\
 	            <br>\
@@ -471,6 +485,13 @@ var langSwap = {
 	            Andy Sigler\
 	            <br>\
 	            <br>\
+	            <b>Voix</b>\
+	            <br>\
+	            Vanessa Latchoumane\
+	            <br>\
+	            Veronika Beiweis\
+	            <br>\
+	            <br>\
 	            <b><ins>ONF / NFB</ins></b>\
 	            <br>\
 	            <br>\
@@ -675,8 +696,8 @@ var langSwap = {
 	},
 	"makeEye": {
 		"en": ["", "Make eye contact with other sleepyheads", "to navigate the world"],
-		"fr": ["Établissez un contact visuel", "avec les autres endormis", "en explorant notre univers"],
-		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen", "her während Sie durch die Welt surfen"]
+		"fr": ["Établissez un contact visuel", "avec les autres endormis", "en explorant le nid"],
+		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen her", "während Sie durch die Welt surfen"]
 	},
 	"goodNight": {
 		"en": "Good night",
@@ -720,6 +741,6 @@ var langSwap = {
 	"gazeNote": {
 		"en": [" is gazing at you <3"],
 		"fr": [" vous regarde <3"],
-		"de": [" sieht Sie an <3"]
+		"de": [" blickt Sie an <3"]
 	}
 };
