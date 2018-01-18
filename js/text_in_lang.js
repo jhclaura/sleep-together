@@ -685,9 +685,9 @@ var langSwap = {
 		"de": ["atmen", "erkunden", "xchlafen"]
 	},
 	"startPractice": {
-		"en": ["Listen to the voice, and", "follow the light as you breathe"],
-		"fr": ["Écoutez le son de la voix,", "et suivez la lumière tout en respirant"],
-		"de": ["Lauschen Sie dem Klang der Stimme, und", "folgen Sie dem Licht, während Sie atmen"]
+		"en": ["", "Listen to the voice, and", "follow the light as you breathe"],
+		"fr": ["", "Écoutez le son de la voix,", "et suivez la lumière tout en respirant"],
+		"de": ["Lauschen Sie dem Klang der Stimme", "und folgen Sie dem Licht,", "während Sie atmen"]
 	},
 	"nextStep": {
 		"en": ["", "Look at the sky, and", "gaze upon options to choose next step"],

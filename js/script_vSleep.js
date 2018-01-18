@@ -1,4 +1,4 @@
-var devMode = false;
+var devMode = true;
 
 ////////////////////////////////////////////////////////////	
 // SET_UP_VARIABLES
@@ -811,8 +811,9 @@ function startBreathingPractice(_redo) {
     // Eye-level info
     UpdateFrontRotationWithMe(announcement);
 
-    announcementTexture.clear().drawText(langSwap.startPractice[sleepLang][0], undefined, 200, 'white');
-    announcementTexture.drawText(langSwap.startPractice[sleepLang][1], undefined, 290, 'white');
+    announcementTexture.clear().drawText(langSwap.startPractice[sleepLang][0], undefined, 130, 'white');
+    announcementTexture.drawText(langSwap.startPractice[sleepLang][1], undefined, 220, 'white');
+    announcementTexture.drawText(langSwap.startPractice[sleepLang][2], undefined, 310, 'white');
 
     UpdateFrontRotationWithMe(pplCount);
     UpdateFrontRotationWithMe(optionButtons);
