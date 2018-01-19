@@ -35,7 +35,7 @@ app.get('*', function(req, res){
 		    		folder: "", //temp
 		    		ip: req.ip,
 		    		settings: req.protocol + '://' + req.get('host') + "/settings.json",
-		    		host: req.protocol + '://' + req.get('host')}
+		    		host: req.protocol + '://' + req.get('host') + ((lang == "") ? "" : "/" + lang)}
 		    },
 		    function (error, response, body) {
 		    	if (!error && response.statusCode == 200) {
