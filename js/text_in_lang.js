@@ -13,7 +13,7 @@ var langSwap = {
 		"aboutPage": {
 			"en": "/// About ///",
 			"fr": "/// À PROPOS ///",
-			"de": "/// ÜBER ///"
+			"de": "/// ÜBER DAS PROJEKT ///"
 		},
 		"insTap": {
 			"en": "images/instructions/instruction_sound_tap.jpg",
@@ -258,8 +258,8 @@ var langSwap = {
 	    		<p style='font-size: 1.3em;'>/// AB IN DIE KISTE ///</p>\
 		        <p>Ab in die Kiste ist ein gemeinsames Erlebnis in virtueller Realität für Menschen, die einschlafen möchten. Innerhalb von 60 Sekunden vollziehen die Besucher (auch Schlafmützen genannt) zusammen mit anderen Schlafmützen ein Einschlafritual, bei dem sie es sich in ihrem Bett bequem machen und gemeinsam atmen.</p>\
 		        <br>\
-		        <p style='font-size: 1.3em;'>/// KREDITE ///</p>\
-		        <b><ins>SCHAFFUNG</ins></b>\
+		        <p style='font-size: 1.3em;'>/// MITWIRKENDE ///</p>\
+		        <b><ins>ENTWICKLUNG</ins></b>\
 	            <br>\
 	            <br>\
 	            <b>Gestaltung</b>\
@@ -471,7 +471,7 @@ var langSwap = {
 	    		<p style='font-size: 1.3em;'>/// CODODO ///</p>\
 		        <p>Cododo est une expérience collective en réalité virtuelle destinée à être utilisée avant le dodo. En 60 secondes, les visiteurs (alias endormis) participeront à un rituel de sommeil où ils flotteront dans un nid douillet en respirant profondément en compagnie d'autres endormis.</p>\
 		        <br>\
-		        <p style='font-size: 1.3em;'>/// CRÈDITS ///</p>\
+		        <p style='font-size: 1.3em;'>/// CRÉDITS ///</p>\
 		        <b><ins>CRÉATION</ins></b>\
 	            <br>\
 	            <br>\
@@ -682,7 +682,7 @@ var langSwap = {
 	"optionTags": {
 		"en": ["breath", "explore", "sleep"],
 		"fr": ["respirer", "explorer", "dormir"],
-		"de": ["atmen", "erkunden", "xchlafen"]
+		"de": ["atmen", "erkunden", "schlafen"]
 	},
 	"startPractice": {
 		"en": ["", "Listen to the voice, and", "follow the light as you breathe"],
@@ -697,7 +697,7 @@ var langSwap = {
 	"makeEye": {
 		"en": ["", "Make eye contact with other sleepyheads", "to navigate the world"],
 		"fr": ["Établissez un contact visuel", "avec les autres endormis", "en explorant le nid"],
-		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen her", "während Sie durch die Welt surfen"]
+		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen her,", "während Sie durch die Welt surfen"]
 	},
 	"goodNight": {
 		"en": "Good night",
