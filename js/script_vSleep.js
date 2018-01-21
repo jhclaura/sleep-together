@@ -848,21 +848,26 @@ function startBreathingPractice(_redo) {
         console.log('Option time!');
         nestPos = undefined;
         expStage = 4;
-        optionButtons.visible = true;
-
+        
         sound_night.fade(0.3, 0.8, 2000);
         sound_options.play('intro');
 
-        UpdateFrontRotationWithMe(announcement);
-
-        announcementTexture.clear().drawText(langSwap.nextStep[sleepLang][0], undefined, 130, 'white');
-        announcementTexture.drawText(langSwap.nextStep[sleepLang][1], undefined, 220, 'white');
-        announcementTexture.drawText(langSwap.nextStep[sleepLang][2], undefined, 310, 'white');
-        
-        UpdateFrontRotationWithMe(pplCount);
-        UpdateFrontRotationWithMe(optionButtons);
-
+        announcementTexture.clear();
+        setTimeout(()=>{
+            displayOptions();
+        }, langSwap.soundOptionSprite[sleepLang].intro[1]);
     }, duration * 1000);
+}
+
+function displayOptions() {
+    UpdateFrontRotationWithMe(announcement);
+    announcementTexture.clear().drawText(langSwap.nextStep[sleepLang][0], undefined, 130, 'white');
+    announcementTexture.drawText(langSwap.nextStep[sleepLang][1], undefined, 220, 'white');
+    announcementTexture.drawText(langSwap.nextStep[sleepLang][2], undefined, 310, 'white');
+    
+    optionButtons.visible = true;
+    UpdateFrontRotationWithMe(pplCount);
+    UpdateFrontRotationWithMe(optionButtons);
 }
 
 function disposeSocialMedia() {
