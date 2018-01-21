@@ -569,15 +569,15 @@ function AfterFontLoaded() {
         optionLightDicts[optionTags[i]] = optionLight;
 
         // label
-        var optionTextTexture = new THREEx.DynamicTexture(256, 128); //512,512; 1000,128
+        var optionTextTexture = new THREEx.DynamicTexture(512, 512); //256,128; 512,512; 1000,128
         optionTextTexture.context.font = "bolder 70px StupidFont";
-        optionTextTexture.clear().drawText(optionTagTexts[i], undefined, 96, 'white');
+        optionTextTexture.clear().drawText(optionTagTexts[i], undefined, 250, 'white'); //96
         var optionMaterial = new THREE.MeshBasicMaterial({ map: optionTextTexture.texture, transparent: true, side: THREE.DoubleSide });
         var optionTextMesh = new THREE.Mesh(new THREE.PlaneGeometry(optionTextTexture.canvas.width, optionTextTexture.canvas.height), optionMaterial);
         optionTextMesh.scale.multiplyScalar(0.02);
         optionTextMesh.rotation.x = Math.PI / 2;
         optionTextMesh.rotation.z = Math.PI / 2;
-        optionTextMesh.position.x = 1.5;
+        optionTextMesh.position.x = 2.5;    //1.5
         optionTextMesh.visible = false;
 
         dummyButton.add(optionMesh);

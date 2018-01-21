@@ -680,7 +680,7 @@ var langSwap = {
 	            © ARTE  FRANCE - ONF 2018"
 	},
 	"optionTags": {
-		"en": ["breath", "explore", "sleep"],
+		"en": ["breathe", "explore", "sleep"],
 		"fr": ["respirer", "explorer", "dormir"],
 		"de": ["atmen", "erkunden", "schlafen"]
 	},
