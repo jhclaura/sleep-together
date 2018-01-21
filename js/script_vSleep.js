@@ -1214,7 +1214,7 @@ function GazeToTimer() {
     // keep growing
     if (isGazeTiming)
     {
-        firstGuy.eyeTimer.scale.lerp(new THREE.Vector3(1, 1, 1), 0.01);
+        firstGuy.eyeTimer.scale.lerp(new THREE.Vector3(1, 1, 1), 0.02);
 
         if (firstGuy.eyeTimer.scale.x >= 0.9)
         {
