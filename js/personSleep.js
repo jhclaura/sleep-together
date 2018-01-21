@@ -77,6 +77,9 @@ function PersonSleep(_pos, _color, _id, _name) {
 
     this.nameBubble.add(this.dataBubble);
     this.playerBody.skeleton.bones[0].add(this.nameBubble);
+    if (this.whoIam == whoIamInLife){
+        this.nameBubble.visible = false;
+    }
 
     // 2-3: eye
     this.eye = new THREE.Object3D();
