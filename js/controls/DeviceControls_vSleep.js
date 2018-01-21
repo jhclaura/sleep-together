@@ -524,12 +524,19 @@ THREE.DeviceControls = function(camera, worldCenter) {
     }
 
     var optionOnInput = function() {
-        if (currentOption != '') {
-
+        if (currentOption != '')
+        {
             if (optionLightDicts[currentOption].intensity > 1) {
-                console.log('choose option: ' + currentOption);
-                currentOption == '';
+                console.log('choose option: ' + currentOption);                
                 OptionStartStage(optionLightDicts[currentOption].stageIndex);
+                currentOption = '';
+
+                // end eye timer
+                if(firstGuy.eyeTimer.visible) {
+                    firstGuy.eyeTimer.visible = false;
+                    firstGuy.eyeTimer.scale.set(0.01,0.01,0.01);
+                    isGazeTiming = false;
+                }                
             }
         };
     }

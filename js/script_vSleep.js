@@ -70,10 +70,12 @@ var sleeperOrigin = "Earth";
 var currMinute, startTimestamp, endTimestamp;
 var sleeper, sleeperGeo, sleeperTexture, sleep_test, sleeperGeo_test;
 var breathLightTexture;
+var eyeCircleInTexture, eyeCircleOutTexture;
 
 var isGazing = false,
     isGazeMoving = false,
-    notifyGazeMax = false;
+    notifyGazeMax = false,
+    isGazeTiming = false;
 var gazeDotTex, gazeDotMat, gazeDotGeo;
 var EyeMaxSize = 5,
     gazeTargetIndex = -1;
@@ -105,7 +107,7 @@ var worldTotal = 18,
     eaterPerTable = 6,
     tableAmount = 3;
 
-var optionGeo, optionMat, currentOption, optionLights = [],
+var optionGeo, optionMat, currentOption = previousGazeOption = '', optionLights = [],
     optionLightDicts = {},
     optionButtons = new THREE.Object3D(),
     optionTextures = {},
@@ -360,6 +362,8 @@ function superInit() {
 
     sleeper_test_Texture = textureLoader.load(basedURL + 'images/chef2.jpg');
     breathLightTexture = textureLoader.load("images/glow_edit.png");
+    eyeCircleInTexture = textureLoader.load(basedURL + "images/eye_circle_in.png");
+    eyeCircleOutTexture = textureLoader.load(basedURL + "images/eye_circle_out.png");
 
     gazeDotTex = textureLoader.load(basedURL + 'images/gazeDot.png');
     gazeDotTex.wrapT = THREE.RepeatWrapping;
@@ -1077,6 +1081,7 @@ function update() {
                 currentOption = '';
             }
             GazeToChoose();
+            GazeToTimer();
             break;
 
         // Explore mode: Gaze-to-move
@@ -1110,6 +1115,7 @@ function update() {
                 currentOption = '';
             }
             GazeToChoose();
+            GazeToTimer();
             break;
     }
 
@@ -1181,6 +1187,47 @@ function GazeToChoose() {
                 optionButtons.children[i].children[2].visible = false;
         }
     }
+}
+
+function GazeToTimer() {
+    // first gaze?
+    if(previousGazeOption != currentOption)
+    {
+        if(currentOption == '')
+        {
+            console.log("stop time gaze!");
+            firstGuy.eyeTimer.visible = false;
+            firstGuy.eyeTimerTarget.visible = false;
+            firstGuy.eyeTimer.scale.set(0.01,0.01,0.01);
+            isGazeTiming = false;
+        }
+        else
+        {
+            console.log("start time gaze!");
+            firstGuy.eyeTimer.visible = true;
+            firstGuy.eyeTimerTarget.visible = true;
+            isGazeTiming = true;
+        }
+        previousGazeOption = currentOption;
+    }
+
+    // keep growing
+    if (isGazeTiming)
+    {
+        firstGuy.eyeTimer.scale.lerp(new THREE.Vector3(1, 1, 1), 0.01);
+
+        if (firstGuy.eyeTimer.scale.x >= 0.9)
+        {
+            // trigger thing as button click!
+            OptionStartStage(optionLightDicts[currentOption].stageIndex);
+            // reset
+            currentOption = '';
+            firstGuy.eyeTimer.visible = false;
+            firstGuy.eyeTimerTarget.visible = false;
+            firstGuy.eyeTimer.scale.set(0.01,0.01,0.01);
+            isGazeTiming = false;
+        }
+    }    
 }
 
 function OptionStartStage(stageIndex) {

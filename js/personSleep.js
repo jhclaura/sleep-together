@@ -108,6 +108,24 @@ function PersonSleep(_pos, _color, _id, _name) {
     */
     this.playerBody.skeleton.bones[0].add(this.breathLight);
 
+    // 2-4: eye-timer
+    var eyeMat = new THREE.SpriteMaterial({ map: eyeCircleInTexture, transparent: true, depthTest: false });
+    var eyeOutMat = new THREE.SpriteMaterial({ map: eyeCircleOutTexture, transparent: true, depthTest: false });
+    this.eyeTimerHolder = new THREE.Object3D();
+    this.eyeTimerHolder.name = "eyeTimer";
+
+    this.eyeTimer = new THREE.Sprite(eyeMat);    
+    this.eyeTimer.position.z = 20;
+    this.eyeTimer.scale.multiplyScalar(0.01);
+    this.eyeTimer.visible = false;
+
+    this.eyeTimerTarget = new THREE.Sprite(eyeOutMat);    
+    this.eyeTimerTarget.position.z = 20;
+    this.eyeTimerTarget.visible = false;
+
+    this.eyeTimerHolder.add(this.eyeTimer);
+    this.eyeTimerHolder.add(this.eyeTimerTarget);
+
     // Gaze Dots
     this.gazeDots = new THREE.Object3D();
     // new texture for manipulating UV
@@ -136,6 +154,8 @@ function PersonSleep(_pos, _color, _id, _name) {
         this.playerBody.skeleton.bones[0].quaternion.setFromEuler(tempEuler);
 
     this.player.add(this.playerBodyParent);
+
+    this.player.add(this.eyeTimerHolder);
 
     this.player.position.copy(_pos);
 
@@ -196,6 +216,9 @@ PersonSleep.prototype.update = function(_playerLocX, _playerLocY, _playerLocZ, _
     // if(this.player.children[1]) {
     //  this.player.children[1].quaternion.copy(_playerQ);
     // }
+    if(this.eyeTimer.visible) {
+        this.eyeTimerHolder.quaternion.copy(_playerQ);
+    }
 
     // body
     this.tmpPlayerQ.copy(_playerQ);
