@@ -695,7 +695,7 @@ var langSwap = {
 		"de": ["In den Himmel blicken", "und sich die Möglichkeiten anschauen,", "was als Nächstes zu tun wäre"]
 	},
 	"makeEye": {
-		"en": ["", "Make eye contact with other sleepyheads", "to navigate the world"],
+		"en": ["Make eye contact", "with other sleepyheads", "to navigate the world"],
 		"fr": ["Établissez un contact visuel", "avec les autres endormis", "en explorant le nid"],
 		"de": ["Stellen Sie Blickkontakt", "mit anderen Schlafmützen her,", "während Sie durch die Welt surfen"]
 	},
