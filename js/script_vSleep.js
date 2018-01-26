@@ -89,7 +89,7 @@ var socialMediaMat, socialMediaTex, socialMediaScreens = [],
     socialMediaTweens = [],
     sm_materials = [];
 var sm_screenGeo, glowGeo, glowMat1, glowMat2, sm_glow;
-var announcement, announcementTexture;
+var announcement, announcementTexture, announcementTextureFront;
 var nest, nestTex, nestStickGeos = [],
     nestSticks = []
 var nestSticksPos = [],
@@ -603,11 +603,20 @@ function AfterFontLoaded() {
     announcementTexture.context.font = "bolder 70px StupidFont";
     announcementTexture.clear().drawText(":", undefined, 96, 'white');
     announcementTexture.clear();
+    announcementTextureFront = new THREEx.DynamicTexture(1024, 512); //512,512; 1000,128
+    announcementTextureFront.context.font = "bolder 70px StupidFont";
+    announcementTextureFront.clear().drawText(":", undefined, 96, 'white');
+    announcementTextureFront.clear();
     var announcementMaterial = new THREE.MeshBasicMaterial({ map: announcementTexture.texture, transparent: true}); //depthTest: false
     var announcementMesh = new THREE.Mesh(new THREE.PlaneGeometry(announcementTexture.canvas.width, announcementTexture.canvas.height), announcementMaterial);
     announcementMesh.scale.multiplyScalar(0.01);
     announcementMesh.position.z = -20;
     announcement.add(announcementMesh);
+    var announcementMaterialFront = new THREE.MeshBasicMaterial({ map: announcementTextureFront.texture, transparent: true, opacity: 0.2, depthTest: false});
+    var announcementMeshFront = new THREE.Mesh(new THREE.PlaneGeometry(announcementTextureFront.canvas.width, announcementTextureFront.canvas.height), announcementMaterialFront);
+    announcementMeshFront.scale.multiplyScalar(0.01);
+    announcementMeshFront.position.z = -20;
+    announcement.add(announcementMeshFront);
     scene.add(announcement);
 
     // PEOPLE_COUNT
@@ -818,6 +827,9 @@ function startBreathingPractice(_redo) {
     announcementTexture.clear().drawText(langSwap.startPractice[sleepLang][0], undefined, 130, 'white');
     announcementTexture.drawText(langSwap.startPractice[sleepLang][1], undefined, 220, 'white');
     announcementTexture.drawText(langSwap.startPractice[sleepLang][2], undefined, 310, 'white');
+    announcementTextureFront.clear().drawText(langSwap.startPractice[sleepLang][0], undefined, 130, 'white');
+    announcementTextureFront.drawText(langSwap.startPractice[sleepLang][1], undefined, 220, 'white');
+    announcementTextureFront.drawText(langSwap.startPractice[sleepLang][2], undefined, 310, 'white');
 
     UpdateFrontRotationWithMe(pplCount);
     UpdateFrontRotationWithMe(optionButtons);
@@ -857,6 +869,7 @@ function startBreathingPractice(_redo) {
         sound_options.play('intro');
 
         announcementTexture.clear();
+        announcementTextureFront.clear();
         setTimeout(()=>{
             displayOptions();
         }, langSwap.soundOptionSprite[sleepLang].intro[1]);
@@ -868,6 +881,9 @@ function displayOptions() {
     announcementTexture.clear().drawText(langSwap.nextStep[sleepLang][0], undefined, 130, 'white');
     announcementTexture.drawText(langSwap.nextStep[sleepLang][1], undefined, 220, 'white');
     announcementTexture.drawText(langSwap.nextStep[sleepLang][2], undefined, 310, 'white');
+    announcementTextureFront.clear().drawText(langSwap.nextStep[sleepLang][0], undefined, 130, 'white');
+    announcementTextureFront.drawText(langSwap.nextStep[sleepLang][1], undefined, 220, 'white');
+    announcementTextureFront.drawText(langSwap.nextStep[sleepLang][2], undefined, 310, 'white');
     
     optionButtons.visible = true;
     UpdateFrontRotationWithMe(pplCount);
@@ -1236,6 +1252,7 @@ function OptionStartStage(stageIndex) {
         // Redo breathing exercise
         case 1:
             announcementTexture.clear();
+            announcementTextureFront.clear();
             controls.movingEnabled = false;
             optionButtons.visible = false;
             if(!optionButtons.children[1].visible)
@@ -1273,6 +1290,9 @@ function OptionStartStage(stageIndex) {
             announcementTexture.clear().drawText(langSwap.makeEye[sleepLang][0], undefined, 130, 'white');
             announcementTexture.drawText(langSwap.makeEye[sleepLang][1], undefined, 220, 'white');
             announcementTexture.drawText(langSwap.makeEye[sleepLang][2], undefined, 310, 'white');
+            announcementTextureFront.clear().drawText(langSwap.makeEye[sleepLang][0], undefined, 130, 'white');
+            announcementTextureFront.drawText(langSwap.makeEye[sleepLang][1], undefined, 220, 'white');
+            announcementTextureFront.drawText(langSwap.makeEye[sleepLang][2], undefined, 310, 'white');
 
             optionButtons.children[1].visible = false;
 
@@ -1294,6 +1314,8 @@ function OptionStartStage(stageIndex) {
 
             announcementTexture.clear().drawText(langSwap.goodNight[sleepLang], undefined, 200, 'white');
             announcementTexture.drawText(":)", undefined, 290, 'white');
+            announcementTextureFront.clear().drawText(langSwap.goodNight[sleepLang], undefined, 200, 'white');
+            announcementTextureFront.drawText(":)", undefined, 290, 'white');
 
             // Move up to be out of the nest
             pplCountTex.clear();

@@ -534,6 +534,7 @@ THREE.DeviceControls = function(camera, worldCenter) {
                 // end eye timer
                 if(firstGuy.eyeTimer.visible) {
                     firstGuy.eyeTimer.visible = false;
+                    firstGuy.eyeTimerTarget.visible = false;
                     firstGuy.eyeTimer.scale.set(0.01,0.01,0.01);
                     isGazeTiming = false;
                 }                
