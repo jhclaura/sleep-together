@@ -1,13 +1,4 @@
 
-WebVRConfig = {
-	MOUSE_KEYBOARD_CONTROLS_DISABLED: true, // Default: false.
-	BUFFER_SCALE: 0.5, // Default: 1.0.
-	predistorted: true,
-	DIRTY_SUBMIT_FRAME_BINDINGS: true, // Polyfill optimizations
-	TOUCH_PANNER_DISABLED: true
-	// ROTATE_INSTRUCTIONS_DISABLED: false
-};
-
 // PointerLockControls
 // http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 	var element = document.body;

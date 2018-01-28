@@ -132,6 +132,21 @@ superInit(); // init automatically
 ///////////////////////////////////////////////////////////
 function superInit() {
 
+    // ================== WebVR-Polyfill ====================
+    var WebVRConfig = {
+        PROVIDE_MOBILE_VRDISPLAY: true,
+        MOBILE_WAKE_LOCK: true,
+        MOUSE_KEYBOARD_CONTROLS_DISABLED: true, // Default: false.
+        BUFFER_SCALE: 0.5,
+        predistorted: true,
+        DIRTY_SUBMIT_FRAME_BINDINGS: false,
+        TOUCH_PANNER_DISABLED: true
+        // ROTATE_INSTRUCTIONS_DISABLED: false
+    };
+    var polyfill = new WebVRPolyfill(WebVRConfig);
+    console.log("Using webvr-polyfill version: " + WebVRPolyfill.version);
+    // ============== End of WebVR-Polyfill ==================
+
     // Determine Sleepers Start Positions (45, 50)
     var s_index = 1;
     for (var j = 0; j < 3; j++) {
@@ -209,16 +224,6 @@ function superInit() {
     effect = new THREE.VREffect(renderer);
     effect.setSize(window.innerWidth, window.innerHeight);
 
-    // DEPRECATED(?) - WebVR Manager
-    /*
-    // Create a VR manager helper to enter and exit VR mode.
-    var params = {
-        hideButton: false, // Default: false.
-        isUndistorted: false // Default: false.
-    };
-    vrmanager = new WebVRManager(renderer, effect, params);
-	*/
-
 	// =============== WebVR-UI =================
 	// reference: https://github.com/googlevr/webvr-ui/blob/master/examples/basic.html
 	var vrUIOptions = {
@@ -286,10 +291,14 @@ function superInit() {
 	// Add button to the #button element
 	document.getElementById("vr-button").appendChild(enterVR.domElement);
 
-	window.addEventListener('vrdisplaypresentchange', onWindowResize, true);
+	window.addEventListener('vrdisplaypresentchange', onResize, true);    
+    window.addEventListener('resize', onResize, false);
 
 	// Get the HMD
-	enterVR.getVRDisplay()
+    //v.1
+    //v.2
+    enterVR.getVRDisplay()
+    //navigator.getVRDisplays()
 		.then(function(display){
 			animationDisplay = display;
 			// display.requestAnimationFrame(animate);
@@ -299,7 +308,6 @@ function superInit() {
 			animationDisplay = window;
 			// window.requestAnimationFrame(animate);
 		});
-
 	// ==========================================
 
     // SCENE
@@ -308,11 +316,6 @@ function superInit() {
     // LIGHT
     hemiLight = new THREE.HemisphereLight(0x224659, 0x593522, 0.8); // nighttime
     scene.add(hemiLight);
-
-    // light = new THREE.SpotLight( 0xffffff );
-    // light.position.set( 100, 100, -100);
-    // light.intensity = 0.3;
-    // scene.add(light);
 
     // CAMERA
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -385,15 +388,11 @@ function superInit() {
 	    container.appendChild(stats.domElement);
 	}
 
-    // EVENTS
-    window.addEventListener('resize', onWindowResize, false);
-
     // After trigger the loading functions
     // Connect to WebSocket!
     connectSocket();
 
     // lateInit();
-
     //pageIsReadyToStart = true;
 
     // Social Media Wall
@@ -407,12 +406,10 @@ function superInit() {
     for (var i = 0; i < 5; i++) {
         var cloneTex = socialMediaTex.clone();
         cloneTex.needsUpdate = true;
-
         var sm_mat = new THREE.MeshBasicMaterial({
             map: cloneTex,
             side: THREE.DoubleSide
         });
-
         sm_materials.push(sm_mat);
         ScrollSocialMedia(sm_mat.map.offset);
     }
@@ -433,9 +430,7 @@ function superInit() {
 	                side: THREE.BackSide
 	            });
 	            var glowMesh = new THREE.Mesh(glowGeo, glowMat1);
-	            //glowMesh.scale.multiplyScalar(4);
 	            var glowMesh2 = new THREE.Mesh(glowGeo, glowMat2);
-	            //glowMesh2.scale.multiplyScalar(4);
 
 	            // Create Social Medai Wall
 	            var screenIndex = 1;
@@ -500,24 +495,6 @@ function superInit() {
         fontLoaded = true;
         AfterFontLoaded();
     });
-
-    // panelGroupt = new THREE.Object3D();
-    // // INVISIBLE_PANEL_FOR_DETECTING_EYE_GAZING
-    // for(var i=0; i<6; i++){
-    // 	var panel = new THREE.Mesh(
-    // 		new THREE.PlaneGeometry(20,12),
-    // 		new THREE.MeshBasicMaterial({side: THREE.DoubleSide, color: 0xff0000})
-    // 	);
-    // 	panel.rotation.set(0, Math.PI*2/6*i, 0);
-    // 	panel.position.set(
-    // 		Math.sin(Math.PI*2/6*i)*18,
-    // 		0,
-    // 		Math.cos(Math.PI*2/6*i)*18
-    // 	);
-    // 	panel.name = "panel";
-    // 	panelGroupt.add(panel);
-    // }
-    // scene.add(panelGroupt);
 }
 
 // function requestEnterVRfromIcon() {
@@ -692,9 +669,6 @@ function lateInit() {
     optionButtons.position.copy(nest.position);
     pplCount.position.copy(nest.position);
     pplCount.position.y = 110;
-    // panelGroupt.position.copy(nest.position);
-
-    // UpdateRotationWithMe( introRoom );
 
     // start to animate()!
     //animate(performance ? performance.now() : Date.now());
@@ -742,8 +716,6 @@ function lateInit() {
     sound_digital.fade(0, 0.5, 2000);
 
     // 1. Moving to NEST
-    //var nestPos = controls.position().clone();
-    //nestPos.multiplyScalar(20 / 225);
     var nestPos = nest.position.clone();
     nestPos.z = GetRandomArbitrary(-5, 5);
 
@@ -969,12 +941,7 @@ function createHeart(fromIndex, toIndex) {
             });
         }
     });
-
-    // mHOut.chain(mHGone);
-    // mHOut.start();
-
     // sample.trigger( 4, 1 );
-
     console.log("send heart from " + fromIndex + " to " + toIndex);
 }
 
@@ -998,7 +965,7 @@ function myKeyUp(event) {
 var lastRender = 0;
 function animate(timestamp) {
     if (!isAllOver) {
-        var delta = Math.min(timestamp - lastRender, 500);
+        //var delta = Math.min(timestamp - lastRender, 500);
         lastRender = timestamp;
 
         update();
@@ -1008,7 +975,7 @@ function animate(timestamp) {
 
         // v.2 - WebVR-UI
         if(enterVR.isPresenting()){
-        	renderer.render(scene, camera);
+        	//renderer.render(scene, camera);
         	effect.render(scene, camera);
         }else{
         	renderer.render(scene, camera);
@@ -1667,6 +1634,18 @@ function fullscreen() {
         container.mozRequestFullScreen();
     } else if (container.webkitRequestFullscreen) {
         container.webkitRequestFullscreen();
+    }
+}
+
+function onResize() {
+    if(!onResize.resizeDelay) {
+        onResize.resizeDelay = setTimeout(function() {
+            onResize.resizeDelay = null;
+            console.log('Resizing to %s x %s.', window.innerWidth, window.innerHeight);
+            effect.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        }, 250);
     }
 }
 
