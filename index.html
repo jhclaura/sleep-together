@@ -59,6 +59,7 @@
     //source: http://stackoverflow.com/questions/3514784/what-is-the-best-way-to-detect-a-mobile-device-in-jquery
     var isMobile = false; //initiate as false
     var whichMobile = "";
+    var isiPAD = false;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         isMobile = true;
     }
@@ -75,6 +76,10 @@
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
         console.log("I'm iOS!");
         whichMobile = "iOS_mobile";
+    }
+    if (/iPad/i.test(navigator.userAgent)) {
+        console.log("I'm ipad!");
+        isiPAD = true;
     }
 
     // if it's desktop, create click.gif div for PointerlockAPI
@@ -573,7 +578,7 @@
         }
         final_statistic.playerName = playerNName;
 
-        if(isMobile) {
+        if(isMobile && !isiPAD) {
 	    	ToggleVR();	// turn off VR options
 
 	    	if(chooseVRimg) {
@@ -720,7 +725,7 @@
     }
     var ToggleVR = function() {
 
-    	if(!isMobile){
+    	if(!isMobile || isiPAD){
     		chooseVRtoStart = true;
     		getNameToStart();
 
