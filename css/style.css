@@ -266,7 +266,7 @@ input[type=text].focus {
 	/*display: block;
 	margin: 0 auto;*/
 	position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
 }
