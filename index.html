@@ -715,32 +715,6 @@
             }, 1000);
         }
     }
-    // var chooseVRmode = function () {
-    // 	chooseVRimg = !chooseVRimg;
-    // 	if(chooseVRimg) {
-    // 		yesVR.src = "images/instructions/instruction_vr_select.png";
-    // 		if(chooseNonVRimg){
-    // 			chooseNonVRimg = false;
-    // 			noVR.src = "images/instructions/instruction_nonvr.png";
-    // 		}
-    // 	} else {
-    // 		yesVR.src = "images/instructions/instruction_vr.png";
-    // 	}
-    // 	checkForStart();
-    // }
-    // var chooseNonVRmode = function () {
-    // 	chooseNonVRimg = !chooseNonVRimg;
-    // 	if(chooseNonVRimg) {
-    // 		noVR.src = "images/instructions/instruction_nonvr_select.png";
-    // 		if(chooseVRimg){
-    // 			chooseVRimg = false;
-    // 			yesVR.src = "images/instructions/instruction_vr.png";
-    // 		}
-    // 	} else {
-    // 		noVR.src = "images/instructions/instruction_nonvr.png";
-    // 	}
-    // 	checkForStart();
-    // }
     var chooseVRmode = function () {
     	if(!chooseVRimg) {
 			yesVR.src = "images/instructions/instruction_vr_select.png";
@@ -815,6 +789,7 @@
     } else {
         window.addEventListener('touchstart', closeInfoDiv, false);
     }
+    window.addEventListener('keydown', myFakeEnter, false);
 
     function closeInfoDiv(event) {
     	//console.log(event.target);
@@ -825,8 +800,6 @@
             // if (showCredit) ToggleCredit();
         }
     }
-
-    window.addEventListener('keydown', myFakeEnter, false);
 
     function myFakeEnter(event) {
         if (!readyToStart) return;
@@ -1095,8 +1068,6 @@
                         var oldPlayerID = data[i].id;
                         var oldPlayerName = data[i].nname;
 
-                        // var oldPlayer = new Person( oldPlayerStartPos, oldHex, oldPlayerID, oldPlayerName );
-                        // var oldPlayer = new PersonEat( oldPlayerStartPos, new THREE.Color(), oldPlayerID, oldPlayerName, mouth );
                         var oldPlayer = new PersonSleep(oldPlayerStartPos, oldHex, oldPlayerID, oldPlayerName);
 
                         dailyLifePlayerDict[oldPlayerID] = oldPlayer;
@@ -1194,11 +1165,8 @@
 
     <!-- Libraries -->
     <script type="text/javascript" src="js/lib/howler.js"></script>
-    <!-- <script type="text/javascript" src="js/lib/SPE.min.js"></script> -->
     <script type="text/javascript" src="js/lib/BufferLoader.js"></script>
-    <!-- <script type="text/javascript" src="js/lib/physi.js"></script> -->
     <!-- <script type="text/javascript" src="js/lib/ImprovedNoise.js"></script> -->
-    <!-- <script type="text/javascript" src="js/util/EndArrayPlugin.js"></script> -->
 
     <script type="text/javascript" src="js/lib/stats.min.js"></script>
     <script type="text/javascript" src="js/lib/threex.dynamictexture.js"></script>
@@ -1207,7 +1175,6 @@
     <script type="text/javascript" src="js/sample.js"></script>
     <!-- <script type="text/javascript" src="js/wave.js"></script> -->
     <script type="text/javascript" src="js/personSleep.js"></script>
-    <!-- <script type="text/javascript" src="js/AniObject.js"></script> -->
     <script type="text/javascript" src="js/controls/DeviceControls_vSleep.js"></script>
     <script type="text/javascript" src="js/script_functions.js"></script>
     <script type="text/javascript" src="js/loader_sleep.js"></script>
