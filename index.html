@@ -492,7 +492,7 @@
     	</div>
     </div>
     <div class="orientationBlock trans" id="mobileOrientation" style="display:none;">
-    	<img id="m_orient" style="height: 70%;" src="images/mobile_hand.jpg">
+    	<img id="m_orient" style="height: 65%;" src="images/mobile_hand.jpg">
     </div>
     <div class="infoBlock trans" id="goodbyeMsg" style="display:none; background-color: black; color:white;">
 	    <div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
@@ -582,9 +582,11 @@
         	} else {
 	        	enterVR.requestEnterFullscreen();
 
-	        	if(getOrientation()==0) {
+	        	if(getOrientation()==0) {	        		
 		        	mobileOrient.style.display = "block";
-		        	mobileOrient.style.opacity = 1;
+		        	setTimeout(function () {
+		            	mobileOrient.style.opacity = 1;
+		            }, 100);
 		        	window.addEventListener('orientationchange', onMobileOrientationChange);
 		        } else {
 		        	trulyStart();
@@ -602,6 +604,8 @@
         if (blockerDiv) blockerDiv.style.display = "-webkit-box";
 
         // HIDE EVERYTHING ELSE
+        infoBG.style.opacity = 0;
+        infoBG.style.display = "none";
         splashPage.style.display = "none";
         aboutPage.style.display = "none";
         aboutPage.style.height = '';
@@ -742,11 +746,11 @@
             	instructDetail.style.display = "none";
             }, 1000);
         } else {
-        	infoBG.style.opacity = 0;
+        	//infoBG.style.opacity = 0;
             vrOption.style.opacity = 0;
             setTimeout(function () {
             	if(!showVRoption && !isAllOver){
-	            	infoBG.style.display = "none";
+	            	//infoBG.style.display = "none";
 	            	vrOption.style.display = "none";
 	            }
             }, 1000);
