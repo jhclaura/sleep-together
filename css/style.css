@@ -258,6 +258,17 @@ input[type=text].focus {
 	position: fixed;
 	width: 100%;
 	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#m_orient {
+	/*display: block;
+	margin: 0 auto;*/
+	position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
 }
 
 .infoBlock {
