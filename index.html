@@ -491,6 +491,9 @@
 			</div>
     	</div>
     </div>
+    <div class="orientationBlock trans" id="mobileOrientation" style="display:none;">
+    	<img id="m_orient" style="height: 60%; display: block; margin: 0 auto;" src="images/mobile_hand.jpg">
+    </div>
     <div class="infoBlock trans" id="goodbyeMsg" style="display:none; background-color: black; color:white;">
 	    <div class="infoText" id="goodbyeText" style="position: relative; top: 50%; text-align: center;">
 	        <div id="closeText" style="display: none;">
@@ -552,6 +555,7 @@
     var arteHeader = byId("arte-header");
     var vrEnterCircle = byId("vr-enter-circle");
     var vrFullscreenCircle = byId("vr-fullscreen-circle");
+    var mobileOrient = byId("mobileOrientation");
 
     var playerNName = "";
     var readyToStart = false, chooseVRtoStart = false;
@@ -561,9 +565,7 @@
     	if(!chooseVRtoStart)
     		return;
 
-    	if(isMobile)
-	    	ToggleVR();	// turn off
-
+	    // Get player name
         if (playerNameInput.value == playerNName) {
             playerNName = "Anonymous";
         } else {
@@ -571,27 +573,52 @@
         }
         final_statistic.playerName = playerNName;
 
-        renderCanvas.style.display = "inline";
-        renderCanvas.style.opacity = 1;
+        if(isMobile) {
+	    	ToggleVR();	// turn off VR options
 
+	    	if(chooseVRimg) {
+	        	enterVR.requestEnterVR();
+	        	trulyStart();
+        	} else {
+	        	enterVR.requestEnterFullscreen();
+
+	        	if(getOrientation()==0) {
+		        	mobileOrient.style.display = "block";
+		        	mobileOrient.style.opacity = 1;
+		        	window.addEventListener('orientationchange', onMobileOrientationChange);
+		        } else {
+		        	trulyStart();
+		        }
+	        }
+        } else {
+        	trulyStart();
+        }
+    }
+
+    var trulyStart = function () {
+    	// SHOW THE SLEEPING THING!!!
+        renderCanvas.style.display = "inline";
+        renderCanvas.style.opacity = 1;        
         if (blockerDiv) blockerDiv.style.display = "-webkit-box";
 
+        // HIDE EVERYTHING ELSE
         splashPage.style.display = "none";
         aboutPage.style.display = "none";
         aboutPage.style.height = '';
         aboutDetail.style.display = "none";
         showAbout = false;
 
+        // Late init
         lateInit();
 
-        if(isMobile) {
-        	if(chooseVRimg){
-	        	enterVR.requestEnterVR();
-        	}
-	        else{
-	        	enterVR.requestEnterFullscreen();
-	        }
-        }
+        // Enter VR & Fullscreen
+        // if(isMobile) {
+        // 	if(chooseVRimg) {
+	       //  	enterVR.requestEnterVR();
+        // 	} else {
+	       //  	enterVR.requestEnterFullscreen();
+	       //  }
+        // }
 
         // Remove Events
         window.removeEventListener('keydown', myFakeEnter, false);
@@ -602,6 +629,16 @@
         }
     }
 
+    var onMobileOrientationChange = function () {
+    	if(getOrientation()==90) {
+    		mobileOrient.style.opacity = 0;
+    		window.removeEventListener('orientationchange', onMobileOrientationChange);
+    		trulyStart();
+    		setTimeout(function () {
+        		mobileOrient.style.display = "none";
+            }, 1000);
+    	}
+    }
     var startToShowInstruction = function () {
     	if(!enableStart)
     		return;

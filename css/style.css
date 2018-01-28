@@ -251,6 +251,15 @@ input[type=text].focus {
 	display: flex;
 }
 
+.orientationBlock {
+	background-color: #000000;
+	z-index: 3000; /* Sit on top */
+	/*margin: 0 auto;*/
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+
 .infoBlock {
 	background-color: #ffffff;
 	z-index: 3000; /* Sit on top */
