@@ -69,6 +69,12 @@
     var iosTexts = document.getElementsByClassName("ios_text");//.style.display = "none";
     var androidTexts = document.getElementsByClassName("android_text");
 
+    // tell Chrome
+    if (/Chrome/i.test(navigator.userAgent)) {
+    	console.log("I'm Chrome!");
+        isChrome = true;
+    }
+
     // tell android or iOS
     if (/Android/i.test(navigator.userAgent)) {
         console.log("I'm android!");
@@ -77,16 +83,17 @@
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
         console.log("I'm iOS!");
         whichMobile = "iOS_mobile";
+
+        if (/CriOS/i.test(navigator.userAgent)) {
+	    	console.log("I'm Chrome on iOS!");
+	        isChrome = true;
+	    }
     }
     if (/iPad/i.test(navigator.userAgent)) {
         console.log("I'm iPad!");
         isiPAD = true;
     }
-    if (/Chrome/i.test(navigator.userAgent)) {
-    	console.log("I'm Chrome!");
-        isChrome = true;
-    }
-
+    
     // if it's desktop, create click.gif div for PointerlockAPI
     if (!isMobile) {
         var clickDiv = document.createElement('div');
