@@ -31,6 +31,7 @@
     <script src="js/lib/webvr-polyfill.js"></script>
     <!-- <script src="js/lib/webvr-manager.js"></script> -->
     <script src="js/lib/webvr-ui.js"></script>
+    <script src="js/lib/NoSleep.js"></script>
 
     <script type="text/javascript" src="js/lib/Detector.js"></script>
     <script type="text/javascript" src="js/lib/inobounce.js"></script>
@@ -584,6 +585,7 @@
     var playerNName = "";
     var readyToStart = false, chooseVRtoStart = false;
     var enableStart = true;
+    var nooSleep = new NoSleep();
 
     var getNameToStart = function() {
     	if(!chooseVRtoStart)
@@ -617,6 +619,7 @@
 		        	trulyStart();
 		        }
 	        }
+	        nooSleep.enable();
         } else {
         	trulyStart();
         }
@@ -745,7 +748,7 @@
     }
     var ToggleVR = function() {
 
-    	if(!isMobile || isiPAD){
+    	// if(!isMobile || isiPAD){
     		chooseVRtoStart = true;
     		getNameToStart();
 
@@ -756,7 +759,7 @@
             	infoBG.style.display = "none";
             }, 1000);
     		return;
-    	}
+    	// }
 
         showVRoption = !showVRoption;
 
