@@ -600,8 +600,8 @@
         final_statistic.playerName = playerNName;
 
         if(isMobile) {
-        	if(!isiPAD)
-		    	ToggleVR();	// turn off VR options
+       //  	if(!isiPAD)
+		    	// ToggleVR();	// turn off VR options
 
 	    	if(chooseVRimg) {
 	        	enterVR.requestEnterVR();
@@ -748,7 +748,7 @@
     }
     var ToggleVR = function() {
 
-    	if(!isMobile || isiPAD){
+    	// if(!isMobile || isiPAD){
     		chooseVRtoStart = true;
     		getNameToStart();
 
@@ -759,7 +759,7 @@
             	infoBG.style.display = "none";
             }, 1000);
     		return;
-    	}
+    	// }
 
         showVRoption = !showVRoption;
 
