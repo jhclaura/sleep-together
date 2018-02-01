@@ -816,7 +816,7 @@
     var showIntroTween = new TimelineMax();
     var doIntroAnimation = false;
     // If it's on not supported browers, no intro, show gif & static texts
-    if(iOS_mobile && isChrome)
+    if(whichMobile == "iOS_mobile" && isChrome)
     {
     	// wrong
     	changeBrowser.style.display="";
