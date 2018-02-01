@@ -191,7 +191,7 @@
 	        <a id="startLink" style="display:none; color:#0af5e1; cursor:pointer;" onclick="startToShowInstruction();">Enter</a>
         </div>
         <div class="trans" id="changeBrowser" style="display: none;">        	
-	        <span class="en_text">To enjoy the experience, please open in Safari browser.</span>
+	        <span class="en_text">To enjoy the experience,<br>please open in Safari browser.</span>
         	<span class="fr_text" style="display: none;">Si je ne veux pas dormir tout seul</span>
         	<span class="de_text" style="display: none;">Wenn ich nicht allein schlafen will</span>
         </div>
@@ -825,7 +825,7 @@
     // If it's on not supported browers, no intro, show gif & static texts
     if((whichMobile == "iOS_mobile") && isChrome)
     {
-    	// wrong
+    	bgImage.style.opacity = 0.3;
     	changeBrowser.style.display="";
     	setTimeout(()=>{
 	    	changeBrowser.style.opacity=1;
