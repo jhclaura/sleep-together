@@ -5,7 +5,7 @@
     "www_folder": "www",
     "cdn": "https://amazon.ca",
     "switch_lang_by_query": false,
-    "mobile_only": true,
+    "mobile_only": false,
     "share": {
         "en": {
             "title": "Sleep Together",
