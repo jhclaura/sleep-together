@@ -170,7 +170,7 @@ input[type=text].focus {
 	transition: opacity 2s;
 }
 
-#inputGroupt {
+#changeBrowser {
 	width: 100%;
 	bottom: 50px;
 	position: fixed;
