@@ -825,11 +825,10 @@
     // If it's on not supported browers, no intro, show gif & static texts
     if((whichMobile == "iOS_mobile") && isChrome)
     {
-    	bgImage.style.opacity = 0.3;
     	changeBrowser.style.display="";
     	setTimeout(()=>{
 	    	changeBrowser.style.opacity=1;
-	    	bgImage.style.opacity=1;
+	    	bgImage.style.opacity=0.3;
 	    },100);
     }
     else
