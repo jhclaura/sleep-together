@@ -579,7 +579,8 @@
         final_statistic.playerName = playerNName;
 
         if(isMobile) {
-	    	ToggleVR();	// turn off VR options
+        	if(!isiPAD)
+		    	ToggleVR();	// turn off VR options
 
 	    	if(chooseVRimg) {
 	        	enterVR.requestEnterVR();
