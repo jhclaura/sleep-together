@@ -747,12 +747,12 @@ var langSwap = {
 		"iosChrome": {
 			"en": "To enjoy the experience,<br>please open in your Safari browser.",
 			"fr": "Pour faire cette expérience,<br>veuillez l'ouvrir dans votre navigateur Safari.",
-			"de": ""
+			"de": "Für ein unbeschwertes Erlebnis<br>AB IN DIE KISTE in Safari öffnen."
 		},
 		"androidSamsung": {
 			"en": "To enjoy the experience,<br>please open in your Chrome browser.",
 			"fr": "Pour faire cette expérience,<br>veuillez l'ouvrir dans votre navigateur Chrome.",
-			"de": ""
+			"de": "Für ein unbeschwertes Erlebnis<br>AB IN DIE KISTE in Chrome öffnen."
 		}
 	}
 };
