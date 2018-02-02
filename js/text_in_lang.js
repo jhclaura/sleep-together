@@ -742,5 +742,17 @@ var langSwap = {
 		"en": [" is gazing at you <3"],
 		"fr": [" vous regarde <3"],
 		"de": [" blickt Sie an <3"]
+	},
+	"changeBrowser": {
+		"iosChrome": {
+			"en": "To enjoy the experience,<br>please open in your Safari browser.",
+			"fr": "Pour faire cette expérience,<br>veuillez l'ouvrir dans votre navigateur Safari.",
+			"de": ""
+		},
+		"androidSamsung": {
+			"en": "To enjoy the experience,<br>please open in your Chrome browser.",
+			"fr": "Pour faire cette expérience,<br>veuillez l'ouvrir dans votre navigateur Chrome.",
+			"de": ""
+		}
 	}
 };

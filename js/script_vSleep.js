@@ -47,7 +47,7 @@ var dailyLifePlayerDict = {},
 // var audioContext = new AudioContext();
 // var sample = new SoundsSample(audioContext);
 
-var sleepLang='', fontLoaded = false, textCreated = false;
+var fontLoaded = false, textCreated = false;
 
 var sound_digital, sound_opening, sound_practice, sound_night;
 var sound_hello, sound_visitor_alone, sound_visitor_others, sound_lets, sound_options, sound_bamboo;
@@ -1198,7 +1198,7 @@ function GazeToTimer() {
     if (isGazeTiming)
     {
         if(isiPAD)
-            firstGuy.eyeTimer.scale.lerp(new THREE.Vector3(1, 1, 1), 0.03);
+            firstGuy.eyeTimer.scale.lerp(new THREE.Vector3(1, 1, 1), 0.03);        
         else
             firstGuy.eyeTimer.scale.lerp(new THREE.Vector3(1, 1, 1), 0.02);
 

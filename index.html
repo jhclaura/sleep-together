@@ -32,6 +32,7 @@
     <!-- <script src="js/lib/webvr-manager.js"></script> -->
     <script src="js/lib/webvr-ui.js"></script>
     <script src="js/lib/NoSleep.js"></script>
+    <script type="text/javascript" src="js/text_in_lang.js"></script>
 
     <script type="text/javascript" src="js/lib/Detector.js"></script>
     <script type="text/javascript" src="js/lib/inobounce.js"></script>
@@ -39,7 +40,7 @@
     <script type="text/javascript">
 
     var hasInternet = true;
-
+    var sleepLang='';
     // FIREBASE
     var fireVisit = 0, fbDatabase, visitDataRef, fbDatabaseRef;
     if(hasInternet){
@@ -58,10 +59,8 @@
 
     //device detection
     //source: http://stackoverflow.com/questions/3514784/what-is-the-best-way-to-detect-a-mobile-device-in-jquery
-    var isMobile = false; //initiate as false
+    var isMobile = isiPAD = isChrome = isSamsung = false; //initiate as false
     var whichMobile = "";
-    var isiPAD = false;
-    var isChrome = false;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         isMobile = true;
     }
@@ -71,11 +70,14 @@
     var androidTexts = document.getElementsByClassName("android_text");
 
     // tell Chrome
-    if (/Chrome/i.test(navigator.userAgent)) {
+    if (/SamsungBrowser/i.test(navigator.userAgent)) {
+        isSamsung = true;
+    }
+    else if (/Chrome/i.test(navigator.userAgent)) {
     	console.log("I'm Chrome!");
         isChrome = true;
     }
-
+    
     // tell android or iOS
     if (/Android/i.test(navigator.userAgent)) {
         console.log("I'm android!");
@@ -192,9 +194,7 @@
 	        <a id="startLink" style="display:none; color:#0af5e1; cursor:pointer;" onclick="startToShowInstruction();">Enter</a>
         </div>
         <div class="trans" id="changeBrowser" style="display: none;">        	
-	        <span class="en_text">To enjoy the experience,<br>please open in Safari browser.</span>
-        	<span class="fr_text" style="display: none;">Si je ne veux pas dormir tout seul</span>
-        	<span class="de_text" style="display: none;">Wenn ich nicht allein schlafen will</span>
+	        To enjoy the experience,<br>please open in Safari browser.
         </div>
     </div>
     <div id="aboutPage" style="display:block; position:absolute; opacity: 0;">
@@ -821,52 +821,6 @@
     	// }
     }
     //////////////////////////////////////////////////////////////////
-    // Intro animation
-    //////////////////////////////////////////////////////////////////
-    var showIntroTween = new TimelineMax();
-    var doIntroAnimation = false;
-    // If it's on not supported browers, no intro, show gif & static texts
-    if((whichMobile == "iOS_mobile") && isChrome)
-    {
-    	changeBrowser.style.display="";
-    	setTimeout(()=>{
-	    	changeBrowser.style.opacity=1;
-	    	bgImage.style.opacity=0.3;
-	    },100);
-    }
-    else
-    {
-    	bgImage.src = "";    
-	    showIntroTween.staggerTo(".introText", 1, {
-	    	opacity: 1, repeatDelay: 1, repeat: 1, yoyo: true,
-	    	onStart: introTweenStart, onStartParams:["{self}"],
-	    	onComplete: introTweenComplete, onCompleteParams:["{self}"]
-	    }, 3.5, "+=4", introCompleteAll);
-    }    
-    function introTweenStart(tween) {
-    	tween.target.style.display = "block";
-    }
-    function introTweenComplete(tween) {
-    	tween.target.style.display = "none";
-    }
-    function introCompleteAll() {
-    	// console.log(showIntroTween);
-    	// if(doIntroAnimation)
-	    // 	showIntroTween.restart();
-
-	    //V.2
-	    // splashPage.style.background = "url('../images/sleep_poster_color_V3.gif') no-repeat center center fixed";
-	    // splashPage.style.backgroundSize = "cover";
-
-	    //V.3
-	    bgImage.src = "images/sleep_poster_color_V3.gif";
-	    inputGroupt.style.display="";
-	    setTimeout(()=>{
-	    	inputGroupt.style.opacity=1;
-	    	bgImage.style.opacity=1;
-	    },100);
-    }
-    //////////////////////////////////////////////////////////////////
     if (!isMobile) {
         window.addEventListener('click', closeInfoDiv, false);
     } else {
@@ -1254,7 +1208,6 @@
     <script type="text/javascript" src="js/lib/stats.min.js"></script>
     <script type="text/javascript" src="js/lib/threex.dynamictexture.js"></script>
 
-    <script type="text/javascript" src="js/text_in_lang.js"></script>
     <script type="text/javascript" src="js/sample.js"></script>
     <!-- <script type="text/javascript" src="js/wave.js"></script> -->
     <script type="text/javascript" src="js/personSleep.js"></script>
@@ -1299,6 +1252,54 @@
     		splashPage.style.opacity = 1;
     		aboutPage.style.opacity = 1;
     	}
+    }
+    //////////////////////////////////////////////////////////////////
+    // Intro animation
+    //////////////////////////////////////////////////////////////////
+    var showIntroTween = new TimelineMax();
+    var doIntroAnimation = false;
+    // If it's on not supported browers, no intro, show gif & static texts
+    if((whichMobile == "iOS_mobile") && isChrome)
+    {
+    	console.log(sleepLang);
+    	changeBrowser.innerHTML = langSwap.changeBrowser.iosChrome[sleepLang];
+    	showBrowserInstruction();
+    }
+    else if((whichMobile == "android") && isSamsung)
+    {
+    	changeBrowser.innerHTML = langSwap.changeBrowser.androidSamsung[sleepLang];
+    	showBrowserInstruction();
+    }
+    else
+    {
+    	bgImage.src = "";    
+	    showIntroTween.staggerTo(".introText", 1, {
+	    	opacity: 1, repeatDelay: 2, repeat: 1, yoyo: true,
+	    	onStart: introTweenStart, onStartParams:["{self}"],
+	    	onComplete: introTweenComplete, onCompleteParams:["{self}"]
+	    }, 4.5, "+=4", introCompleteAll);
+    }
+    function showBrowserInstruction() {
+    	changeBrowser.style.display="";
+    	setTimeout(()=>{
+	    	changeBrowser.style.opacity=1;
+	    	bgImage.style.opacity=0.3;
+	    },100);
+    }
+    function introTweenStart(tween) {
+    	tween.target.style.display = "block";
+    }
+    function introTweenComplete(tween) {
+    	tween.target.style.display = "none";
+    }
+    function introCompleteAll() {
+	    //V.3
+	    bgImage.src = "images/sleep_poster_color_V3.gif";
+	    inputGroupt.style.display="";
+	    setTimeout(()=>{
+	    	inputGroupt.style.opacity=1;
+	    	bgImage.style.opacity=1;
+	    },100);
     }
     </script>
 </body>
