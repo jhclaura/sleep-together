@@ -281,7 +281,11 @@ THREE.DeviceControls = function(camera, worldCenter) {
         tempQuaternion.setFromRotationMatrix(tempMatrix4);
         tempEuler.setFromQuaternion(tempQuaternion);
 
-        var ttt = tempEuler.y; // + Math.PI
+        var ttt;
+        if(whichMobile == "iOS_mobile")
+            ttt = tempEuler.y;
+        else
+            ttt = tempEuler.y + Math.PI;
         tempEuler.set(0, ttt, 0);
         alignQuaternionPublic.setFromEuler(tempEuler);
 
