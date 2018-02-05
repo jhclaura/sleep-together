@@ -2249,18 +2249,25 @@ function RotateInstructions() {
   s.width = '50%';
   //text.innerHTML = 'Place your phone into your Cardboard viewer.';
   // ====== LAURA ========
+  this.enTexts = [];
+  this.frTexts = [];
+  this.deTexts = [];
+  this.langSwapped = false;
   var textEn = document.createElement('span');
   textEn.className = "en_text";
   textEn.innerHTML = langSwap.cardboardInstruction.en.ins1;
   text.appendChild(textEn);
+  this.enTexts.push(textEn);
   var textFr = document.createElement('span');
   textFr.className = "fr_text";
   textFr.innerHTML = langSwap.cardboardInstruction.fr.ins1;
   text.appendChild(textFr);
+  this.frTexts.push(textFr);
   var textDe = document.createElement('span');
   textDe.className = "fr_text";
   textDe.innerHTML = langSwap.cardboardInstruction.de.ins1;
   text.appendChild(textDe);
+  this.deTexts.push(textDe);
   // =====================  
   overlay.appendChild(text);
   var snackbar = document.createElement('div');
@@ -2282,14 +2289,17 @@ function RotateInstructions() {
   textEn.className = "en_text";
   textEn.innerHTML = langSwap.cardboardInstruction.en.ins2;
   snackbarText.appendChild(textEn);
+  this.enTexts.push(textEn);
   var textFr = document.createElement('span');
   textFr.className = "fr_text";
   textFr.innerHTML = langSwap.cardboardInstruction.fr.ins2;
   snackbarText.appendChild(textFr);
+  this.frTexts.push(textFr);
   var textDe = document.createElement('span');
   textDe.className = "fr_text";
   textDe.innerHTML = langSwap.cardboardInstruction.de.ins2;
   snackbarText.appendChild(textDe);
+  this.deTexts.push(textDe);
   // =====================  
   var snackbarButton = document.createElement('a');
   snackbarButton.href = 'https://www.google.com/get/cardboard/get-cardboard/';
@@ -2299,14 +2309,17 @@ function RotateInstructions() {
   textEn.className = "en_text";
   textEn.innerHTML = langSwap.cardboardInstruction.en.ins3;
   snackbarButton.appendChild(textEn);
+  this.enTexts.push(textEn);
   var textFr = document.createElement('span');
   textFr.className = "fr_text";
   textFr.innerHTML = langSwap.cardboardInstruction.fr.ins3;
   snackbarButton.appendChild(textFr);
+  this.frTexts.push(textFr);
   var textDe = document.createElement('span');
   textDe.className = "fr_text";
   textDe.innerHTML = langSwap.cardboardInstruction.de.ins3;
   snackbarButton.appendChild(textDe);
+  this.deTexts.push(textDe);
   // =====================  
   snackbarButton.target = '_blank';
   var s = snackbarButton.style;
@@ -2324,6 +2337,31 @@ function RotateInstructions() {
   this.hide();
 }
 RotateInstructions.prototype.show = function(parent) {
+  // ========= LAURA =========
+  if (!this.langSwapped) {
+    switch(sleepLang) {
+      case 'en':
+        for (var i=0; i<this.enTexts.length; i++) {
+          this.frTexts[i].style.display = "none";
+          this.deTexts[i].style.display = "none";
+        }
+        break;
+      case 'fr':
+        for (var i=0; i<this.enTexts.length; i++) {
+          this.enTexts[i].style.display = "none";
+          this.deTexts[i].style.display = "none";
+        }
+        break;
+      case 'de':
+        for (var i=0; i<this.enTexts.length; i++) {
+          this.enTexts[i].style.display = "none";
+          this.frTexts[i].style.display = "none";
+        }
+        break;
+    }    
+    this.langSwapped = true;
+  }
+  // ========================
   if (!parent && !this.overlay.parentElement) {
     document.body.appendChild(this.overlay);
   } else if (parent) {
