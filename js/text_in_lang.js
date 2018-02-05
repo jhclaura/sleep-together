@@ -760,5 +760,22 @@ var langSwap = {
 			"fr": "Pour faire cette expérience,<br>veuillez l'ouvrir dans votre navigateur Chrome.",
 			"de": "Für ein unbeschwertes Erlebnis<br>AB IN DIE KISTE in Chrome öffnen."
 		}
-	}
+	},
+	"cardboardInstruction": {
+		"en": {
+			"ins1": "Place your phone into your Cardboard viewer.",
+            "ins2": "No Cardboard viewer?",
+            "ins3": "get one"
+		},
+		"fr": {
+			"ins1": "Place your French phone into your Cardboard viewer.",
+            "ins2": "No French Cardboard?",
+            "ins3": "fr one"
+		},
+		"de": {
+			"ins1": "Place your German phone into your Cardboard viewer.",
+            "ins2": "No German Cardboard?",
+            "ins3": "de one"
+		}
+	},
 };

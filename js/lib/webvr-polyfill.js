@@ -2247,7 +2247,21 @@ function RotateInstructions() {
   s.lineHeight = '24px';
   s.margin = '24px 25%';
   s.width = '50%';
-  text.innerHTML = 'Place your phone into your Cardboard viewer.';
+  //text.innerHTML = 'Place your phone into your Cardboard viewer.';
+  // ====== LAURA ========
+  var textEn = document.createElement('span');
+  textEn.className = "en_text";
+  textEn.innerHTML = langSwap.cardboardInstruction.en.ins1;
+  text.appendChild(textEn);
+  var textFr = document.createElement('span');
+  textFr.className = "fr_text";
+  textFr.innerHTML = langSwap.cardboardInstruction.fr.ins1;
+  text.appendChild(textFr);
+  var textDe = document.createElement('span');
+  textDe.className = "fr_text";
+  textDe.innerHTML = langSwap.cardboardInstruction.de.ins1;
+  text.appendChild(textDe);
+  // =====================  
   overlay.appendChild(text);
   var snackbar = document.createElement('div');
   var s = snackbar.style;
@@ -2262,10 +2276,38 @@ function RotateInstructions() {
   overlay.appendChild(snackbar);
   var snackbarText = document.createElement('div');
   snackbarText.style.float = 'left';
-  snackbarText.innerHTML = 'No Cardboard viewer?';
+  //snackbarText.innerHTML = 'No Cardboard viewer?';
+  // ====== LAURA =======
+  var textEn = document.createElement('span');
+  textEn.className = "en_text";
+  textEn.innerHTML = langSwap.cardboardInstruction.en.ins2;
+  snackbarText.appendChild(textEn);
+  var textFr = document.createElement('span');
+  textFr.className = "fr_text";
+  textFr.innerHTML = langSwap.cardboardInstruction.fr.ins2;
+  snackbarText.appendChild(textFr);
+  var textDe = document.createElement('span');
+  textDe.className = "fr_text";
+  textDe.innerHTML = langSwap.cardboardInstruction.de.ins2;
+  snackbarText.appendChild(textDe);
+  // =====================  
   var snackbarButton = document.createElement('a');
   snackbarButton.href = 'https://www.google.com/get/cardboard/get-cardboard/';
-  snackbarButton.innerHTML = 'get one';
+  //snackbarButton.innerHTML = 'get one';
+  // ====== LAURA =======
+  var textEn = document.createElement('span');
+  textEn.className = "en_text";
+  textEn.innerHTML = langSwap.cardboardInstruction.en.ins3;
+  snackbarButton.appendChild(textEn);
+  var textFr = document.createElement('span');
+  textFr.className = "fr_text";
+  textFr.innerHTML = langSwap.cardboardInstruction.fr.ins3;
+  snackbarButton.appendChild(textFr);
+  var textDe = document.createElement('span');
+  textDe.className = "fr_text";
+  textDe.innerHTML = langSwap.cardboardInstruction.de.ins3;
+  snackbarButton.appendChild(textDe);
+  // =====================  
   snackbarButton.target = '_blank';
   var s = snackbarButton.style;
   s.float = 'right';
