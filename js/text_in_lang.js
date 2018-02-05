@@ -99,6 +99,8 @@ var langSwap = {
 	            <br>\
 	            Dominique Brunet\
 	            <br>\
+	            Sandrick Mathurin\
+	            <br>\
 	            <br>\
 	            <b>Administrator</b>\
 	            <br>\
@@ -312,6 +314,8 @@ var langSwap = {
 	            <br>\
 	            Dominique Brunet\
 	            <br>\
+	            Sandrick Mathurin\
+	            <br>\
 	            <br>\
 	            <b>Verwaltung</b>\
 	            <br>\
@@ -524,6 +528,8 @@ var langSwap = {
 	            Claudia Boutin\
 	            <br>\
 	            Dominique Brunet\
+	            <br>\
+	            Sandrick Mathurin\
 	            <br>\
 	            <br>\
 	            <b>Administratrice</b>\
