@@ -585,6 +585,7 @@
     var readyToStart = false, chooseVRtoStart = false;
     var enableStart = true;
     var nooSleep = new NoSleep();
+    var showMobileOrientationInstruction = false;
 
     var getNameToStart = function() {
     	if(!chooseVRtoStart)
@@ -665,6 +666,15 @@
     		mobileOrient.style.opacity = 0;
     		window.removeEventListener('orientationchange', onMobileOrientationChange);
     		trulyStart();
+    		setTimeout(function () {
+        		mobileOrient.style.display = "none";
+            }, 1000);
+    	}
+    }
+    var onMobileOrientationChangeLater = function () {
+    	if(getOrientation()==90) {
+    		mobileOrient.style.opacity = 0;
+    		window.removeEventListener('orientationchange', onMobileOrientationChangeLater);
     		setTimeout(function () {
         		mobileOrient.style.display = "none";
             }, 1000);

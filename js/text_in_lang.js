@@ -764,18 +764,18 @@ var langSwap = {
 	"cardboardInstruction": {
 		"en": {
 			"ins1": "Place your phone into your Cardboard viewer.",
-            "ins2": "No Cardboard viewer?",
-            "ins3": "Go in nature mode"
+            "ins2": "Do not have a Cardboard viewer?",
+            "ins3": "No worries. Experience it in nature mode."
 		},
 		"fr": {
 			"ins1": "Placez votre téléphone dans votre lunette Cardboard.",
             "ins2": "Vous n'avez pas de lunette Cardboard?",
-            "ins3": "Faites l'expérience en mode nature"
+            "ins3": "Faites l'expérience en mode nature."
 		},
 		"de": {
 			"ins1": "Stecken Sie Ihr Smartphone in Ihre Cardboard-Brille.",
             "ins2": "Sie haben keine Cardboard-Brille?",
-            "ins3": "Genießen Sie das Erlebnis im normalen Modus"
+            "ins3": "Genießen Sie das Erlebnis im normalen Modus."
 		}
 	},
 };

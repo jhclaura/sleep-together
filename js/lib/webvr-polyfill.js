@@ -2276,7 +2276,7 @@ function RotateInstructions() {
   s.position = 'fixed';
   s.bottom = 0;
   s.width = '100%';
-  s.height = '48px';
+  s.height = '75px';  //'48px'; laura
   s.padding = '14px 24px';
   s.boxSizing = 'border-box';
   s.color = '#656A6B';
@@ -2285,6 +2285,8 @@ function RotateInstructions() {
   snackbarText.style.float = 'left';
   //snackbarText.innerHTML = 'No Cardboard viewer?';
   // ====== LAURA =======
+  snackbarText.style.width = '50%';
+  snackbarText.style.paddingTop = '4px';
   var textEn = document.createElement('span');
   textEn.className = "en_text";
   textEn.innerHTML = langSwap.cardboardInstruction.en.ins2;
@@ -2297,14 +2299,26 @@ function RotateInstructions() {
   this.frTexts.push(textFr);
   var textDe = document.createElement('span');
   textDe.className = "fr_text";
-  textDe.innerHTML = langSwap.cardboardInstruction.de.ins2 + langSwap.cardboardInstruction.de.ins3;
+  textDe.innerHTML = langSwap.cardboardInstruction.de.ins2;
   snackbarText.appendChild(textDe);
   this.deTexts.push(textDe);
   // =====================  
   var snackbarButton = document.createElement('a');
-  snackbarButton.href = 'https://www.google.com/get/cardboard/get-cardboard/';
+  //snackbarButton.href = 'https://www.google.com/get/cardboard/get-cardboard/';
   //snackbarButton.innerHTML = 'get one';
-  // ====== LAURA =======
+  // ====== LAURA ========
+  snackbarButton.onclick = function() { 
+    enterVR.requestExit();
+    enterVR.requestEnterFullscreen();
+    if(!showMobileOrientationInstruction && getOrientation()==0) {
+      mobileOrient.style.display = "block";
+      setTimeout(function () {
+          mobileOrient.style.opacity = 1;
+        }, 100);
+      window.addEventListener('orientationchange', onMobileOrientationChangeLater);
+      showMobileOrientationInstruction = true;
+    }
+  };
   var textEn = document.createElement('span');
   textEn.className = "en_text";
   textEn.innerHTML = langSwap.cardboardInstruction.en.ins3;
@@ -2321,9 +2335,11 @@ function RotateInstructions() {
   snackbarButton.appendChild(textDe);
   this.deTexts.push(textDe);
   // =====================  
-  snackbarButton.target = '_blank';
+  //snackbarButton.target = '_blank';
   var s = snackbarButton.style;
   s.float = 'right';
+  s.width = '42%';  //laura
+  s.fontSize = '0.8em'; //laura
   s.fontWeight = 600;
   s.textTransform = 'uppercase';
   s.borderLeft = '1px solid gray';
