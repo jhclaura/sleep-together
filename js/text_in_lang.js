@@ -765,17 +765,17 @@ var langSwap = {
 		"en": {
 			"ins1": "Place your phone into your Cardboard viewer.",
             "ins2": "No Cardboard viewer?",
-            "ins3": "get one"
+            "ins3": "Go in nature mode"
 		},
 		"fr": {
-			"ins1": "Place your French phone into your Cardboard viewer.",
-            "ins2": "No French Cardboard?",
-            "ins3": "fr one"
+			"ins1": "Placez votre téléphone dans votre lunette Cardboard.",
+            "ins2": "Vous n'avez pas de lunette Cardboard?",
+            "ins3": "Faites l'expérience en mode nature"
 		},
 		"de": {
-			"ins1": "Place your German phone into your Cardboard viewer.",
-            "ins2": "No German Cardboard?",
-            "ins3": "de one"
+			"ins1": "Stecken Sie Ihr Smartphone in Ihre Cardboard-Brille.",
+            "ins2": "Sie haben keine Cardboard-Brille?",
+            "ins3": "Genießen Sie das Erlebnis im normalen Modus"
 		}
 	},
 };

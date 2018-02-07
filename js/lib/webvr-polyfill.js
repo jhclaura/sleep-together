@@ -2297,7 +2297,7 @@ function RotateInstructions() {
   this.frTexts.push(textFr);
   var textDe = document.createElement('span');
   textDe.className = "fr_text";
-  textDe.innerHTML = langSwap.cardboardInstruction.de.ins2;
+  textDe.innerHTML = langSwap.cardboardInstruction.de.ins2 + langSwap.cardboardInstruction.de.ins3;
   snackbarText.appendChild(textDe);
   this.deTexts.push(textDe);
   // =====================  
